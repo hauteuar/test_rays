@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Organization</title>
+  <link rel="stylesheet" href="/css/corp.css">
+</head>
+<body>
+  <% include partials/header %>
+  <div class="form-container">
+    <h2>Create Organization</h2>
+    <form action="/corp-admin/create" method="POST" enctype="multipart/form-data">
+      <label for="name">Organization Name:</label>
+      <input type="text" id="name" name="name" required>
+      <label for="theme_color">Theme Color:</label>
+      <input type="color" id="theme_color" name="theme_color" required>
+      <label for="domain">Domain:</label>
+      <input type="text" id="domain" name="domain" required>
+      <label for="logo">Logo:</label>
+      <input type="file" id="logo" name="logo" required>
+
+      <h3>Organization Admin</h3>
+      <label for="firstName">First Name:</label>
+      <input type="text" id="firstName" name="firstName" required>
+      <label for="lastName">Last Name:</label>
+      <input type="text" id="lastName" name="lastName" required>
+      <label for="dob">Date of Birth:</label>
+      <input type="date" id="dob" name="dob" required>
+      <label for="gender">Gender:</label>
+      <input type="text" id="gender" name="gender" required>
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required>
+      <label for="contactNumber">Contact Number:</label>
+      <input type="text" id="contactNumber" name="contactNumber" required>
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" required>
+
+      <button type="submit">Create Organization</button>
+    </form>
+  </div>
+</body>
+</html>

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Admin</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/mobile.css">
+  <link rel="stylesheet" href="/css/tab.css">
+  <link rel="stylesheet" href="/css/calendar.css">
+  <link rel="stylesheet" href="css/style22.css">
+  <link rel="stylesheet" href="css/style2.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+  <script src="components/topnav.js" type="text/javascript" defer></script>
+  <script src="components/sidebar.js" type="text/javascript" defer></script>
+
+</head>
+<body>
+  <div class="container-scroller">
+    <topnav-component></topnav-component>
+    <div class="container-fluid page-body-wrapper">
+      <sidebar-component data-page="members"></sidebar-component>
+      <div class="main-section main-section2">
+        <div class="filter-bar">
+          <div class="input-group1">
+            <div class="search">
+              <input type="text" placeholder="search by name" name="search" class="input" style="min-width: 280px;">
+              <img src="images/search.png">
+            </div>
+            <select class="select-input" style="min-width: 150px;">
+              <option>status</option>
+            </select>
+            <select class="select-input" style="min-width: 150px;">
+              <option>Role Title</option>
+            </select>
+          </div>
+          <div class="btn btn-ramblers" data-bs-toggle="modal" data-bs-target="#addMember">
+            <img src="images/add.png">
+            Add New Member
+          </div>
+        </div>
+        <div id="member-list" class="row mx-0 mt-3">
+          <!-- Members will be dynamically added here -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modals (Add Member Modal) -->
+  <div class="modal fade" id="addMember" tabindex="-1" aria-labelledby="addMemberLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-body p-4">
+          <div class="flex-align moadl-head2 pb-4 border-bottom">
+            <h3>Add/Edit Member Personal info.</h3>
+            <img src="images/close.png" data-bs-dismiss="modal" style="cursor: pointer;width: 20px;height: 20px;">
+          </div>
+          <div class="modal-body2 p-md-3 p-0">
+            <div class="add-image-sec">
+              <img src="images/user-dp.png" class="user-dp">
+              <div class="file-choose">
+                <img src="images/add-image.png" class="add-image">
+                <input type="file" name="profile_picture">
+              </div>
+            </div>
+            <form id="memberForm">
+              <div class="row mt-3">
+                <div class="col-md-4 col-item py-2">
+                  <h5 class="font-weight-500 mb-1">Club</h5>
+                  <select class="select-input w-100" name="club_id" style="min-width: 150px;">
+                    <option value="1">Select Club</option>
+                  </select>
+                </div>
+                <div class="col-md-4 col-item py-2">
+                  <h5 class="font-weight-500 mb-1">First Name</h5>
+                  <input type="text" placeholder="Enter First Name" name="first_name" class="input w-100">
+                </div>
+                <div class="col-md-4 col-item py-2">
+                  <h5 class="font-weight-500 mb-1">Last Name</h5>
+                  <input type="text" placeholder="Enter Last Name" name="last_name" class="input w-100">
+                </div>
+                <div class="col-md-4 col-item py-2">
+                  <h5 class="font-weight-500 mb-1">Gender</h5>
+                  <select class="select-input w-100" name="gender" style="min-width: 150px;">
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                  </select>
+                </div>
+                <div class="col-md-4 col-item py-2">
+                  <h5 class="font-weight-500 mb-1">Date of birth</h5>
+                  <input type="date" placeholder="Enter Date of Birth" name="date_of_birth" class="input w-100">
+                </div>
+                <div class="col-md-4 col-item py-2">
+                  <h5 class="font-weight-500 mb-1">Email</h5>
+                  <input type="email" placeholder="Enter Email" name="email" class="input w-100">
+                </div>
+                <div class="col-md-4 col-item py-2">
+                  <h5 class="font-weight-500 mb-1">Country Code</h5>
+                  <input type="text" inputmode="numeric" placeholder="Enter Country Code" name="country_code" class="input w-100">
+                </div>
+                <div class="col-md-4 col-item py-2">
+                  <h5 class="font-weight-500 mb-1">Phone Number</h5>
+                  <input type="text" inputmode="numeric" placeholder="Enter Phone Number" name="phone_number" class="input w-100">
+                </div>
+                <div class="col-md-4 col-item py-2">
+                  <h5 class="font-weight-500 mb-1">Emergency Contact Name</h5>
+                  <input type="text" placeholder="Enter Emergency Contact Name" name="emergency_contact_name" class="input w-100">
+                </div>
+                <div class="col-md-4 col-item py-2">
+                  <h5 class="font-weight-500 mb-1">Emergency Contact Number Country Code</h5>
+                  <input type="text" inputmode="numeric" placeholder="Enter Emergency Contact Number Country Code" name="emergency_contact_number_country_code" class="input w-100">
+                </div>
+                <div class="col-md-4 col-item py-2">
+                  <h5 class="font-weight-500 mb-1">Emergency Contact Number</h5>
+                  <input type="text" inputmode="numeric" placeholder="Enter Emergency Contact Number" name="emergency_contact_number" class="input w-100">
+                </div>
+              </div>
+              <div class="modal-footer2 d-flex justify-content-end g2 pt-3">
+                <button type="button" class="btn btn-outline-ramblers px-4" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-ramblers px-4">Save</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <script>
+    // Function to fetch and display members
+    function fetchAndDisplayMembers() {
+      fetch('https://ramblersappv2.club7ms.com/api/member-profile', {
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer CLUB#ID:1-Exp:2024-08-25 12:11:00-r6SbmMlT'
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.errorCode === 0) {
+          const memberList = data.memberProfile;
+          const memberListContainer = document.getElementById('member-list');
+          memberListContainer.innerHTML = ''; // Clear existing members
+
+          memberList.forEach(member => {
+            const memberCard = `
+              <div class="col-md-3 col-sm-4 col-6 col-item">
+                <div class="card-1">
+                  <img src="${member.photo_url || 'images/user-dp.png'}" alt="Member Photo">
+                  <h5 class="ellipsis">${member.first_name} ${member.last_name}</h5>
+                  <h6>${member.role_title || 'Member'}</h6>
+                </div>
+              </div>
+            `;
+            memberListContainer.insertAdjacentHTML('beforeend', memberCard);
+          });
+        } else {
+          alert(`Error: ${data.errorMessage}`);
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while fetching members. Please try again.');
+      });
+    }
+
+    // Call fetchAndDisplayMembers on page load
+    document.addEventListener('DOMContentLoaded', fetchAndDisplayMembers);
+
+    // Add new member functionality
+    document.getElementById('memberForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const form = document.getElementById('memberForm');
+      const formData = new FormData(form);
+
+      const personalInfo = {
+        first_name: formData.get('first_name'),
+        last_name: formData.get('last_name'),
+        gender: formData.get('gender'),
+        date_of_birth: formData.get('date_of_birth'),
+        email: formData.get('email'),
+        country_code: formData.get('country_code'),
+        phone_number: formData.get('phone_number'),
+        emergency_contact_name: formData.get('emergency_contact_name'),
+        emergency_contact_number_country_code: formData.get('emergency_contact_number_country_code'),
+        emergency_contact_number: formData.get('emergency_contact_number')
+      };
+
+      const requestBody = JSON.stringify({
+        personal_info: personalInfo,
+        scoring_application: [
+          { scoring_app_id: 1, scoring_app_name: "CricClub", scoring_app_club_id: "1529417" },
+          { scoring_app_id: 2, scoring_app_name: "CricHeroes", scoring_app_club_id: "2826556" }
+        ],
+        club_reg_questionnaire: [
+          { qa_id: 1, question: "Batting Style", type: "Selection", club_id: 1, questionnaire_answer: { qa_ans_id: 1, answer_option: "Right Hand" } },
+          { qa_id: 2, question: "Bowling Style", type: "Selection", club_id: 1, questionnaire_answer: { qa_ans_id: 3, answer_option: "Right Arm Fast/Medium" } },
+          { qa_id: 3, question: "Fielding Position", type: "Selection", club_id: 1, questionnaire_answer: { qa_ans_id: 9, answer_option: "Wicket Keeper" } }
+        ],
+        team_category: [
+          { team_category_id: 1, category_name: "Senior Team" }
+        ]
+      });
+
+      fetch('https://ramblersappv2.club7ms.com/api/member-registration', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer CLUB#ID:1-Exp:2024-08-25 12:11:00-r6SbmMlT'
+        },
+        body: requestBody
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.errorCode === 0) {
+          alert('Member registration successful!');
+          $('#addMember').modal('hide');
+          form.reset();
+          fetchAndDisplayMembers(); // Refresh member list
+        } else {
+          alert(`Error: ${data.errorMessage}`);
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
+      });
+    });
+  </script>
+</body>
+</html>

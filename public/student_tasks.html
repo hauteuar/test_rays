@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Student Tasks</title>
+  
+  <link rel="stylesheet" href="css/style-coach.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/mobile.css">
+  <link rel="stylesheet" href="css/tab.css">
+  <link rel="shortcut icon" href="images/favicon.png" />
+  <link rel="stylesheet" href="vendors/ti-icons/css/themify-icons.css">
+  <script src="components/sidebar.js" type="text/javascript" defer></script>
+  <script src="components/topnav.js" type="text/javascript" defer></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+
+</head>
+
+<body>
+    <div class="container-scroller">
+        <topnav-component></topnav-component>
+        <div class="container-fluid page-body-wrapper">
+            <sidebar-component data-page="my_task"></sidebar-component>
+            <div class="main-panel">
+                <div class="flex-align px-4 py-2" style="border-bottom: 1px solid #D9D8D8;height: 60px;">
+                    <h4 class="m-0">My Tasks</h4>
+                </div>
+                <div class="content-wrapper">
+                    <div class="row" id="taskList" style="max-height:calc(100vh - 200px);overflow: auto;">
+                        <!-- Task List will be dynamically generated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.ckeditor.com/ckeditor5/34.1.0/classic/ckeditor.js"></script>
+    <script src="js/off-canvas.js"></script>
+    <script src="js/template.js"></script>
+    <script>
+        $(document).ready(function () {
+            const studentId = localStorage.getItem('userId');
+            const orgId = localStorage.getItem('organizationId');
+            console.log(orgId);
+
+            // Fetch tasks assigned to the student
+            fetch(`/api/tasks/student/${studentId}/${orgId}`, {
+                headers: { 'organizationId': orgId }
+            })
+            .then(response => response.json())
+            .then(tasks => {
+                displayTasks(tasks);
+            })
+            .catch(error => console.error('Error fetching tasks:', error));
+
+            function displayTasks(tasks) {
+                const taskList = $('#taskList');
+                taskList.empty();
+                tasks.forEach(task => {
+                    const taskItem = `
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">${task.title}</h5>
+                                    <p class="card-text">${task.description}</p>
+                                    <button class="btn btn-primary" data-task-id="${task._id}" onclick="viewTaskDetails('${task._id}')">View Task</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    taskList.append(taskItem);
+                });
+            }
+        });
+
+        function viewTaskDetails(taskId) {
+            window.location.href = `student-task-detail.html?taskId=${taskId}`;
+        }
+    </script>
+</body>
+
+</html>

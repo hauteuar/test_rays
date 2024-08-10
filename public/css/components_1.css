@@ -1,0 +1,254 @@
+/*=========== TABLE OF CONTENTS ===========
+1. Selectbox CSS
+2. Input CSS
+3. Button CSS
+4. Text CSS
+5. Heading CSS
+==========================================*/
+
+/*-------------------------------------
+  1. Selectbox CSS
+--------------------------------------*/
+.ui.selectbox.round {
+  border-radius: var(--radius-xs);
+}
+
+.ui.selectbox.size-xs {
+  height: 48px;
+  padding-left: var(--space-2xl);
+  padding-right: var(--space-2xl);
+  font-size: 16px;
+}
+
+.ui.selectbox.fill.white_a700_19 {
+  background-color: var(--white_a700_19);
+  color: var(--white_a700_7f);
+}
+
+.ui.selectbox {
+  display: flex;
+}
+
+/*-------------------------------------
+  2. Input CSS
+--------------------------------------*/
+.ui.input.square {
+  border-radius: 0px;
+}
+
+.ui.input.round {
+  border-radius: var(--radius-xs);
+}
+
+.ui.input.size-md {
+  height: 74px;
+  font-size: 24px;
+}
+
+.ui.input.size-sm {
+  height: 60px;
+  padding-left: 32px;
+  padding-right: 32px;
+  font-size: 22px;
+}
+
+.ui.input.size-xs {
+  height: 48px;
+  padding-left: var(--space-2xl);
+  padding-right: var(--space-2xl);
+  font-size: 16px;
+}
+
+.ui.input.fill.gray_100_19 {
+  background-color: var(--gray_100_19);
+  color: var(--white_a700_66);
+}
+
+.ui.input.fill.white_a700_19 {
+  background-color: var(--white_a700_19);
+  color: var(--white_a700_7f);
+}
+
+.ui.input {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: text;
+  border-style: solid;
+}
+
+/*-------------------------------------
+  3. Button CSS
+--------------------------------------*/
+.ui.button.round {
+  border-radius: var(--radius-md);
+}
+
+.ui.button.size-xs {
+  height: 66px;
+  padding-left: var(--space-5xl);
+  padding-right: var(--space-5xl);
+  font-size: 24px;
+}
+
+.ui.button.fill.red_a700 {
+  background-color: var(--red_a700);
+  color: var(--white_a700);
+}
+
+.ui.button {
+  text-align: center;
+  display: flex;
+  cursor: pointer;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  color: var(--white_a700);
+  font-family: GT Walsheim Pro;
+  font-size: 24px;
+  font-weight: 500;
+  background-color: var(--red_a700);
+  align-self: stretch;
+  border-radius: var(--radius-md);
+}
+
+/*-------------------------------------
+  4. Text CSS
+--------------------------------------*/
+.ui.text.size-textxs {
+  font-size: 14px;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.ui.text.size-texts {
+  font-size: 16px;
+  font-weight: 400;
+  font-style: normal;
+  @media only screen and (max-width: 1440px) {
+    font-size: 13px;
+  }
+}
+
+.ui.text.size-textmd {
+  font-size: 18px;
+  font-weight: 400;
+  font-style: normal;
+  @media only screen and (max-width: 1440px) {
+    font-size: 15px;
+  }
+}
+
+.ui.text.size-textlg {
+  font-size: 20px;
+  font-weight: 400;
+  font-style: normal;
+  @media only screen and (max-width: 1440px) {
+    font-size: 17px;
+  }
+}
+
+.ui.text.size-text2xl {
+  font-size: 24px;
+  font-weight: 400;
+  font-style: normal;
+  @media only screen and (max-width: 1440px) {
+    font-size: 20px;
+  }
+
+  @media only screen and (max-width: 1050px) {
+    font-size: 22px;
+  }
+}
+
+.ui.text.size-text3xl {
+  font-size: 28px;
+  font-weight: 400;
+  font-style: normal;
+  @media only screen and (max-width: 1440px) {
+    font-size: 23px;
+  }
+
+  @media only screen and (max-width: 1050px) {
+    font-size: 26px;
+  }
+
+  @media only screen and (max-width: 550px) {
+    font-size: 24px;
+  }
+}
+
+.ui.text {
+  color: var(--white_a700);
+  font-family: Poppins;
+}
+
+/*-------------------------------------
+  5. Heading CSS
+--------------------------------------*/
+.ui.heading.size-textxl {
+  font-size: 22px;
+  font-weight: 500;
+  font-style: normal;
+  @media only screen and (max-width: 1440px) {
+    font-size: 18px;
+  }
+}
+
+.ui.heading.size-headingxs {
+  font-size: 18px;
+  font-weight: 600;
+  font-style: bold;
+  @media only screen and (max-width: 1440px) {
+    font-size: 15px;
+  }
+}
+
+.ui.heading.size-headings {
+  font-size: 22px;
+  font-weight: 700;
+  font-style: bold;
+  @media only screen and (max-width: 1440px) {
+    font-size: 18px;
+  }
+}
+
+.ui.heading.size-headingmd {
+  font-size: 44px;
+  font-weight: 800;
+  font-style: bold;
+  @media only screen and (max-width: 1440px) {
+    font-size: 37px;
+  }
+
+  @media only screen and (max-width: 1050px) {
+    font-size: 40px;
+  }
+
+  @media only screen and (max-width: 550px) {
+    font-size: 34px;
+  }
+}
+
+.ui.heading.size-headinglg {
+  font-size: 58px;
+  font-weight: 700;
+  font-style: bold;
+  @media only screen and (max-width: 1440px) {
+    font-size: 49px;
+  }
+
+  @media only screen and (max-width: 1050px) {
+    font-size: 50px;
+  }
+
+  @media only screen and (max-width: 550px) {
+    font-size: 44px;
+  }
+}
+
+.ui.heading {
+  color: var(--white_a700);
+  font-family: Inter;
+}

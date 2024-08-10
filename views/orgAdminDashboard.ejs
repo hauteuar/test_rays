@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Organization Dashboard</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/mobile.css">
+  <link rel="stylesheet" href="css/tab.css">
+  <link rel="shortcut icon" href="images/1.png" />
+  <script src="/components/sidebar.js" type="text/javascript" defer></script>
+  <script src="/components/sidebar.js" type="text/javascript" defer></script>
+</head>
+
+<body>
+  <div class="container-scroller">
+      <topnav-component></topnav-component>
+      <div class="container-fluid page-body-wrapper">
+     <sidebar-component data-page="dashboard"></sidebar-component>
+      <div class="main-panel">
+        <div class="content-wrapper p-4">
+          <h4 class="font-weight-600">Dashboard</h4>
+          <div class="row mt-3" style="margin-left:-6px;margin-right:-6px;">
+            <div class="col-12">
+              <h6 class="text-gray2 mb-1">Overview</h6>
+            </div>
+            <div class="col-5-in-row" style="padding: 6px;">
+              <div class="dashboard-card">
+                <h6>Total revenue generated</h6>
+                <h5 class="mt-2">$465000</h5>
+              </div>
+            </div>
+            <div class="col-5-in-row" style="padding: 6px;">
+              <div class="dashboard-card">
+                <h6>Total booking revenue</h6>
+                <h5 class="mt-2">$18000</h5>
+              </div>
+            </div>
+            <div class="col-5-in-row" style="padding: 6px;">
+              <div class="dashboard-card">
+                <h6>Total number of courses</h6>
+                <h5 class="mt-2">53</h5>
+              </div>
+            </div>
+            <div class="col-5-in-row" style="padding: 6px;">
+              <div class="dashboard-card">
+                <h6>Total number of public users</h6>
+                <h5 class="mt-2">600</h5>
+              </div>
+            </div>
+            <div class="col-5-in-row" style="padding: 6px;">
+              <div class="dashboard-card">
+                <h6>Total number of course-based users</h6>
+                <h5 class="mt-2">120</h5>
+              </div>
+            </div>
+          </div>
+          <hr class="my-4">
+          <div class="flex-align g2">
+            <div class="flex-align2 g4">
+              <select class="classic w-fit-content pl-3 pr-5 site-btn-outline-info text-dark" id="pills-tab2" role="tablist" onchange="changeTab(event)" style="min-width: 220px;">
+                <option value="pills-financial" selected>Financial</option>
+                <option value="pills-courses">Courses</option>
+                <option value="pills-booking">Booking</option>
+                <option value="pills-customers">Customers</option>
+                <option value="pills-coaches">Coaches</option>
+                <option value="pills-attendance">Attendance</option>
+              </select>
+              <select class="classic w-fit-content pl-3 pr-5 site-btn-outline-info text-dark booking-select" style="display: none;">
+                <option selected>All</option>
+                <option>Cricket</option>
+                <option>Volleyball</option>
+              </select>
+              <select class="classic w-fit-content pl-3 pr-5 site-btn-outline-info text-dark attendance-select" style="display: none;">
+                <option selected>All</option>
+                <option>Coach</option>
+                <option>Student</option>
+              </select>
+            </div>
+            <select class="classic w-fit-content pl-3 pr-5 site-btn-outline-info text-dark ">
+              <option selected>Daily</option>
+              <option>Last month</option>
+              <option>Last week</option>
+            </select>
+          </div>
+          <div class="tab-content" id="pills-tabContent2">
+            <div class="tab-pane fade  active show" id="pills-financial" role="tabpanel" aria-labelledby="pills-financial-tab">
+              <div class="row mt-3" style="margin-left:-6px;margin-right:-6px;">
+                <div class="col-md-4" style="padding: 6px;">
+                  <div class="card p-4 card-shadow">
+                    <img src="images/total-revenue.png" class="icon3">
+                    <h6 class="text-gray2 mt-2">Total revenue generated</h6>
+                    <h4 class="mt-2 font-weight-600">$465000</h4>
+                  </div>
+                </div>
+                <div class="col-md-4" style="padding: 6px;">
+                  <div class="card p-4 card-shadow">
+                    <img src="images/course-revenue.png" class="icon3">
+                    <h6 class="text-gray2 mt-2">Course-based revenue</h6>
+                    <h4 class="mt-2 font-weight-600">$26000</h4>
+                  </div>
+                </div>
+                <div class="col-md-4" style="padding: 6px;">
+                  <div class="card p-4 card-shadow">
+                    <img src="images/booking-revenue.png" class="icon3">
+                    <h6 class="text-gray2 mt-2">Booking revenue</h6>
+                    <h4 class="mt-2 font-weight-600">$18000</h4>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="pills-courses" role="tabpanel" aria-labelledby="pills-courses-tab">
+              <div class="row my-3" style="margin-left:-6px;margin-right:-6px;">
+                <div class="col-5-in-row" style="padding: 6px;">
+                  <div class="card p-3 card-shadow h-100">
+                    <h6 class="text-gray2">Total courses created</h6>
+                    <h4 class="mt-2 font-weight-600">6</h4>
+                  </div>
+                </div>
+                <div class="col-5-in-row" style="padding: 6px;">
+                  <div class="card p-3 card-shadow h-100">
+                    <h6 class="text-gray2">Course revenue</h6>
+                    <h4 class="mt-2 font-weight-600">$26000</h4>
+                  </div>
+                </div>
+                <div class="col-5-in-row" style="padding: 6px;">
+                  <div class="card p-3 card-shadow h-100">
+                    <h6 class="text-gray2">Number of students enrolled</h6>
+                    <h4 class="mt-2 font-weight-600">450</h4>
+                  </div>
+                </div>
+                <div class="col-5-in-row" style="padding: 6px;">
+                  <div class="card p-3 card-shadow h-100">
+                    <h6 class="text-gray2">Student completion rate</h6>
+                    <h4 class="mt-2 font-weight-600">85%</h4>
+                  </div>
+                </div>
+              </div>
+              <div class="card team-table w-100" style="overflow: auto;">
+                <table>
+                  <thead>
+                    <tr style="background-color: #3924871F;">
+                      <th style="border: none;">Course name</th>
+                      <th style="border: none;">Number of students enrolled <img src="images/arrow-down.png" class="ml-2 icon2"></th>
+                      <th style="border: none;">Course duration <img src="images/arrow-down.png" class="ml-2 icon2"></th>
+                      <th style="border: none;">Course revenue <img src="images/arrow-down.png" class="ml-2 icon2"></th>
+                      <th style="border: none;">Student completion rate <img src="images/arrow-down.png" class="ml-2 icon2"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% courses.forEach(course => { %>
+                    <tr>
+                      <td><%= course.name %></td>
+                      <td><%= course.students.length %></td>
+                      <td><%= course.duration %> hour</td>
+                      <td>$<%= course.revenue %></td>
+                      <td><%= course.completionRate %>%</td>
+                    </tr>
+                    <% }); %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="pills-booking" role="tabpanel" aria-labelledby="pills-booking-tab">
+              <div class="row my-3" style="margin-left:-6px;margin-right:-6px;">
+                <div class="col-5-in-row" style="padding: 6px;">
+                  <div class="card p-3 card-shadow h-100">
+                    <h6 class="text-gray2">Total booking revenue</h6>
+                    <h4 class="mt-2 font-weight-600">$18000</h4>
+                  </div>
+                </div>
+                <div class="col-5-in-row" style="padding: 6px;">
+                  <div class="card p-3 card-shadow h-100">
+                    <h6 class="text-gray2">Total booking</h6>
+                    <h4 class="mt-2 font-weight-600">35</h4>
+                  </div>
+                </div>
+                <div class="col-5-in-row" style="padding: 6px;">
+                  <div class="card p-3 card-shadow h-100">
+                    <h6 class="text-gray2">Badminton total revenue</h6>
+                    <h4 class="mt-2 font-weight-600">$13000</h4>
+                  </div>
+                </div>
+                <div class="col-5-in-row" style="padding: 6px;">
+                  <div class="card p-3 card-shadow h-100">
+                    <h6 class="text-gray2">Table tennis total revenue</h4>
+                    <h4 class="mt-2 font-weight-600">$5000</h4>
+                  </div>
+                </div>
+              </div>
+              <div class="my-4">
+                <h5 class="font-weight-600 mb-2">Badminton</h5>
+                <div class="card team-table w-100" style="overflow: auto;">
+                  <table>
+                    <thead>
+                      <tr style="background-color: #3924871F;">
+                        <th style="border: none;">Court 1</th>
+                        <th style="border: none;">Court 2</th>
+                        <th style="border: none;">Court 3</th>
+                        <th style="border: none;">Court 4</th>
+                        <th style="border: none;">Court 5</th>
+                        <th style="border: none;">Court 6</th>
+                        <th style="border: none;">Court 7</th>
+                        <th style="border: none;">Court 8</th>
+                        <th style="border: none;">Court 9</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>$650</td>
+                        <td>$650</td>
+                        <td>$650</td>
+                        <td>$650</td>
+                        <td>$650</td>
+                        <td>$650</td>
+                        <td>$650</td>
+                        <td>$650</td>
+                        <td>$650</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="my-4">
+                <h5 class="font-weight-600 mb-2">Table tennis</h5>
+                <div class="card team-table w-100" style="overflow: auto;">
+                  <table>
+                    <thead>
+                      <tr style="background-color: #3924871F;">
+                        <th style="border: none;">Court 1</th>
+                        <th style="border: none;">Court 2</th>
+                        <th style="border: none;">Court 3</th>
+                        <th style="border: none;">Court 4</th>
+                        <th style="border: none;">Court 5</th>
+                        <th style="border: none;">Court 6</th>
+                        <th style="border: none;">Court 7</th>
+                        <th style="border: none;">Court 8</th>
+                        <th style="border: none;">Court 9</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>$650</td>
+                        <td>$650</td>
+                        <td>$650</td>
+                        <td>$650</td>
+                        <td>$650</td>
+                        <td>$650</td>
+                        <td>$650</td>
+                        <td>$650</td>
+                        <td>$650</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="pills-customers" role="tabpanel" aria-labelledby="pills-customers-tab">
+              <div class="row my-3" style="margin-left:-6px;margin-right:-6px;">
+                <div class="col-5-in-row" style="padding: 6px;">
+                  <div class="card p-3 card-shadow h-100">
+                    <h6 class="text-gray2">Total customer registered</h6>
+                    <h4 class="mt-2 font-weight-600">15</h4>
+                  </div>
+                </div>
+                <div class="col-5-in-row" style="padding: 6px;">
+                  <div class="card p-3 card-shadow h-100">
+                    <h6 class="text-gray2">Courses enrolled</h6>
+                    <h4 class="mt-2 font-weight-600">12</h4>
+                  </div>
+                </div>
+                <div class="col-5-in-row" style="padding: 6px;">
+                  <div class="card p-3 card-shadow h-100">
+                    <h6 class="text-gray2">Public Customers</h6>
+                    <h4 class="mt-2 font-weight-600">20</h4>
+                  </div>
+                </div>
+              </div>
+              <div class="card team-table w-100" style="overflow: auto;">
+                <table>
+                  <thead>
+                    <tr style="background-color: #3924871F;">
+                      <th style="border: none;">User's name</th>
+                      <th style="border: none;">Customer type</th>
+                      <th style="border: none;">Registered date</th>
+                      <th style="border: none;">Revenue generated</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% students.forEach(student => { %>
+                    <tr>
+                      <td class="flex-align2 g1">
+                        <img src="images/user1.png" class="icon5">
+                        <%= student.firstName %> <%= student.lastName %>
+                      </td>
+                      <td>Course enrolled</td>
+                      <td><%= student.registrationDate.toDateString() %></td>
+                      <td>$150</td>
+                    </tr>
+                    <% }); %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="pills-coaches" role="tabpanel" aria-labelledby="pills-coaches-tab">
+              <div class="row my-3" style="margin-left:-6px;margin-right:-6px;">
+                <% coaches.forEach(coach => { %>
+                <div class="col-5-in-row" style="padding: 6px;">
+                  <div class="card p-3 card-shadow h-100">
+                    <h6 class="text-gray2"><%= coach.firstName %> <%= coach.lastName %></h6>
+                    <h4 class="mt-2 font-weight-600">Total hours: 230 hours</h4>
+                  </div>
+                </div>
+                <% }); %>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="pills-attendance" role="tabpanel" aria-labelledby="pills-attendance-tab">
+              <div class="row my-3" style="margin-left:-6px;margin-right:-6px;">
+                <div class="col-5-in-row" style="padding: 6px;">
+                  <div class="card p-3 card-shadow h-100">
+                    <h6 class="text-gray2">Total hours</h6>
+                    <h4 class="mt-2 font-weight-600">230 hours</h4>
+                  </div>
+                </div>
+                <div class="col-5-in-row" style="padding: 6px;">
+                  <div class="card p-3 card-shadow h-100">
+                    <h6 class="text-gray2">Coach attendance</h6>
+                    <h4 class="mt-2 font-weight-600">90% <span class="text-12 text-site font-weight-300">Present</span></h4>
+                  </div>
+                </div>
+                <div class="col-5-in-row" style="padding: 6px;">
+                  <div class="card p-3 card-shadow h-100">
+                    <h6 class="text-gray2">Students attendance</h6>
+                    <h4 class="mt-2 font-weight-600">85% <span class="text-12 text-site font-weight-300">Present</span></h4>
+                  </div>
+                </div>
+              </div>
+              <div class="card team-table w-100" style="overflow: auto;">
+                <table>
+                  <thead>
+                    <tr style="background-color: #3924871F;">
+                      <th style="border: none;">Name</th>
+                      <th style="border: none;">Coach / Student <img src="images/arrow-down.png" class="ml-2 icon2"></th>
+                      <th style="border: none;">Total hours <img src="images/arrow-down.png" class="ml-2 icon2"></th>
+                      <th style="border: none;">Present hours <img src="images/arrow-down.png" class="ml-2 icon2"></th>
+                      <th style="border: none;">Absent hours <img src="images/arrow-down.png" class="ml-2 icon2"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% students.forEach(student => { %>
+                    <tr>
+                      <td class="flex-align2 g1">
+                        <img src="images/user1.png" class="icon5">
+                        <%= student.firstName %> <%= student.lastName %>
+                      </td>
+                      <td>Student</td>
+                      <td>180 hours</td>
+                      <td>180 hours</td>
+                      <td>0 hours</td>
+                    </tr>
+                    <% }); %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/off-canvas.js"></script>
+  <script src="/js/template.js"></script>
+  <script>
+    function changeTab(event) {
+      var selectedTab = event.target.value;
+      var tabContent = document.getElementsByClassName('tab-pane');
+  
+      for (var i = 0; i < tabContent.length; i++) {
+        tabContent[i].classList.remove('active', 'show');
+      }
+      document.getElementById(selectedTab).classList.add('active', 'show');
+  
+      var bookingSelect = document.querySelector('.booking-select');
+      var attendanceSelect = document.querySelector('.attendance-select');
+      bookingSelect.style.display = 'none';
+      attendanceSelect.style.display = 'none';
+  
+      if (selectedTab === 'pills-booking') {
+        bookingSelect.style.display = 'block';
+      } else if (selectedTab === 'pills-attendance') {
+        attendanceSelect.style.display = 'block';
+      }
+    }
+  
+    document.addEventListener('DOMContentLoaded', function() {
+      var event = new Event('change');
+      document.getElementById('pills-tab2').dispatchEvent(event);
+    });
+  </script>
+</body>
+
+</html>

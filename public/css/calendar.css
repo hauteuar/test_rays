@@ -1,0 +1,110 @@
+/* Common CSS */
+.booked {
+  background-color: #ffcccc; /* Light red background */
+  cursor: not-allowed;
+}
+.booking-item {
+  background-color: #ffcccc; /* Light red background */
+  padding: 5px;
+  border-radius: 5px;
+  margin-bottom: 5px;
+}
+
+/* Daily view CSS */
+.daily-view .calender-table3 th, .daily-view .calender-table3 td {
+  vertical-align: top;
+  position: relative;
+  padding: 0;
+  height: 60px; /* Adjust as needed */
+}
+
+/* Weekly view CSS */
+.weekly-view .calender-table3 th, .weekly-view .calender-table3 td {
+  vertical-align: top;
+  position: relative;
+  padding: 0;
+  width: 150px; /* Adjust as needed for even columns */
+  height: auto; /* Adjust as needed */
+}
+
+/* Additional existing styles */
+.modal-header-custom {
+  background-color: #6f42c1;
+  color: white;
+  padding: 15px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.modal-header-custom .modal-title {
+  font-weight: 600;
+}
+
+.modal-body-custom {
+  padding: 20px;
+}
+
+.modal-footer-custom {
+  padding: 15px;
+  border-top: 1px solid #dee2e6;
+  justify-content: flex-end;
+}
+
+.booking-details {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.booking-details h6 {
+  margin-bottom: 5px;
+  color: #6c757d;
+}
+
+.booking-details .details-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.details-row div {
+  flex: 0 0 48%;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.user-info img {
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+}
+
+.user-contact {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-contact i {
+  color: #6f42c1;
+}
+
+.payment-status {
+  color: green;
+}
+
+.status-pending {
+  color: #ffc107;
+}
+
+.modal-body-custom h5, .modal-body-custom h6 {
+  font-weight: 600;
+}
+
+.modal-body-custom h6 {
+  color: #6c757d;
+}

@@ -1,0 +1,23 @@
+.slot {
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 5px;
+    color: white;
+  }
+  
+  .slot.available {
+    background-color: green;
+  }
+  
+  .slot.booked {
+    background-color: red;
+  }
+  
+  .add-day {
+    cursor: pointer;
+  }
+  
+  .icon5 {
+    cursor: pointer;
+  }
+  

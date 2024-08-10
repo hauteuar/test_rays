@@ -1,0 +1,43 @@
+:root {
+  /*------Color variables------*/
+  --amber_500: #ffc107;
+  --black_900: #050913;
+  --black_900_01: #000000;
+  --black_900_19: #00000019;
+  --black_900_cc: #000000cc;
+  --blue_700: #1976d2;
+  --blue_a400: #1877f2;
+  --deep_orange_a400: #ff3d00;
+  --gray_100_19: #f7f7f719;
+  --green_500: #4caf50;
+  --red_a700: #ff0000;
+  --white_a700: #ffffff;
+  --white_a700_19: #ffffff19;
+  --white_a700_26: #ffffff26;
+  --white_a700_30: #ffffff30;
+  --white_a700_49: #ffffff49;
+  --white_a700_66: #ffffff66;
+  --white_a700_7f: #ffffff7f;
+  --white_a700_99: #ffffff99;
+  --white_a700_aa: #ffffffaa;
+
+  /*------Shadow variables------*/
+  --shadow-xs: 0 16px 36px 0 #00000019;
+
+  /*------Border radius variables------*/
+  --radius-xs: 5px;
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: 44px;
+
+  /*------Spacing variables------*/
+  --space-xs: 4px;
+  --space-sm: 6px;
+  --space-md: 7px;
+  --space-lg: 8px;
+  --space-xl: 16px;
+  --space-2xl: 20px;
+  --space-3xl: 24px;
+  --space-4xl: 30px;
+  --space-5xl: 34px;
+}

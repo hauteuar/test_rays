@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Create Assignment</title>
+  <link rel="stylesheet" href="css/style-coach.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/mobile.css">
+  <link rel="stylesheet" href="css/tab.css">
+  <link rel="shortcut icon" href="images/favicon.png" />
+  <script src="components/sidebar.js" type="text/javascript" defer></script>
+  <script src="components/topnav.js" type="text/javascript" defer></script>
+  <style>
+    .popup {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 400px;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      text-align: center;
+    }
+    .popup video, .popup audio {
+      width: 100%;
+      height: auto;
+    }
+    .popup button {
+      margin: 10px 5px;
+    }
+    .overlay {
+      display: none;
+      position: fixed;
+      z-index: 999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+  </style>
+</head>
+<body>
+  <div class="container-scroller">
+    <topnav-component></topnav-component>
+    <div class="container-fluid page-body-wrapper">
+      <sidebar-component data-page="assignment"></sidebar-component>
+      <div class="main-panel">
+        <div class="flex-align second-header px-4 py-2" style="border-bottom: 1px solid #D9D8D8;min-height: 60px;gap:10px">
+          <h4 class="m-0">Assignments</h4>
+        </div>
+        <div class="content-wrapper">
+          <div class="row">
+            <div class="col-md-12" style="min-height: 50px;">
+              <div style="display: flex;gap:10px;align-items: center;">
+                <a href="coach-assignment.html"><img src="images/image1/arrow-left-circle.png" style="width: 35px;height: 35px;"></a>
+                <h5 style="font-weight: 600;margin-bottom: 0px;">Create New Assignment</h5>
+              </div>
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-md-7">
+              <form class="session-forms">
+                <div class="row m-0">
+                  <div class="col-md-6 px-2" style="display:flex;flex-direction: column;">
+                    <label>Select Course</label>
+                    <select id="courseSelect" onchange="fetchStudentsForSelectedCourse()">
+                      <option>Select Course</option>
+                      <!-- Courses will be dynamically loaded here -->
+                    </select>
+                  </div>
+                  <div class="col-md-6 px-2" style="display:flex;flex-direction: column;">
+                    <label>Select Player</label>
+                    <select id="studentSelect" multiple>
+                      <!-- Player options will be dynamically loaded here -->
+                    </select>
+                  </div>
+                  <div class="col-md-12 p-2" style="display:flex;flex-direction: column;">
+                    <label>Assignment Title</label>
+                    <input type="text" id="assignmentTitle" placeholder="Enter assignment title">
+                  </div>
+                </div>
+              </form>
+              <div class="card mt-3" style="overflow:hidden;">
+                <div class="editor">
+                  <form method="post" style="height:255px;">
+                    <textarea id="assignmentDescription" style="width: 100%; height: 100%;"></textarea>
+                  </form>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-5 pt-4 pt-md-0 pl-md-2">
+              <label>Uploads</label>
+              <div class="card p-3 drop-file" style="border: 1px dashed #bdbdbd;aspect-ratio:1/.9;">
+                <h6 style="font-size: 14px;">Drop files here or browse</h6>
+                <input type="file" id="fileInput" style="display:none;" multiple>
+                <div class="flex-align" style="max-width: 320px;gap:30px;">
+                  <div class="drop-file-card" id="recordAudio" style="border: 1px solid #19AF79;background: #fff;">
+                    <img src="images/record.png">
+                    <h6>Record Audio</h6>
+                  </div>
+                  <div class="drop-file-card" id="uploadFile" style="border: 1px solid #19AF79;background: #fff;">
+                    <img src="images/device.png">
+                    <h6>My Device</h6>
+                  </div>
+                  <div class="drop-file-card" id="useCamera" style="border: 1px solid #19AF79;background: #fff;">
+                    <img src="images/camera2.png">
+                    <h6>Camera</h6>
+                  </div>
+                </div>
+              </div>
+              <div class="d-flex align-items-center mt-3" style="gap:10px;justify-content: flex-end;">
+                <a href="coach-assignment.html"><button class="site-btn-outline-info hoverbtn px-5">Cancel</button></a>
+                <button class="site-btn-success hoverbtn px-5" id="saveAssignmentBtn">Send</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Overlay and Popup for recording -->
+  <div class="overlay" id="overlay"></div>
+  <div class="popup" id="popup">
+    <video id="videoPreview" controls style="display: none;"></video>
+    <audio id="audioPreview" controls style="display: none;"></audio>
+    <button id="pauseButton">Pause</button>
+    <button id="resumeButton">Resume</button>
+    <button id="stopButton">Stop</button>
+    <button id="saveButton">Save</button>
+  </div>
+
+  <!-- Replacing vendor.bundle.base.js with CDN links for required libraries -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Replace tinymce with CKEditor -->
+  <script src="https://cdn.ckeditor.com/ckeditor5/34.1.0/classic/ckeditor.js"></script>
+
+  <script>
+    let uploadedFiles = [];
+    let mediaRecorder;
+    let chunks = [];
+
+    document.getElementById('saveAssignmentBtn').addEventListener('click', createAssignment);
+
+    async function fetchCoachId() {
+    const userId = localStorage.getItem('userId'); // Assuming userId is stored in localStorage
+    const organizationId = localStorage.getItem('organizationId');
+    console.log(userId, organizationId);
+    
+    if (!userId) {
+        throw new Error('User ID is not found in local storage');
+    }
+    
+    const response = await fetch(`/api/user/${userId}`,
+     { headers: { 'organizationId': organizationId } });
+
+    if (!response.ok) {
+        throw new Error('Failed to fetch coach details');
+    }
+
+    const coach = await response.json();
+    return coach._id;
+}
+
+async function fetchCoursesAndStudents(coachId) {
+  try {
+    const organizationId = localStorage.getItem('organizationId');
+    const courseSelect = document.getElementById('courseSelect');
+    const studentSelect = document.getElementById('studentSelect');
+
+    if (!coachId) {
+      throw new Error('Coach ID is missing');
+    }
+
+    // Fetch the user profile to get the list of courses
+    const profileResponse = await fetch(`/api/user/${coachId}`, {
+      headers: { 'organizationId': organizationId }
+    });
+
+    if (!profileResponse.ok) {
+      throw new Error('Failed to fetch coach profile');
+    }
+
+    const profile = await profileResponse.json();
+    const courses = profile.organizations[0]?.courses || [];
+
+    if (courses.length === 0) {
+      throw new Error('No courses found for this coach');
+    }
+
+    // Populate the course dropdown
+    courseSelect.innerHTML = '<option value="">Select Course</option><option value="all">All Courses</option>';
+    courses.forEach(course => {
+      const option = document.createElement('option');
+      option.value = course.course_id || course._id;
+      option.textContent = `Course ID: ${course.course_id || course._id}`;
+      courseSelect.appendChild(option);
+    });
+
+    // Preserve the selected course when re-populating the dropdown
+    const selectedCourseId = localStorage.getItem('selectedCourseId');
+    if (selectedCourseId) {
+      courseSelect.value = selectedCourseId;
+      await fetchStudentsForCourse(coachId, selectedCourseId, organizationId, studentSelect);
+    }
+
+    // Add event listener to fetch students based on selected course
+    courseSelect.addEventListener('change', async () => {
+      const selectedCourseId = courseSelect.value;
+      localStorage.setItem('selectedCourseId', selectedCourseId); // Save the selected course
+
+      if (selectedCourseId === 'all') {
+        // Fetch all students assigned to the coach for all courses
+        await fetchAllStudents(coachId, organizationId, studentSelect);
+      } else if (selectedCourseId) {
+        // Fetch students for the selected course
+        await fetchStudentsForCourse(coachId, selectedCourseId, organizationId, studentSelect);
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching courses and students:', error);
+  }
+}
+
+async function fetchStudentsForCourse(coachId, courseId, organizationId, studentSelect) {
+  try {
+    console.log(`Fetching students for course ${courseId}...`);
+    const studentsResponse = await fetch(`/api/user/assigned-student/${courseId}/${coachId}`, {
+      headers: { 'organizationId': organizationId }
+    });
+
+    if (!studentsResponse.ok) {
+      throw new Error('Failed to fetch students');
+    }
+
+    const students = await studentsResponse.json();
+    console.log(students);
+    studentSelect.innerHTML = '<option value="">Select Student</option><option value="all">All Students</option>';
+    students.forEach(student => {
+      const option = document.createElement('option');
+      option.value = student._id;
+      option.textContent = `${student.firstName} ${student.lastName}`;
+      studentSelect.appendChild(option);
+    });
+  } catch (error) {
+    console.error('Error fetching students:', error);
+  }
+}
+
+async function fetchAllStudents(coachId, organizationId, studentSelect) {
+  try {
+    console.log('Fetching all students for coach...');
+    const allStudentsResponse = await fetch(`/api/user/all-students/${coachId}`, {
+      headers: { 'organizationId': organizationId }
+    });
+
+    if (!allStudentsResponse.ok) {
+      throw new Error('Failed to fetch all students');
+    }
+
+    const allStudents = await allStudentsResponse.json();
+
+    studentSelect.innerHTML = '<option value="">Select Student</option><option value="all">All Students</option>';
+    allStudents.forEach(student => {
+      const option = document.createElement('option');
+      option.value = student._id;
+      option.textContent = `${student.firstName} ${student.lastName}`;
+      studentSelect.appendChild(option);
+    });
+  } catch (error) {
+    console.error('Error fetching all students:', error);
+  }
+}
+
+    async function fetchInitialData() {
+      try {
+        const coachId = await fetchCoachId();
+        await fetchCoursesAndStudents(coachId);
+      } catch (error) {
+        console.error('Error fetching initial data:', error);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', fetchInitialData);
+
+    async function fetchStudentsForSelectedCourse() {
+      try {
+        const courseSelect = document.getElementById('courseSelect');
+        const coachId = await fetchCoachId();
+        if (courseSelect.value !== 'Select Course') {
+          await fetchCoursesAndStudents(coachId);
+        }
+      } catch (error) {
+        console.error('Error fetching students for selected course:', error);
+      }
+    }
+
+    async function createAssignment() {
+    try {
+        const courseSelect = document.getElementById('courseSelect');
+        const studentSelect = document.getElementById('studentSelect');
+        const assignmentTitle = document.getElementById('assignmentTitle').value;
+        const assignmentDescription = document.querySelector('.ck-editor__editable').innerHTML;
+
+        if (!assignmentTitle || !courseSelect.value) {
+            alert('Please fill out all required fields.');
+            return;
+        }
+
+        const students = Array.from(studentSelect.selectedOptions).map(option => option.value);
+        const organizationId = localStorage.getItem('organizationId');
+        const userId = localStorage.getItem('userId');
+
+        const profileResponse = await fetch(`/api/user/${userId}`, {
+            headers: { 'organizationId': organizationId }
+        });
+
+        if (!profileResponse.ok) {
+            throw new Error('Failed to fetch user profile');
+        }
+
+        const profile = await profileResponse.json();
+        const selectedCourse = profile.organizations[0].courses.find(course => course.course_id === courseSelect.value);
+
+        if (!selectedCourse || !selectedCourse.batches.length) {
+            throw new Error('No batches found for the selected course');
+        }
+
+        const batchId = selectedCourse.batches[0].batch_id;
+
+        const assignmentData = {
+            title: assignmentTitle,
+            description: assignmentDescription,
+            organizationId,
+            assignedBy: userId,
+            courseId: courseSelect.value,
+            batchId,
+            assignedTo: students,
+            media: {},
+        };
+
+        if (uploadedFiles.length > 0) {
+            assignmentData.media = {};
+            for (let file of uploadedFiles) {
+                const base64String = await convertFileToBase64(file);
+                const sanitizedFileName = file.name.replace(/\./g, '_'); // Replace '.' with '_'
+                assignmentData.media[sanitizedFileName] = base64String;
+            }
+        }
+
+        const response = await fetch('/api/tasks', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(assignmentData),
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to create assignment');
+        }
+
+        alert('Assignment successfully created');
+        window.location.href = 'assignmentview.html';
+    } catch (error) {
+        console.error('Error creating assignment:', error);
+    }
+}
+
+// Function to convert a file to a base64 string
+function convertFileToBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+    });
+}
+
+    document.getElementById('uploadFile').addEventListener('click', () => {
+      document.getElementById('fileInput').click();
+    });
+
+    document.getElementById('fileInput').addEventListener('change', (event) => {
+      uploadedFiles = Array.from(event.target.files);
+    });
+
+    document.getElementById('recordAudio').addEventListener('click', async () => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+        mediaRecorder.ondataavailable = event => chunks.push(event.data);
+        mediaRecorder.onstop = () => handleMediaStop('audio');
+
+        showPopup();
+        mediaRecorder.start();
+      } catch (error) {
+        console.error('Error recording audio:', error);
+      }
+    });
+
+    document.getElementById('useCamera').addEventListener('click', async () => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/mp4' });
+        mediaRecorder.ondataavailable = event => chunks.push(event.data);
+        mediaRecorder.onstop = () => handleMediaStop('video');
+
+        showPopup(stream);
+        mediaRecorder.start();
+      } catch (error) {
+        console.error('Error recording video:', error);
+      }
+    });
+
+    document.getElementById('pauseButton').addEventListener('click', () => {
+      mediaRecorder.pause();
+    });
+
+    document.getElementById('resumeButton').addEventListener('click', () => {
+      mediaRecorder.resume();
+    });
+
+    document.getElementById('stopButton').addEventListener('click', () => {
+      mediaRecorder.stop();
+    });
+
+    document.getElementById('saveButton').addEventListener('click', () => {
+      const blob = new Blob(chunks, { type: mediaRecorder.mimeType });
+      const file = new File([blob], `recorded-${Date.now()}.${mediaRecorder.mimeType.split('/')[1]}`);
+      uploadedFiles.push(file);
+      hidePopup();
+    });
+
+    function showPopup(stream) {
+      document.getElementById('overlay').style.display = 'block';
+      document.getElementById('popup').style.display = 'block';
+      if (stream) {
+        document.getElementById('videoPreview').style.display = 'block';
+        document.getElementById('videoPreview').srcObject = stream;
+      } else {
+        document.getElementById('audioPreview').style.display = 'block';
+      }
+    }
+
+    function hidePopup() {
+      document.getElementById('overlay').style.display = 'none';
+      document.getElementById('popup').style.display = 'none';
+      document.getElementById('videoPreview').style.display = 'none';
+      document.getElementById('audioPreview').style.display = 'none';
+      document.getElementById('videoPreview').srcObject = null;
+      chunks = [];
+    }
+
+    function handleMediaStop(type) {
+      const mediaElement = type === 'video' ? document.getElementById('videoPreview') : document.getElementById('audioPreview');
+      mediaElement.src = URL.createObjectURL(new Blob(chunks, { type: mediaRecorder.mimeType }));
+      mediaElement.controls = true;
+      mediaElement.play();
+    }
+
+    // Initialize CKEditor
+    ClassicEditor
+      .create(document.querySelector('#assignmentDescription'))
+      .catch(error => {
+        console.error(error);
+      });
+  </script>
+</body>
+</html>

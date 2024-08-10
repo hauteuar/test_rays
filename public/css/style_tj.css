@@ -1,0 +1,670 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    font-family: Arial, sans-serif;
+    color: white;
+}
+
+.navbar {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: transparent;
+    padding: 20px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 2;
+}
+
+.navbar .logo {
+    width: 100px;
+    margin-left: 50px;
+}
+
+.navbar-toggle {
+    display: none;
+    margin-right: 50px;
+    cursor: pointer;
+}
+
+.navbar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.navbar ul li {
+    display: inline;
+    margin: 0 20px;
+}
+
+.navbar ul li a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    font-size: 1.1em;
+    transition: background 0.3s;
+}
+
+.navbar ul li a:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.navbar ul li a.red {
+    color: red;
+    border: 1px solid red;
+    padding: 10px 20px;
+    border-radius: 5px;
+}
+
+.background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-color: black;
+    overflow: hidden;
+}
+
+.diagonal-scroll-container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 60%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.diagonal-images {
+    position: absolute;
+    width: 150%;
+    height: 150%;
+    top: -50%;
+    right: -100%;
+    display: flex;
+    flex-wrap: wrap;
+    transform: rotate(-45deg);
+    animation: moveDiagonalUp 25s linear infinite;
+}
+
+@keyframes moveDiagonalUp {
+    0% {
+        transform: translate(100%, 100%) rotate(-45deg);
+    }
+    100% {
+        transform: translate(-100%, -100%) rotate(-45deg);
+    }
+}
+
+.diagonal-images img {
+    width: 20%;
+    height: auto;
+    margin: 1%;
+    opacity: 0.8;
+    transition: opacity 0.5s;
+}
+
+.diagonal-images img:hover {
+    opacity: 1;
+}
+
+.content {
+    position: relative;
+    z-index: 1;
+    padding: 20px;
+    text-align: left;
+    max-width: 50%;
+    margin-top: 150px;
+    margin-left: 50px;
+}
+
+h1 {
+    font-size: 4em;
+    margin-bottom: 20px;
+    line-height: 1.2;
+}
+
+p {
+    font-size: 1.5em;
+    margin-bottom: 20px;
+}
+
+.booking {
+    display: flex;
+    align-items: center;
+}
+
+.booking img {
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+}
+
+.horizontal-scroller {
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 10px;
+    border-radius: 10px;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.scroll-content {
+    display: inline-flex;
+    animation: scroll 20s linear infinite;
+}
+
+@keyframes scroll {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+.horizontal-scroller button {
+    background: transparent;
+    color: white;
+    border: 1px solid white;
+    padding: 10px 20px;
+    margin: 0 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background 0.3s;
+    white-space: nowrap;
+}
+
+.horizontal-scroller button:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.login-card {
+    position: fixed;
+    top: 100px;
+    right: 50px;
+    height: 65%;
+    padding: 40px;
+    border-radius: 10px;
+    background-color: #ffffff; /* Light background for the login card */
+    width: 400px;
+    max-width: 450px;
+    color: #000; /* Dark text color for contrast */
+    z-index: 2;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a slight shadow */
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: flex-start;
+    color: var(--color3);
+    margin: 30px 0;
+}
+
+.input-field {
+    position: relative;
+    margin-top: 15px;
+    width: 100%;
+}
+
+form input {
+    border: none;
+    border-bottom: 1px solid red;
+    padding: 5px 0;
+    outline: none;
+    width: 100%;
+}
+
+form label {
+    position: absolute;
+    left: 0;
+    top: 0;
+    cursor: pointer;
+    transition: .3s;
+    color: red; /* Label color */
+}
+
+form input:focus ~ label,
+form input:valid ~ label {
+    margin-top: -15px;
+    font-size: 12px;
+}
+
+.text-danger {
+    color: red;
+}
+
+.text-dark {
+    color: black;
+}
+
+.w-100 {
+    width: 100%;
+}
+
+.btn {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 15px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 6px;
+}
+
+.login-card-bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.login-card-bottom-icons {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.login-card-bottom-icons img {
+    width: 25px;
+}
+
+.button-elite {
+    background: transparent;
+    padding: 10px 16px;
+    border-radius: 2px;
+    text-transform: uppercase;
+    border: 1px solid var(--color2);
+    color: var(--color1);
+    font-size: 14px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.button-elite:hover {
+    background: linear-gradient(90deg, var(--color1), var(--color2));
+    background-size: 400% 400%;
+    animation: gradient 3s ease;
+    color: var(--color3);
+}
+
+.button-elite2 {
+    background: var(--color2);
+    padding: 10px 16px;
+    border-radius: 2px;
+    text-transform: uppercase;
+    border: 1px solid var(--color2);
+    color: var(--color4);
+    font-size: 14px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.button-elite2:hover {
+    background: linear-gradient(90deg, var(--color1), var(--color2));
+    background-size: 400% 400%;
+    animation: gradient 3s ease;
+    color: var(--color3);
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.w-50 {
+    width: 50%;
+}
+
+.text-white {
+    color: var(--color1) !important;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.bg-white {
+    background-color: var(--color1);
+}
+
+.circle {
+    border-radius: 50%;
+}
+
+.mt-1 {
+    margin-top: 5px;
+}
+
+.mt-2 {
+    margin-top: 10px;
+}
+
+.mt-3 {
+    margin-top: 15px;
+}
+
+.mt-4 {
+    margin-top: 20px;
+}
+
+img {
+    object-fit: contain;
+}
+
+.open {
+    overflow: hidden;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 0;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: lightgray;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: gray;
+}
+
+h2 {
+    font-size: 40px;
+    line-height: 50px;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 3px;
+    font-family: "gt-walsheim", sans-serif;
+}
+
+h3 {
+    font-size: 34px;
+    line-height: 44px;
+    font-family: gt-walsheim3;
+}
+
+h4 {
+    font-size: 24px;
+    line-height: 34px;
+}
+
+h5 {
+    font-size: 20px;
+    line-height: 32px;
+}
+
+h6 {
+    font-size: 16px;
+    line-height: 26px;
+}
+
+label {
+    font-size: 14px;
+    line-height: 24px;
+}
+
+a {
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.flex-align {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+header {
+    z-index: 9;
+    position: fixed;
+    left: 0;
+    width: 100%;
+    top: 0;
+}
+
+.fixed-logo {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9;
+    width: 100px;
+}
+
+.scroll-start header {
+    background-color: var(--color2);
+}
+
+.header-align {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    height: 70px;
+}
+
+.header-left {
+    width: 50%;
+}
+
+.logo {
+    align-items: center;
+    display: flex;
+    z-index: 9999;
+}
+
+.logo img {
+    max-width: 150px;
+    height: 50px;
+    object-fit: contain;
+}
+
+.header-right {
+    width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+}
+
+.login-btn {
+    display: flex;
+    color: var(--color2);
+    align-items: center;
+    gap: 5px;
+}
+
+.login-btn img {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+}
+
+@keyframes tab_border {
+    0% {
+        width: 5px;
+        opacity: .2;
+    }
+    50% {
+        width: 50%;
+        opacity: .5;
+    }
+    100% {
+        width: 100%;
+        opacity: .6;
+    }
+}
+
+:root {
+    --color1: #fff;
+    --color2: #CA2026;
+    --color3: #000;
+    --color4: #091763;
+    --color5: #FFFFFF1A;
+}
+
+/* footer start */
+.footer1 {
+    background-color: var(--color2);
+}
+
+.copywrite {
+    padding-top: 100px;
+    padding-bottom: 20px;
+    text-align: center;
+}
+/* footer end */
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .navbar {
+        justify-content: space-between;
+        padding: 10px;
+    }
+
+    .navbar .logo {
+        margin-left: 10px;
+    }
+
+    .navbar-toggle {
+        display: block;
+    }
+
+    .menu-item.hidden {
+        display: none;
+    }
+
+    .navbar-menu {
+        flex-direction: column;
+        align-items: center;
+        position: absolute;
+        top: 60px;
+        right: 10px;
+        background: rgba(0, 0, 0, 0.9);
+        width: 80%;
+        padding: 20px;
+        border-radius: 10px;
+    }
+
+    .navbar-menu.active .menu-item.hidden {
+        display: block;
+    }
+
+    .navbar-menu li {
+        margin: 10px 0;
+    }
+
+    .content {
+        max-width: 90%;
+        margin-top: 100px;
+        margin-left: 5%;
+    }
+
+    h1 {
+        font-size: 2em;
+    }
+
+    p {
+        font-size: 1em;
+    }
+
+    .booking img {
+        width: 30px;
+        height: 30px;
+    }
+
+    .horizontal-scroller {
+        width: 100%;
+        padding: 5px;
+        border-radius: 5px;
+    }
+
+    .horizontal-scroller button {
+        padding: 5px 10px;
+        font-size: 0.8em;
+    }
+    .login-card {
+        width: 80%;
+        max-width: 80%;
+        padding: 10px;
+        height: 75%;
+    }
+
+}
+
+@media (max-width: 480px) {
+    .navbar .logo {
+        width: 80px;
+    }
+
+    .content {
+        margin-top: 80px;
+        margin-left: 5%;
+    }
+
+    h1 {
+        font-size: 1.5em;
+    }
+
+    p {
+        font-size: 0.8em;
+    }
+
+    .booking img {
+        width: 20px;
+        height: 20px;
+    }
+
+    .horizontal-scroller {
+        width: 100%;
+        padding: 5px;
+        border-radius: 5px;
+    }
+
+    .horizontal-scroller button {
+        padding: 5px 10px;
+        font-size: 0.7em;
+    }
+    .login-card {
+        width: 80%;
+        max-width: 80%;
+        padding: 10px;
+        height: 75%;
+    }
+
+}
+

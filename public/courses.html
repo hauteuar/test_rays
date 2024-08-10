@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Courses</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/mobile.css">
+    <link rel="stylesheet" href="css/tab.css">
+    <link rel="shortcut icon" href="images/1.png" />
+    <script src="components/sidebar.js" type="text/javascript" defer></script>
+    <script src="components/topnav.js" type="text/javascript" defer></script>
+</head>
+
+<body>
+    <div class="container-scroller">
+        <topnav-component></topnav-component>
+        <div class="container-fluid page-body-wrapper">
+            <sidebar-component data-page="courses"></sidebar-component>
+            <div class="course-main">
+                <div class="mb-3 mt-2">
+                    <h4 class="m-0" style="font-weight: 650;">Course</h4>
+                </div>
+                <div class="row coaches-dropdown align-items-end m-0" style="row-gap:15px;justify-content: space-between;">
+                    <div class="pl-0">
+                        <h6 class="text-gray package-count" style="font-size: 14px;">Total Courses :
+                            <span id="totalCourses">0</span>
+                        </h6>
+                        <h6 class="text-gray package-count" style="font-size: 14px;">Packages :
+                            <span id="totalPackages">0</span>
+                        </h6>
+                        <h6 class="text-gray package-count" style="font-size: 14px;">Assigned Courses :
+                            <span id="assignedCourses">0</span>
+                        </h6>
+                        <h6 class="text-gray package-count" style="font-size: 14px;">Enrolled Students :
+                            <span>123</span>
+                        </h6>
+                    </div>
+
+                    <div class="dropdown" style="padding: 0 6px;">
+                        <button class="btn site-btn-success dropdown-btn2" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="font-size: 15px; white-space: nowrap;font-weight: 500;">
+                            <span>+</span> Create new <img src="images/arrow-down3.png" style="filter: invert(1);height: 6px;margin-top: 1px;">
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-right p-0" aria-labelledby="dropdownMenuButton">
+                            <a href="new-course.html" class="dropdown-item">Course</a>
+                            <a class="dropdown-item" data-toggle="modal" data-target="#add-package">Add Package</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="radios">
+                    <label for="all"><input name="radio" type="radio" id="all" checked>All</label>
+                    <label for="active"><input name="radio" type="radio" id="active">Active</label>
+                    <label for="not-assigned"><input name="radio" type="radio" id="not-assigned">Not assigned</label>
+                    <label for="expired"><input name="radio" type="radio" id="expired">Expired</label>
+                </div>
+                <div class="package-container" id="coursesContainer">
+                    <!-- Courses will be dynamically added here -->
+                </div>
+                <div class="package-heading">
+                    <h4>Packages</h4>
+                </div>
+                <div class="package-container" id="packagesContainer">
+                    <!-- Packages will be dynamically added here -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade " id="add-package">
+        <div class="modal-dialog modal-md" role="document" style="max-width: 840px;">
+            <div class="modal-content">
+                <div class="modal-header align-items-center">
+                    <h5 class="modal-title" id="coachModalLabel">Add Package</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" style="max-height: calc(100vh - 180px); overflow: auto;">
+                    <div class="row" style="row-gap:20px">
+                        <div class="col-12">
+                            <h6 class="mb-2">Package name</h6>
+                            <input type="text" id="packageName" placeholder="Enter package name" name="packageName" class="hwzthat-input w-100">
+                        </div>
+                        <div class="col-12">
+                            <h6 class="mb-2">Please select which courses you want to add to this package.</h6>
+                            <select class="hwzthat-input w-100" id="packageCourses" name="packageCourses" multiple>
+                                <!-- Courses will be dynamically added here -->
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <h6 class="mb-2">Package fee</h6>
+                            <input type="number" id="packageFee" placeholder="Enter package fee" name="packageFee" class="hwzthat-input w-100">
+                        </div>
+                        <div class="col-6">
+                            <h6 class="mb-2">Package discount</h6>
+                            <input type="number" id="packageDiscount" placeholder="Enter package discount % or discount amount" name="packageDiscount" class="hwzthat-input w-100">
+                        </div>
+                        <div class="col-6">
+                            <h6 class="mb-2">Start date</h6>
+                            <input type="date" id="packageStartDate" name="packageStartDate" class="hwzthat-input w-100">
+                        </div>
+                        <div class="col-6">
+                            <h6 class="mb-2">End date</h6>
+                            <input type="date" id="packageEndDate" name="packageEndDate" class="hwzthat-input w-100">
+                        </div>
+                        <div class="col-12" style="border-bottom: 1px solid #ddd;">
+                            <h3 class="batch-subheading" style="font-size: 13px;font-weight: 500;color:#392487">
+                                <span style="color: #392487;">+</span>Add new discount
+                            </h3>
+                        </div>
+                        <div class="col-12 addons">
+                            <div class="col-12" style="padding-left: 0px;">
+                                <h3 class="batch-subheading" style="font-size: 13px;font-weight: 500;">Add ons</h3>
+                            </div>
+                            <div class="col-12" style="border-bottom: 1px solid #ddd;padding-left: 0px;flex: 0 0 60%;">
+                                <h3 class="batch-subheading" style="font-size: 13px;font-weight: 500;color:#392487">
+                                    <span style="color: #392487;">+</span>Add add ons
+                                </h3>
+                            </div>
+                        </div>
+                        <div class="col-12" style="margin-top: 70px;">
+                            <h6 class="mb-2">Package description</h6>
+                            <textarea id="packageDescription" class="col-12 description" placeholder="Enter description" style="border-radius: 5px;font-size: 13px;height: 120px;"></textarea>
+                        </div>
+                        <div class="col-12">
+                            <h6 class="mb-2">Upload image</h6>
+                            <div class="add-package-file">
+                                <img src="images/download.png" alt="">
+                                <label for="add-package-file">Upload image</label>
+                                <input id="add-package-file" type="file" name="bannerImage" class="hwzthat-input w-100" style="display: none;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mt-4 p-3" style="gap:10px;gap: 10px;justify-content: flex-end;border-top: 1px solid #39248726;">
+                    <button class="site-btn-outline-info hoverbtn px-5" data-dismiss="modal" aria-label="Close">Cancel</button>
+                    <button class="site-btn-success hoverbtn px-5" id="savePackageBtn" style="background-color: #4165ff;border-color: #4165ff;">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const coursesContainer = document.getElementById('coursesContainer');
+        const packagesContainer = document.getElementById('packagesContainer');
+        const totalCourses = document.getElementById('totalCourses');
+        const totalPackages = document.getElementById('totalPackages');
+        const assignedCourses = document.getElementById('assignedCourses');
+        const packageCoursesSelect = document.getElementById('packageCourses');
+        const savePackageBtn = document.getElementById('savePackageBtn');
+
+        const today = new Date();
+        const organizationName = localStorage.getItem('organizationName');
+        const organizationId = localStorage.getItem('organizationId');
+
+        async function fetchCourses() {
+
+            try {
+                const response = await fetch('/api/courses', {
+                    headers: {  'organizationId': organizationId }
+                });
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                const courses = await response.json();
+                console.log("Fetched courses:", courses);
+                populateCoursesDropdown(courses);
+                categorizeCourses(courses);
+                updateCourseCounters(courses);
+            } catch (error) {
+                console.error('Error fetching courses:', error);
+            }
+        }
+
+        async function fetchPackages() {
+            try {
+                const response = await fetch('/api/packages', {
+                    headers: { 'organizationName': organizationName }
+                });
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                const packages = await response.json();
+                console.log("Fetched packages:", packages);
+                categorizePackages(packages);
+            } catch (error) {
+                console.error('Error fetching packages:', error);
+            }
+        }
+
+        function populateCoursesDropdown(courses) {
+            packageCoursesSelect.innerHTML = '';
+            courses.forEach(course => {
+                const option = document.createElement('option');
+                option.value = course._id;
+                option.textContent = course.title;
+                packageCoursesSelect.appendChild(option);
+            });
+        }
+
+        function categorizeCourses(courses) {
+            const allCourses = [];
+            const activeCourses = [];
+            const notAssignedCourses = [];
+            const expiredCourses = [];
+
+            courses.forEach(course => {
+                const startDate = new Date(course.startDate);
+                const endDate = new Date(course.endDate);
+
+                if (startDate <= today && endDate >= today) {
+                    course.status = 'Active';
+                    activeCourses.push(course);
+                } else if (startDate > today) {
+                    course.status = 'Not Assigned';
+                    notAssignedCourses.push(course);
+                } else if (endDate < today) {
+                    course.status = 'Expired';
+                    expiredCourses.push(course);
+                }
+
+                allCourses.push(course);
+            });
+
+            console.log("Categorized all courses:", allCourses);
+            displayCourses(allCourses, 'all');
+        }
+
+        function categorizePackages(packages) {
+            const allPackages = [];
+            const activePackages = [];
+            const notAssignedPackages = [];
+            const expiredPackages = [];
+
+            packages.forEach(package => {
+                const startDate = new Date(package.startDate);
+                const endDate = new Date(package.endDate);
+
+                if (startDate <= today && endDate >= today) {
+                    package.status = 'Active';
+                    activePackages.push(package);
+                } else if (startDate > today) {
+                    package.status = 'Not Assigned';
+                    notAssignedPackages.push(package);
+                } else if (endDate < today) {
+                    package.status = 'Expired';
+                    expiredPackages.push(package);
+                }
+
+                allPackages.push(package);
+            });
+
+            displayPackages(allPackages, 'all');
+        }
+
+        function displayCourses(courses, category) {
+            const container = document.getElementById('coursesContainer');
+            console.log(`Displaying ${category} courses:`, courses);
+
+            container.innerHTML = '';
+            courses.forEach(course => {
+                const imageUrl = course.bannerImage ? `/images/${course.bannerImage}` : 'images/summer-camp.jpg';
+                const courseElement = document.createElement('div');
+                courseElement.classList.add('package');
+                courseElement.innerHTML = `
+                    <div class="package-image">
+                        <img src="${imageUrl}" alt="${course.title}" onerror="this.onerror=null; this.src='images/summer-camp.jpg'">
+                        <div class="status-ribbon">
+                            <h4>${course.status}</h4>
+                        </div>
+                    </div>
+                    <div class="bottom">
+                        <div class="text">
+                            <h4>${course.title}</h4>
+                        </div>
+                        <div class="course-details">
+                            <h4><span>Start Date: </span>${new Date(course.startDate).toLocaleDateString()}</h4>
+                            <h4><span>End Date: </span>${new Date(course.endDate).toLocaleDateString()}</h4>
+                        </div>
+                    </div>
+                `;
+                courseElement.onclick = () => window.location.href = `course-details.html?courseId=${course._id}`;
+                container.appendChild(courseElement);
+            });
+        }
+
+        function displayPackages(packages, category) {
+            const container = document.getElementById('packagesContainer');
+            console.log(`Displaying ${category} packages:`, packages);
+
+            container.innerHTML = '';
+            packages.forEach(package => {
+                const imageUrl = package.bannerImage ? `/images/${package.bannerImage}` : 'images/default-package.jpg';
+                const packageElement = document.createElement('div');
+                packageElement.classList.add('package');
+                packageElement.innerHTML = `
+                    <div class="package-image">
+                        <img src="${imageUrl}" alt="${package.name}" onerror="this.onerror=null; this.src='images/default-package.jpg'">
+                        <div class="status-ribbon">
+                            <h4>${package.status}</h4>
+                        </div>
+                    </div>
+                    <div class="bottom">
+                        <div class="text">
+                            <h4>${package.name}</h4>
+                        </div>
+                        <div class="course-details">
+                            <h4><span>Courses: </span>${package.courses.length}</h4>
+                            <h4><span>Start Date: </span>${new Date(package.startDate).toLocaleDateString()}</h4>
+                            <h4><span>End Date: </span>${new Date(package.endDate).toLocaleDateString()}</h4>
+                        </div>
+                    </div>
+                `;
+                packageElement.onclick = () => window.location.href = `package-details.html?packageId=${package._id}`;
+                container.appendChild(packageElement);
+            });
+        }
+
+        function updateCourseCounters(courses) {
+            totalCourses.textContent = courses.length;
+            assignedCourses.textContent = courses.filter(course => course.status === 'Active').length;
+        }
+
+        function filterCourses(category) {
+            const courses = document.querySelectorAll('.package-container .package');
+
+            courses.forEach(course => {
+                course.style.display = 'none';
+                if (category === 'all' || course.querySelector('.status-ribbon h4').textContent === category) {
+                    course.style.display = 'block';
+                }
+            });
+        }
+
+        document.getElementById('all').addEventListener('click', () => filterCourses('all'));
+        document.getElementById('active').addEventListener('click', () => filterCourses('Active'));
+        document.getElementById('not-assigned').addEventListener('click', () => filterCourses('Not Assigned'));
+        document.getElementById('expired').addEventListener('click', () => filterCourses('Expired'));
+
+        savePackageBtn.addEventListener('click', addPackage);
+
+        async function addPackage() {
+            try {
+                const packageName = document.getElementById('packageName').value;
+                const packageCourses = Array.from(packageCoursesSelect.selectedOptions).map(option => option.value);
+                const packageFee = document.getElementById('packageFee').value;
+                const packageDiscount = document.getElementById('packageDiscount').value;
+                const packageDescription = document.getElementById('packageDescription').value;
+                const packageStartDate = document.getElementById('packageStartDate').value;
+                const packageEndDate = document.getElementById('packageEndDate').value;
+                const bannerImageFile = document.getElementById('add-package-file').files[0];
+
+                const formData = new FormData();
+                formData.append('name', packageName);
+                formData.append('courses', JSON.stringify(packageCourses));
+                formData.append('fee', packageFee);
+                formData.append('discount', packageDiscount);
+                formData.append('description', packageDescription);
+                formData.append('startDate', packageStartDate);
+                formData.append('endDate', packageEndDate);
+                if (bannerImageFile) {
+                    formData.append('bannerImage', bannerImageFile);
+                }
+
+                const response = await fetch('/api/add-package', {
+                    method: 'POST',
+                    headers: { 'organizationName': organizationName },
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                console.log('Package added:', result);
+
+                // Close the modal and redirect to the main screen
+                $('#add-package').modal('hide');
+                window.location.href = '/courses.html';
+            } catch (error) {
+                console.error('Error creating package:', error);
+            }
+        }
+
+        fetchCourses();
+        fetchPackages();
+    </script>
+</body>
+
+</html>

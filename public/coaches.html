@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>TJS</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="shortcut icon" href="images/favicon.png" />
+  <script src="components/sidebar.js" type="text/javascript" defer></script>
+  <script src="components/topnav.js" type="text/javascript" defer></script>
+</head>
+<body>
+  <div class="container-scroller">
+    <topnav-component></topnav-component>
+    <div class="container-fluid page-body-wrapper">
+      <sidebar-component data-page="coaches"></sidebar-component>
+      <div class="main-panel">
+        <div class="content-wrapper2">
+          <div class="side-tab-sec">
+            <div class="tab-left" style="min-height: calc(100vh - 60px);">
+              <div class="mb-5 mt-2">
+                <h4 class="m-0" style="font-weight: 600;">Coach</h4>
+              </div>
+              <ul class="nav nav-pills side-tab-pills" id="pills-tab" role="tablist" style="width:auto;">
+                <li class="nav-item">
+                  <a class="nav-link active" id="pills-coach-tab" data-toggle="pill" href="#pills-coach" role="tab" aria-controls="pills-coach" aria-selected="false">Coaches</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="pills-category-tab" data-toggle="pill" href="#pills-category" role="tab" aria-controls="pills-category" aria-selected="true">Category</a>
+                </li>
+              </ul>
+            </div>
+            <div class="tab-content tab-right" id="pills-tabContent">
+              <div class="tab-pane fade show active" id="pills-coach" role="tabpanel" aria-labelledby="pills-coach-tab">
+                <div class="row coaches-dropdown align-items-center m-0 p-3" style="row-gap:15px;justify-content: space-between;">
+                  <div class="pl-0">
+                    <h6 class="mb-3 text-gray" style="font-size: 12px;">Total Category : 2</h6>
+                    <div class="top-search">
+                      <img src="images/search.png" class="icon1" style="right: auto; left: 15px;">
+                      <input type="text" name="" class="hwzthat-input w-100 pl-5" placeholder="search coaches">
+                    </div>
+                  </div>
+                  <div class="dropdown" style="padding: 0 6px;">
+                    <button class="btn site-btn-success dropdown-btn2" type="button" id="dropdownMenuDate2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="font-size: 13px; white-space: nowrap;">
+                      + Add coaches <img src="images/arrow-down2.png">
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right p-0" aria-labelledby="dropdownStudent">
+                      <a class="dropdown-item" data-toggle="modal" data-target="#new_coach">New coach</a>
+                      <a class="dropdown-item" data-toggle="modal" data-target="#invite_coach">invite coach</a>
+                      <a class="dropdown-item" data-toggle="modal" data-target="#new_category">New category</a>
+                    </div>
+                  </div>
+                </div>
+                <div class="hwzthat-coaches pb-4">
+                  <div class="row m-0 px-3" id="coach-list"></div>
+                </div>
+              </div>
+              <div class="tab-pane fade" id="pills-category" role="tabpanel" aria-labelledby="pills-category-tab">
+                <div class="row coaches-dropdown align-items-center m-0 p-3" style="row-gap:15px;justify-content: space-between; flex-wrap: wrap;">
+                  <div>
+                    <h6 class="m-0 text-gray" style="font-size: 12px;">Total Category : <span id="total-categories"></span></h6>
+                  </div>
+                  <button class="btn site-btn-success dropdown-btn2" data-toggle="modal" data-target="#new_category">
+                    + Add new category
+                  </button>
+                </div>
+                <div class="row message-row m-0" style="align-items: flex-start;">
+                  <div class="col-xl-3 col-lg-4">
+                    <div class="card h-100 border rounded" style="overflow: hidden;">
+                      <table>
+                        <thead>
+                          <tr style="border-bottom: 1px solid #D4D4D4;">
+                            <th>Name</th>
+                            <th>Coaches</th>
+                          </tr>
+                        </thead>
+                        <tbody id="category-list"></tbody>
+                      </table>
+                    </div>
+                  </div>
+                  <div class="col-xl-9 col-lg-8">
+                    <div class="card team-table">
+                      <div class="py-3 px-3 flex-align g3 border-bottom">
+                        <h5 class="m-0" style="font-weight: 600;" id="category-name">Category <span class="font-weight-500" id="coach-count"></span> </h5>
+                        <h5 class="text-success m-0 font-weight-600">Edit</h5>
+                      </div>
+                      <div class="hwzthat-coaches pb-4">
+                        <div class="row m-0 p-2" id="category-coach-list"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="new_coach">
+    <div class="modal-dialog modal-md" role="document">
+      <div class="modal-content">
+        <div class="modal-header align-items-center">
+          <h5 class="modal-title" id="coachModalLabel">New Coach</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="max-height: calc(100vh - 180px); overflow: auto;">
+          <form id="new-coach-form">
+            <div class="accordion">Personal information</div>
+            <div class="row panel" style="row-gap:20px">
+              <div class="col-12 mb-3">
+                <h5 class="text-center pb-1">Profile Photo</h5>
+                <div class="profile-dp mx-auto" style="border: 1px dashed #0000004A; width:90px; height:90px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 10px;">
+                  <img src="images/download.png" id="profile-photo-preview">
+                  <h5 class="text-success m-0">Upload</h5>
+                  <input type="file" name="profilePhoto" id="profile-photo-input">
+                </div>
+              </div>
+              <div class="col-6">
+                <h6 class="mb-2 required">First name</h6>
+                <input type="text" placeholder="Enter coach name" name="firstName" class="hwzthat-input w-100">
+              </div>
+              <div class="col-6">
+                <h6 class="mb-2 required">Last name</h6>
+                <input type="text" placeholder="Enter Last name" name="lastName" class="hwzthat-input w-100">
+              </div>
+              <div class="col-6">
+                <h6 class="mb-2 required">Date of birth</h6>
+                <input type="date" name="dateOfBirth" class="hwzthat-input2 w-100">
+              </div>
+              <div class="col-6">
+                <h6 class="mb-2 required">Gender</h6>
+                <select class="classic" name="gender">
+                  <option>Male</option>
+                  <option>Female</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <div class="col-6">
+                <h6 class="mb-2 required">Email ID</h6>
+                <input type="email" placeholder="Enter email id" name="email" class="hwzthat-input w-100">
+              </div>
+              <div class="col-6">
+                <h6 class="mb-2 required">Contact number</h6>
+                <input type="text" placeholder="Enter contact number" name="contactNumber" class="hwzthat-input w-100">
+              </div>
+              <div class="col-6">
+                <h6 class="mb-2 required">Emergency Contact Number</h6>
+                <input type="text" placeholder="Enter Emergency Contact Number" name="emergencyContactNumber" class="hwzthat-input w-100">
+              </div>
+            </div>
+            <div class="accordion">Address</div>
+            <div class="row panel" style="row-gap:20px">
+              <div class="col-6">
+                <h6 class="mb-2 required">Street Address</h6>
+                <input type="text" placeholder="Enter street address" name="address.street" class="hwzthat-input w-100">
+              </div>
+              <div class="col-6">
+                <h6 class="mb-2">Apartment, Suite, or Unit Number</h6>
+                <input type="text" placeholder="Enter Apartment, Suite, or Unit Number" name="address.apartment" class="hwzthat-input w-100">
+              </div>
+              <div class="col-6">
+                <h6 class="mb-2 required">City</h6>
+                <input type="text" placeholder="Enter city" name="address.city" class="hwzthat-input w-100">
+              </div>
+              <div class="col-6">
+                <h6 class="mb-2 required">State/Province</h6>
+                <input type="text" placeholder="Enter State/Province" name="address.state" class="hwzthat-input w-100">
+              </div>
+              <div class="col-6">
+                <h6 class="mb-2 required">Postal Code/Zip Code</h6>
+                <input type="text" placeholder="Enter Postal Code/Zip Code" name="address.postalCode" class="hwzthat-input w-100">
+              </div>
+              <div class="col-6">
+                <h6 class="mb-2 required">Country</h6>
+                <select class="classic" name="address.country">
+                  <option>select country</option>
+                  <option>India</option>
+                  <option>Australia</option>
+                </select>
+              </div>
+            </div>
+            <div class="accordion">Category</div>
+            <div class="row panel" style="row-gap:20px">
+              <div class="col-12">
+                <h6 class="mb-2 required">Add to category</h6>
+                <select class="classic" name="category" id="category-select">
+                  <!-- Dynamic categories will be loaded here -->
+                </select>
+              </div>
+            </div>
+            <div class="accordion">Cricket information</div>
+            <div class="row panel" style="row-gap:20px">
+              <div class="col-6">
+                <h6 class="mb-2 required">Coaching certifications</h6>
+                <input type="text" placeholder="Enter Coaching certifications" name="coachingCertifications" class="hwzthat-input w-100">
+              </div>
+              <div class="col-6">
+                <h6 class="mb-2 required">Batting style</h6>
+                <select class="classic" name="battingStyle">
+                  <option>Right hand</option>
+                  <option>Left hand</option>
+                </select>
+              </div>
+              <div class="col-6">
+                <h6 class="mb-2 required">Bowling style</h6>
+                <select class="classic" name="bowlingStyle">
+                  <option>Spin</option>
+                  <option>Fast</option>
+                </select>
+              </div>
+              <div class="col-6">
+                <h6 class="mb-2 required">Cricinfo link</h6>
+                <input type="text" placeholder="Enter Coaching certifications" name="cricinfoLink" class="hwzthat-input w-100">
+              </div>
+              <div class="col-6">
+                <h6 class="mb-2 required">Teams played</h6>
+                <select class="classic" name="teamsPlayed">
+                  <option>1</option>
+                  <option>2</option>
+                </select>
+              </div>
+              <div class="col-6">
+                <h6 class="mb-2 required">Primary Language(s) used for coaching</h6>
+                <select class="classic" name="primaryLanguages">
+                  <option>English</option>
+                </select>
+              </div>
+              <div class="col-6">
+                <h6 class="mb-2 required">Additional language</h6>
+                <input type="text" placeholder="English" name="additionalLanguages" class="hwzthat-input w-100">
+              </div>
+              <div class="col-6">
+                <h6 class="mb-2 required">Preferred category to train</h6>
+                <select class="classic" name="preferredCategory">
+                  <option>Beginner</option>
+                </select>
+              </div>
+              <div class="col-6">
+                <h6 class="mb-2 required">Coaching specialization</h6>
+                <select class="classic" name="coachingSpecialization">
+                  <option>All</option>
+                </select>
+              </div>
+              <div class="col-12">
+                <h6 class="mb-2 required">Tell us about yourself</h6>
+                <textarea name="about" class="hwzthat-input w-100" style="min-height: 100px;"></textarea>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="d-flex align-items-center mt-3 p-3" style="gap:10px;justify-content: flex-end;">
+          <button class="site-btn-outline-info hoverbtn px-5" data-dismiss="modal" aria-label="Close">Cancel</button>
+          <button class="site-btn-success hoverbtn px-5" id="save-coach-btn">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="invite_coach">
+    <div class="modal-dialog modal-md" role="document">
+      <div class="modal-content">
+        <div class="modal-header align-items-center">
+          <h5 class="modal-title" id="coachModalLabel">Invite coach</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="max-height: calc(100vh - 180px); overflow: auto;">
+          <form id="invite-coach-form">
+            <div class="row" style="row-gap:20px">
+              <div class="col-6">
+                <h6 class="mb-2 required">First name</h6>
+                <input type="text" placeholder="Enter coach name" name="firstName" class="hwzthat-input w-100">
+              </div>
+              <div class="col-6">
+                <h6 class="mb-2 required">Last name</h6>
+                <input type="text" placeholder="Enter Last name" name="lastName" class="hwzthat-input w-100">
+              </div>
+              <div class="col-6">
+                <h6 class="mb-2 required">Email ID</h6>
+                <input type="email" placeholder="Enter email id" name="email" class="hwzthat-input w-100">
+              </div>
+              <div class="col-6">
+                <h6 class="mb-2 required">Gender</h6>
+                <select class="classic" name="gender">
+                  <option>Male</option>
+                  <option>Female</option>
+                  <option>Other</option>
+                </select>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="d-flex align-items-center mt-3 p-3" style="gap:10px;justify-content: flex-end;">
+          <button class="site-btn-outline-info hoverbtn px-5" data-dismiss="modal" aria-label="Close">Cancel</button>
+          <button class="site-btn-success hoverbtn px-5" id="invite-coach-btn">Invite</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="new_category">
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content">
+        <div class="modal-header align-items-center">
+          <h5 class="modal-title" id="coachModalLabel">New category</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="new-category-form">
+            <div>
+              <h6 class="mb-2">Category name</h6>
+              <input type="text" placeholder="Enter category name" name="name" class="hwzthat-input w-100">
+            </div>
+            <div class="flex-align g2 py-4">
+              <div class="flex-align2 g4">
+                <h6 class="text-gray" style="font-size: 12px;">Total students: <span class="font-weight-600 text-dark">150</span></h6>
+                <h6 class="text-gray" style="font-size: 12px;">Selected: <span class="font-weight-600 text-dark">0</span></h6>
+              </div>
+              <div class="top-search">
+                <img src="images/search.png" class="icon1" style="right: auto; left: 15px;">
+                <input type="text" name="" class="hwzthat-input w-100 pl-5" placeholder="search students">
+              </div>
+            </div>
+            <div class="row m-0" style="max-height: calc(100vh - 330px); overflow: auto;" id="student-list">
+              <!-- Student list will be loaded here -->
+            </div>
+          </form>
+        </div>
+        <div class="d-flex align-items-center p-3" style="gap:10px;justify-content: flex-end;">
+          <button class="site-btn-outline-info hoverbtn px-5" data-dismiss="modal" aria-label="Close">Cancel</button>
+          <button class="site-btn-success hoverbtn px-5" id="save-category-btn">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+  <script src="js/off-canvas.js"></script>
+  <script src="js/template.js"></script>
+  <script>
+    const organizationId = localStorage.getItem('organizationId');
+  
+    async function fetchCategories() {
+      try {
+        const response = await fetch('/api/categories', {
+          headers: {
+            'Content-Type': 'application/json',
+            'organizationId': organizationId
+          }
+        });
+        if (!response.ok) {
+          throw new Error('Network response was not ok ' + response.statusText);
+        }
+        const categories = await response.json();
+        if (!Array.isArray(categories)) {
+          throw new Error('Categories response is not an array');
+        }
+        const categoryList = document.getElementById('category-list');
+        const categorySelect = document.getElementById('category-select');
+        const totalCategories = document.getElementById('total-categories');
+        totalCategories.textContent = categories.length;
+        categories.forEach(category => {
+          const categoryItem = document.createElement('tr');
+          categoryItem.classList.add('category-item');
+          categoryItem.dataset.categoryId = category._id;
+          categoryItem.innerHTML = `<td>${category.name}</td><td>${category.coachCount}</td>`;
+          categoryList.appendChild(categoryItem);
+          const option = document.createElement('option');
+          option.value = category.name;
+          option.textContent = category.name;
+          categorySelect.appendChild(option);
+        });
+  
+        // Add event listener for category items to load coaches
+        document.querySelectorAll('.category-item').forEach(item => {
+          item.addEventListener('click', async (event) => {
+            const categoryId = event.currentTarget.dataset.categoryId;
+            try {
+              const response = await fetch(`/api/categories/${categoryId}/coaches`, {
+                headers: {
+                  'Content-Type': 'application/json',
+                  'organizationId': organizationId
+                }
+              });
+              if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+              }
+              const coaches = await response.json();
+              const categoryCoachList = document.getElementById('category-coach-list');
+              categoryCoachList.innerHTML = ''; // Clear previous coaches
+              coaches.forEach(coach => {
+                const coachItem = document.createElement('div');
+                coachItem.classList.add('col-lg-4', 'col-md-6', 'p-1');
+                const coachPhoto = coach.profilePhoto ? coach.profilePhoto : '/images/default-coach.png';
+                coachItem.innerHTML = `<a href="coach-details.html" class="p-2 bg-white rounded d-block border">
+                  <div class="dp-name">
+                    <img src="${coachPhoto}" class="dp-1">
+                    <div>
+                      <h5 class="font-weight-600 mb-1">${coach.firstName} ${coach.lastName}</h5>
+                      <h6 class="m-0">${coach.email}</h6>
+                    </div>
+                  </div>
+                </a>`;
+                categoryCoachList.appendChild(coachItem);
+              });
+            } catch (error) {
+              console.error('Error loading coaches by category:', error);
+              alert('Failed to load coaches by category. Please try again later.');
+            }
+          });
+        });
+      } catch (error) {
+        console.error('Error loading categories:', error);
+        alert('Failed to load categories. Please try again later.');
+      }
+    }
+  
+    async function fetchCoaches() {
+      try {
+        const response = await fetch(`/api/user/organization/${organizationId}/coaches`, {
+          headers: {
+            'Content-Type': 'application/json',
+            'organizationId': organizationId
+          }
+        });
+        if (!response.ok) {
+          throw new Error('Network response was not ok ' + response.statusText);
+        }
+        const coaches = await response.json();
+        if (!Array.isArray(coaches)) {
+          throw new Error('Coaches response is not an array');
+        }
+        const coachList = document.getElementById('coach-list');
+        coaches.forEach(coach => {
+          const coachItem = document.createElement('div');
+          coachItem.classList.add('col-lg-4', 'col-xl-3', 'p-1');
+          const coachPhoto = coach.profilePhoto ? coach.profilePhoto : '/images/default-coach.png';
+          coachItem.innerHTML = `<a href="coach-details.html" class="p-2 bg-white rounded d-block border">
+            <div class="dp-name">
+              <img src="${coachPhoto}" class="dp-1">
+              <div>
+                <h5 class="font-weight-600 mb-1">${coach.firstName} ${coach.lastName}</h5>
+                <h6 class="m-0">${coach.email}</h6>
+              </div>
+            </div>
+          </a>`;
+          coachList.appendChild(coachItem);
+        });
+      } catch (error) {
+        console.error('Error loading coaches:', error);
+        alert('Failed to load coaches. Please try again later.');
+      }
+    }
+  
+    document.addEventListener('DOMContentLoaded', () => {
+      fetchCategories();
+      fetchCoaches();
+    });
+  
+    document.getElementById('save-coach-btn').addEventListener('click', async (event) => {
+      event.preventDefault();
+      const formData = new FormData(document.getElementById('new-coach-form'));
+      const data = Object.fromEntries(formData.entries());
+  
+      if (formData.get('profilePhoto').size > 0) {
+        data.profilePhoto = URL.createObjectURL(formData.get('profilePhoto'));
+      } else {
+        data.profilePhoto = '';
+      }
+  
+      try {
+        const response = await fetch('/api/user/add-coach', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'organizationId': organizationId
+          },
+          body: JSON.stringify(data)
+        });
+  
+        if (response.ok) {
+          alert('Coach added successfully');
+          location.reload();
+        } else {
+          const errorData = await response.json();
+          alert('Error: ' + errorData.message);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
+      }
+    });
+  
+    document.getElementById('invite-coach-btn').addEventListener('click', async (event) => {
+      event.preventDefault();
+      const formData = new FormData(document.getElementById('invite-coach-form'));
+      const data = Object.fromEntries(formData.entries());
+  
+      try {
+        const response = await fetch('/api/coaches/invite', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'organizationId': organizationId
+          },
+          body: JSON.stringify(data)
+        });
+  
+        if (response.ok) {
+          alert('Coach invited successfully');
+          location.reload();
+        } else {
+          const errorData = await response.json();
+          alert('Error: ' + errorData.message);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
+      }
+    });
+  
+    document.getElementById('save-category-btn').addEventListener('click', async (event) => {
+      event.preventDefault();
+      const formData = new FormData(document.getElementById('new-category-form'));
+      const data = Object.fromEntries(formData.entries());
+  
+      try {
+        const response = await fetch('/api/categories', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'organizationId': organizationId
+          },
+          body: JSON.stringify(data)
+        });
+  
+        if (response.ok) {
+          alert('Category added successfully');
+          location.reload();
+        } else {
+          const errorData = await response.json();
+          alert('Error: ' + errorData.message);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
+      }
+    });
+  </script>
+  </body>
+</html>

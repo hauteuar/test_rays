@@ -1,0 +1,118 @@
+.macbook-pro-16 {
+  background-color: var(--black_900);
+  width: 100%;
+  position: relative;
+}
+
+.navbar {
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  background-color: rgba(0, 0, 0, 0.5); /* Transparent background */
+  position: absolute; /* Overlay on top of the image */
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 2;
+}
+
+.logo {
+  display: flex;
+  justify-content: flex-start;
+  padding-left: 5%;
+}
+
+.logo img {
+  height: 50px;
+  width: auto;
+  position: relative;
+}
+
+.nav-links {
+  display: flex;
+  justify-content: flex-start;
+  padding-left: 25%; /* Start links from 1/4th of the left */
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  padding: 10px 20px;
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+}
+
+.admins-login {
+  color: var(--red_a700)!important;
+  text-decoration: none;
+  padding: 10px 20px;
+  font-family: GT Walsheim Pro !important;
+  font-size: 16px;
+  margin-left: auto;
+}
+
+.row {
+  height: 100%;
+  z-index: 1;
+  background-image: url(/images/img_group_1.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  padding: 0px 56px;
+}
+
+@media only screen and (max-width: 1440px) {
+  .row {
+      height: auto;
+      padding-top: 32px;
+      padding-bottom: 32px;
+  }
+}
+
+@media only screen and (max-width: 1050px) {
+  .row {
+      height: auto;
+      padding: var(--space-2xl);
+  }
+}
+
+@media only screen and (max-width: 550px) {
+  .row {
+      padding: var(--space-xl);
+  }
+}
+
+.rowadminlogin {
+  margin-bottom: 638px;
+  display: flex;
+  padding: 10px var(--space-2xl);
+}
+
+.rowadminlogin__title {
+  color: var(--red_a700) !important;
+  font-family: GT Walsheim Pro !important;
+  align-self: end;
+}
+
+.screenshot2024 {
+  height: 826px;
+  margin-top: -138px;
+  position: relative;
+  object-fit: cover;
+  width: 100%;
+}
+
+@media only screen and (max-width: 1440px) {
+  .screenshot2024 {
+      height: auto;
+  }
+}
+
+@media only screen and (max-width: 1050px) {
+  .screenshot2024 {
+      height: auto;
+  }
+}

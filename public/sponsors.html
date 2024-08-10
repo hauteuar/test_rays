@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Admin</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/mobile.css">
+  <link rel="stylesheet" href="/css/tab.css">
+  <link rel="stylesheet" href="/css/calendar.css">
+  <link rel="stylesheet" href="css/style22.css">
+  <link rel="stylesheet" href="css/style2.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+  <script src="components/topnav.js" type="text/javascript" defer></script>
+  <script src="components/sidebar.js" type="text/javascript" defer></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.theme.min.css">
+
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.js"></script>
+</head>
+
+<body>
+  <div class="container-scroller">
+    <topnav-component></topnav-component>
+    <div class="container-fluid page-body-wrapper">
+    <sidebar-component data-page="sponsors"></sidebar-component>
+
+      <div class="main-section">
+        <div class="flex-align mt-3" style="flex-wrap: wrap; row-gap: 20px;">
+          <div>
+            <h5 class="font-weight-400 text-gray">Sponsors <span class="text-dark font-weight-50">04</span></h5>
+            <h5 class="mt-3">You can rearrange the sponsor ads by clicking and dragging.</h5>
+          </div>
+          <div class="flex-align3 g2" style="flex-wrap:wrap;">
+            <a class="btn btn-outline-ramblers g2 px-3" data-bs-toggle="modal" data-bs-target="#setTime">
+              <img src="images/clock-red.png" style="width: 16px;">
+              Set Time
+            </a>
+            <a  class="btn btn-ramblers" data-bs-toggle="modal" data-bs-target="#addSponsors">
+              + Add Sponsors
+            </a>
+          </div>
+        
+        </div>
+        <div class="row my-3">
+          <div class="w-100p-450px">
+            <div class="sponsors-cards">
+              <div class="sponsors-cards-child flex-align3 g3 mb-2">
+                <span>1</span>
+                <div class="sponsors-card flex-align3 g4 w-100 border rounded p-3 pe-4">
+                  <div class="flex-align3 g3 pe-4 mr-3" style="border-right: 1px solid #1111114D;">
+                    <img src="images/menu2.png" style="width: 20px;">
+                    <img src="images/win.png" style="width: 90px; height:70px;">
+                  </div>
+                  <div class="flex-align g2 w-100">
+                    <div>
+                      <h6 class=" font-weight-500">WIN Sports and Uniforms</h6>
+                      <h6 class="text-gray mt-2">Web address</h6>
+                    </div>
+                    <div class="dropdown">
+                      <img src="images/dots.png" class="dropdown-toggle" type="button" data-bs-toggle="dropdown" style="width:15px;height: 15px;object-fit: contain;" aria-expanded="false">
+                      <ul class="dropdown-menu" >
+                        <li><a class="dropdown-item">Edit</a></li>
+                        <li><a class="dropdown-item" href="#">Delete</a></li>
+                      </ul>
+                    </div>
+
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="sponsors-cards-child flex-align3 g3 mb-2">
+                <span>2</span>
+                <div class="sponsors-card flex-align3 g4 w-100 border rounded p-3 pe-4">
+                  <div class="flex-align3 g3 pe-4 mr-3" style="border-right: 1px solid #1111114D;">
+                    <img src="images/menu2.png" style="width: 20px;">
+                    <img src="images/forex.png" style="width: 90px; height:70px;">
+                  </div>
+                  <div class="flex-align g2 w-100">
+                    <div>
+                      <h6 class=" font-weight-500">My Forex Funds</h6>
+                      <h6 class="text-gray mt-2">Web address</h6>
+                    </div>
+                    <div class="dropdown">
+                      <img src="images/dots.png" class="dropdown-toggle" type="button" data-bs-toggle="dropdown" style="width:15px;height: 15px;object-fit: contain;" aria-expanded="false">
+                      <ul class="dropdown-menu" >
+                        <li><a class="dropdown-item">Edit</a></li>
+                        <li><a class="dropdown-item" href="#">Delete</a></li>
+                      </ul>
+                    </div>
+
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="sponsors-cards-child flex-align3 g3 mb-2">
+                <span>3</span>
+                <div class="sponsors-card flex-align3 g4 w-100 border rounded p-3 pe-4">
+                  <div class="flex-align3 g3 pe-4 mr-3" style="border-right: 1px solid #1111114D;">
+                    <img src="images/menu2.png" style="width: 20px;">
+                    <img src="images/lazeez.png" style="width: 90px; height:70px;">
+                  </div>
+                  <div class="flex-align g2 w-100">
+                    <div>
+                      <h6 class=" font-weight-500">Lazeez Shawarma</h6>
+                      <h6 class="text-gray mt-2">Web address</h6>
+                    </div>
+                    <div class="dropdown">
+                      <img src="images/dots.png" class="dropdown-toggle" type="button" data-bs-toggle="dropdown" style="width:15px;height: 15px;object-fit: contain;" aria-expanded="false">
+                      <ul class="dropdown-menu" >
+                        <li><a class="dropdown-item">Edit</a></li>
+                        <li><a class="dropdown-item" href="#">Delete</a></li>
+                      </ul>
+                    </div>
+
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="sponsors-cards-child flex-align3 g3 mb-2">
+                <span>1</span>
+                <div class="sponsors-card flex-align3 g4 w-100 border rounded p-3 pe-4">
+                  <div class="flex-align3 g3 pe-4 mr-3" style="border-right: 1px solid #1111114D;">
+                    <img src="images/menu2.png" style="width: 20px;">
+                    <img src="images/win.png" style="width: 90px; height:70px;">
+                  </div>
+                  <div class="flex-align g2 w-100">
+                    <div>
+                      <h6 class=" font-weight-500">WIN Sports and Uniforms</h6>
+                      <h6 class="text-gray mt-2">Web address</h6>
+                    </div>
+                    <div class="dropdown">
+                      <img src="images/dots.png" class="dropdown-toggle" type="button" data-bs-toggle="dropdown" style="width:15px;height: 15px;object-fit: contain;" aria-expanded="false">
+                      <ul class="dropdown-menu" >
+                        <li><a class="dropdown-item">Edit</a></li>
+                        <li><a class="dropdown-item" href="#">Delete</a></li>
+                      </ul>
+                    </div>
+
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="sponsors-cards-child flex-align3 g3 mb-2">
+                <span>2</span>
+                <div class="sponsors-card flex-align3 g4 w-100 border rounded p-3 pe-4">
+                  <div class="flex-align3 g3 pe-4 mr-3" style="border-right: 1px solid #1111114D;">
+                    <img src="images/menu2.png" style="width: 20px;">
+                    <img src="images/forex.png" style="width: 90px; height:70px;">
+                  </div>
+                  <div class="flex-align g2 w-100">
+                    <div>
+                      <h6 class=" font-weight-500">My Forex Funds</h6>
+                      <h6 class="text-gray mt-2">Web address</h6>
+                    </div>
+                    <div class="dropdown">
+                      <img src="images/dots.png" class="dropdown-toggle" type="button" data-bs-toggle="dropdown" style="width:15px;height: 15px;object-fit: contain;" aria-expanded="false">
+                      <ul class="dropdown-menu" >
+                        <li><a class="dropdown-item">Edit</a></li>
+                        <li><a class="dropdown-item" href="#">Delete</a></li>
+                      </ul>
+                    </div>
+
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="sponsors-cards-child flex-align3 g3 mb-2">
+                <span>3</span>
+                <div class="sponsors-card flex-align3 g4 w-100 border rounded p-3 pe-4">
+                  <div class="flex-align3 g3 pe-4 mr-3" style="border-right: 1px solid #1111114D;">
+                    <img src="images/menu2.png" style="width: 20px;">
+                    <img src="images/lazeez.png" style="width: 90px; height:70px;">
+                  </div>
+                  <div class="flex-align g2 w-100">
+                    <div>
+                      <h6 class=" font-weight-500">Lazeez Shawarma</h6>
+                      <h6 class="text-gray mt-2">Web address</h6>
+                    </div>
+                    <div class="dropdown">
+                      <img src="images/dots.png" class="dropdown-toggle" type="button" data-bs-toggle="dropdown" style="width:15px;height: 15px;object-fit: contain;" aria-expanded="false">
+                      <ul class="dropdown-menu" >
+                        <li><a class="dropdown-item">Edit</a></li>
+                        <li><a class="dropdown-item" href="#">Delete</a></li>
+                      </ul>
+                    </div>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+          <div class="w-450px">
+            <h5 class="font-weight-600">Sponsors logo in mobile </h5>
+            <div class="mob-screen mt-5">
+              <img src="images/mob-mockup.png" class="mob-mockup">
+              <div class="mob-screen-container">
+                
+                <div class="flex-align g2 pt-4 px-4">
+                  <img src="images/ramblers-text.png" style="width: 120px;">
+                  <div class="flex-align3 g3">
+                    <img src="images/chat.png" style="width: 20px;">
+                    <img src="images/bell.png" style="width: 20px;">
+                  </div>
+                </div>
+                <div class="mob-body">
+                  <h6 class="font-weight-400 text-gray mb-3">Sponsors</h6>
+                
+               
+                  <style>
+                    .carousel-indicators {
+                      bottom: -40px;
+                  }
+                  .owl-theme .owl-controls .owl-page span{
+
+                   background-color:  #C3282E;
+                   border: 1px solid  #C3282E;
+                   margin: 3px;
+                  }
+
+          
+               </style>
+    
+                 
+                <div id="banner-slider" class="owl-carousel">
+                  <div class="item active">
+                    <img src="images/mob-banner.png" style="width:100%;">
+                  </div>
+
+                  <div class="item">
+                    <img src="images/mob-banner.png" style="width:100%;">
+
+                  </div>
+                
+                  <div class="item">
+                    <img src="images/mob-banner.png" style="width:100%;">
+
+                  </div>
+                  <div class="item">
+                    <img src="images/mob-banner.png" style="width:100%;">
+
+                  </div>
+                </div>
+             
+                  <h6 class="font-weight-400 text-gray mb-3">My dashboard</h6>
+                  <div class="row" style="row-gap: 20px;">
+                    <div class="col-6">
+                      <div class="card mockup-card">
+                        <div class="mob-card-img">
+                          <img src="images/club-matches.png">
+                        </div>
+                        <h6 class="font-weight-600 mt-1 text-center">Club Matches </h6>
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <div class="card mockup-card">
+                        <div class="mob-card-img">
+                          <img src="images/schedule-match.png">
+                        </div>
+                        <h6   class="font-weight-600 mt-1 text-center">My Schedule</h6>
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <div class="card mockup-card">
+                        <div class="mob-card-img">
+                          <img src="images/stats-match.png">
+                        </div>
+                        <h6 class="font-weight-600 mt-1 text-center">My stats </h6>
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <div class="card mockup-card">
+                        <div class="mob-card-img">
+                          <img src="images/club-executive-matches.png">
+                        </div>
+                        <h6 class="font-weight-600 mt-1 text-center">Club Executives</h6>
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <div class="card mockup-card">
+                        <div class="mob-card-img">
+                          <img src="images/payment-matches.png">
+                        </div>
+                        <h6 class="font-weight-600 mt-1 text-center">Payment</h6>
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <div class="card mockup-card">
+                        <div class="mob-card-img">
+                          <img src="images/club-document-matches.png">
+                        </div>
+                        <h6 class="font-weight-600 mt-1 text-center">Club documents</h6>
+                      </div>
+                    </div>
+                  </div>
+                  <div style="background-color: #C3282E26; height: 1px; width: 100%; margin: 20px 0;"></div>
+                  <div class="row" style="row-gap: 20px;">
+                    <div class="col-6">
+                      <h6 class="font-weight-400 text-gray mb-3">Admin login</h6>
+
+                      <div class="card mockup-card">
+                        <img src="images/login.png" style="height: 40px; width: 70px; object-fit:contain; margin:0 auto;">
+                    </div>
+                    </div>
+                    <div class="col-6">
+                      <h6 class="font-weight-400 text-gray mb-3">Better Coaching</h6>
+
+                      <div class="card mockup-card">
+                          <img src="images/hwzthat.png" style="height: 40px; width: 100px; object-fit:contain; margin:0 auto;">
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+                <div class="mob-footer">
+                  <div class="row">
+                    <div class="col-3">
+                      <img src="images/home.png">
+                      <h6 class="font-weight-600">Home</h6>
+                    </div>
+                    <div class="col-3">
+                      <img src="images/Events.png">
+                      <h6>Events & News</h6>
+                    </div>
+                    <div class="col-3">
+                      <img src="images/Ecommerse.png">
+                      <h6>Ecommerce</h6>
+                    </div>
+                    <div class="col-3">
+                      <img src="images/profile.png">
+                      <h6>Profile</h6>
+                    </div>
+
+                  </div>
+
+                </div>
+              </div>
+              
+              
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="addSponsors" tabindex="-1" aria-labelledby="addSponsorsLabel" aria-hidden="true">
+    <div class="modal-dialog  modal-dialog-centered modal-md">
+      <div class="modal-content">
+       
+        <div class="modal-body p-4">
+            
+            <div class="flex-align moadl-head2 pb-4 border-bottom">
+              <h3>Add Sponsors</h3>
+              <img src="images/close.png" data-bs-dismiss="modal" style="cursor: pointer;width: 20px;height: 20px;">
+            </div>
+            <div class="modal-body2 p-md-3 p-0">
+              
+              <div class="row mt-3" style="row-gap: 20px;">
+                    <div class="col-lg-4 col-md-6 col-item" style="padding-right: 20px;">
+                      <h5 class="font-weight-500 mb-2">Sponsors Logo</h5>
+                      <div class="image-picker image-picker2" style="height: 150px;">
+                        <input type="file" accept="image/*" class="input w-100">
+                        <div class="image-picker-tab">
+                          <img src="images/upload3.png">
+                          Upload image
+                        </div>
+                      </div>
+                    </div>
+                    
+                    
+                    <div class="col-md-12 col-item">
+                      <div class="mb-4">
+                        <h5 class="font-weight-500 mb-2">Sponsor name</h5>
+                        <input type="type" value="Jan 12, 2024" name="" class="input w-100">
+                      </div>
+                      <div>
+                        <h5 class="font-weight-500 mb-2">Sponsor web address</h5>
+                        <input type="type" value="Http//:" name="" class="input w-100">
+                      </div>
+                      <label class="flex-align3 g2 mt-4">
+                        <input id="sponsors" type="checkbox" style="accent-color: red;">
+                        <h5 class="font-weight-600 text-dark">Highlight sponsor </h5>
+                      </label>
+                    </div>
+
+                    
+                    
+                    
+              </div>
+              <div class="modal-footer2 d-flex justify-content-end g2 mt-5">
+                <button type="button" class="btn btn-ramblers px-4">Save</button>
+              </div>
+            </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="setTime" tabindex="-1" aria-labelledby="setTimeLabel" aria-hidden="true">
+    <div class="modal-dialog  modal-dialog-centered modal-sm">
+      <div class="modal-content">
+       
+        <div class="modal-body p-4">
+            
+            <div class="flex-align moadl-head2 pb-4 border-bottom">
+              <h3>Set time</h3>
+              <img src="images/close.png" data-bs-dismiss="modal" style="cursor: pointer;width: 20px;height: 20px;">
+            </div>
+            <div class="modal-body2 py-4">
+              <div class="flex-align3 g2">
+                <h4 class="font-weight-500">Auto slide</h4>
+                <div class="toggle-tab-container3  toggle" >
+                  <input type="checkbox" name="">
+                  <span class="toggle-bar"></span>
+                </div>
+              </div>
+              <div class="flex-align3 g4 my-4">
+                <label for="right" class="flex-align3 g1 cursor-pointer">
+                  <input id="right" type="radio" name="slide" checked style="accent-color: #c3282e; width: 18px; height: 18px;">
+                  <h4 class="font-weight-500">Slide right to left</h4>
+                </label>
+                <label for="left" class="flex-align3 g1 cursor-pointer">
+                  <input id="left" type="radio" name="slide" style="accent-color: #c3282e; width: 18px; height: 18px;">
+                  <h4 class="font-weight-500">Slide Left to right</h4>
+                </label>
+              </div>
+              <div class="py-3">
+                <h4>Slide speed</h4>
+                <div class="button-tabs g1 flex-align3 mt-3" style="flex-wrap: wrap;">
+                  <button class="btn btn-outline-danger" style="min-width: 80px;">Slow</button>
+                  <button class="btn btn-outline-danger active-btn-danger" style="min-width: 80px;">Medium</button>
+                  <button class="btn btn-outline-danger" style="min-width: 80px;">Fast</button>
+                  
+                </div>
+  
+              </div>
+              <div class="py-3">
+                <h4>Ad display time</h4>
+                <div class="input-with-btn flex-align3 mt-3">
+                  <input type="text" value="5" class="input w-100">
+                  <div style="position: absolute;right: 0; display: flex;">
+                    <div class="btn btn-outline-danger active-btn-danger px-3" style="border-top-right-radius: 0; border-bottom-right-radius: 0; height: 38px;">Sec</div>
+                    <div class="btn">Min</div>
+                  </div>
+                </div>
+  
+              </div>
+              <div class="modal-footer2 d-flex justify-content-center g2 mt-4">
+                <button type="button" class="btn btn-ramblers px-4">Save</button>
+              </div>
+            </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+  <script src="js/script.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function(){
+    $("#banner-slider").owlCarousel({
+        items:1,
+        pagination:true,
+        navigation:false,
+        autoPlay:true
+    });
+    });
+    </script>
+</body>
+
+</html>

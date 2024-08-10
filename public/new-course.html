@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>New Course</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/mobile.css">
+    <link rel="stylesheet" href="css/tab.css">
+    <link rel="shortcut icon" href="images/1.png" />
+    <script src="components/sidebar.js" type="text/javascript" defer></script>
+    <script src="components/topnav.js" type="text/javascript" defer></script>
+</head>
+<body>
+    <div class="container-scroller">
+        <topnav-component></topnav-component>
+        <div class="container-fluid page-body-wrapper">
+            <sidebar-component data-page="courses"></sidebar-component>
+            <div class="course-main add-course">
+                <div class="mb-3 mt-2 heading">
+                    <h4 class="m-0" style="font-weight: 400; color: rgb(104, 104, 104);"><a href="courses.html" style="color:#5c5c5c;">Course</a></h4>
+                    <img src="images/arrow-right-3.png" alt="">
+                    <h4 class="m-0" style="font-weight: 650;">New Course</h4>
+                </div>
+                <div class="form-container">
+                    <div class="form-body">
+                        <form id="newCourseForm" style="width: 100%;" class="row">
+                            <input type="hidden" id="batchesInput" name="batches" value="[]">
+                            <input type="hidden" id="groundBookingsInput" name="groundBookings" value="[]">
+                            <input type="hidden" id="discountsInput" name="discounts" value="[]">
+
+                            <!-- Rest of the form fields -->
+                            <div class="col-12 col-sm-7">
+                                <h6 class="mb-2 "> <img src="images/graduation.png" alt="">Course Title</h6>
+                                <input type="text" placeholder="Enter course title" name="courseTitle" class="hwzthat-input w-100" required>
+                            </div>
+                            <div class="col-12 col-sm-5 mt-3 mt-sm-0" style="align-self: end;">
+                                <h6 class="mb-2">Upload file</h6>
+                                <div class="add-package-file" style="margin-top: 12px;">
+                                    <img src="images/download.png" alt="">
+                                    <label for="add-package-file">Upload media file</label>
+                                    <input id="add-package-file" type="file" name="bannerImage" class="hwzthat-input w-100" style="display: none;" required>
+                                </div>
+                            </div>
+                            <div class="col-12 mt-3">
+                                <h6 class="mb-2 "> <img src="images/group.png" alt="">Coaches <span>(optional)</span></h6>
+                                <select id="coachesSelect" class="hwzthat-input w-100" name="coaches" multiple>
+                                    <!-- Coaches will be dynamically added here -->
+                                </select>
+                            </div>
+                            <div class="col-sm-3 col-12 mt-3">
+                                <h6 class="mb-2 "> <img src="images/location.png" alt="" style="width: 15px;">Location</h6>
+                                <select class="hwzthat-input w-100" name="location" required>
+                                    <option value="Mississuaga">Mississuaga</option>
+                                    <option value="Toronto">Toronto</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-9 col-12 mt-3 align-self-end">
+                                <h6 class="mb-2">Mode</h6>
+                                <select class="hwzthat-input w-100" name="mode" required>
+                                    <option value="Offline">Offline</option>
+                                    <option value="Online">Online</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <h3 class="batch-heading">Course Duration</h3>
+                            </div>
+                            <div class="col-sm-3 col-6 mt-4">
+                                <h6 class="mb-2">Select duration</h6>
+                                <select class="hwzthat-input w-100" name="courseDuration" required>
+                                    <option value="1 Year">1 Year</option>
+                                    <option value="6 Month">6 Month</option>
+                                    <option value="3 Month">3 Month</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-3 col-6 mt-4">
+                                <h6 class="mb-2"> <img src="images/calendar.png" alt="" style="width: 15px;">Start date</h6>
+                                <input type="date" class="hwzthat-input w-100" name="courseStartDate" required>
+                            </div>
+                            <div class="col-sm-3 col-6 mt-4">
+                                <h6 class="mb-2"> <img src="images/calendar.png" alt="" style="width: 15px;">End date</h6>
+                                <input type="date" class="hwzthat-input w-100" name="courseEndDate" required>
+                            </div>
+                            <div class="col-12">
+                                <h3 class="batch-heading">Batch Creation</h3>
+                            </div>
+                            <div class="col-12">
+                                <h3 class="batch-subheading">Added batches <span id="batchCount">0</span></h3>
+                            </div>
+                            <div class="times" id="batchContainer" style="padding-left: 10px;padding-right: 10px;">
+                                <!-- Batches will be dynamically added here -->
+                            </div>
+                            <div class="col-12 mt-3">
+                                <a class="dropdown-item add-batch" data-toggle="modal" data-target="#add-batch"><span>+</span>Add batch</a>
+                            </div>
+                            <div class="col-12">
+                                <h3 class="batch-heading">Ground/Lane Booking</h3>
+                                <div class="ground-lanes pt-4 pb-4" id="groundLaneContainer">
+                                    <!-- Ground/lanes will be dynamically added here -->
+                                </div>
+                            </div>
+                            <div class="col-12 mt-3">
+                                <a class="dropdown-item add-batch" data-toggle="modal" style="width: 180px;" data-target="#ground-lane-booking"><span>+</span>Add ground/ Lane</a>
+                            </div>
+                            <div class="col-12">
+                                <h3 class="batch-heading">Payment</h3>
+                                <h3 class="batch-subheading" style="font-size: 12px;font-weight: 500;"><img src="images/course-fee.png" alt="">Course Fee</h3>
+                            </div>
+                            <div class="col-12 col-sm-3">
+                                <input type="text" placeholder="200 CAD" name="courseFee" class="hwzthat-input w-100" required>
+                            </div>
+                            <div class="col-12">
+                                <h3 class="batch-subheading" style="font-size: 12px;font-weight: 600;">Added discounts</h3>
+                            </div>
+                            <div class="col-12" id="discountContainer">
+                                <!-- Discounts will be dynamically added here -->
+                            </div>
+                            <div class="col-12 mt-3">
+                                <a class="dropdown-item add-batch" data-toggle="modal" style="width: 150px;" data-target="#add-discount"><span>+</span>Add discount</a>
+                            </div>
+                            <div class="form-bottom col-12 mt-5">
+                                <div class="col-12">
+                                    <h3 class="batch-heading"><img src="images/description.png" alt="">Description</h3>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <textarea name="courseDescription" class="hwzthat-input w-100" style="min-height: 100px;" required></textarea>
+                                <div class="d-flex align-items-center mt-4 p-3 pt-4" style="gap:10px;justify-content: flex-end;border-top: 1px solid #39248726;">
+                                    <button class="site-btn-outline-info hoverbtn px-5" data-dismiss="modal" aria-label="Close">Cancel</button>
+                                    <button type="submit" class="site-btn-success hoverbtn px-5" style="background-color: #4165ff;border-color: #4165ff;">Save</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Batch Modal -->
+    <div class="modal fade" id="add-batch">
+        <div class="modal-dialog modal-md" role="document" style="max-width: 990px;">
+            <div class="modal-content">
+                <div class="modal-header align-items-center">
+                    <h5 class="modal-title" id="batchModalLabel">Add Batch</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" style="max-height: calc(100vh - 180px); overflow: auto;">
+                    <div class="row">
+                        <div class="col-6 mt-3">
+                            <h6 class="mb-2 subhead-bold">Start time</h6>
+                            <input type="time" placeholder="03:00" value="15:00" name="batchStartTime" class="hwzthat-input w-100" required>
+                        </div>
+                        <div class="col-6 mt-3">
+                            <h6 class="mb-2 subhead-bold">End time</h6>
+                            <input type="time" placeholder="04:00" value="16:00" name="batchEndTime" class="hwzthat-input w-100" required>
+                        </div>
+                    </div>
+                    <div class="col-12 mt-5" style="padding-left: 0;padding-right: 0; display: flex;flex-direction: row; align-items: center;gap:10px;">
+                        <h6 class="heading-icon subhead-bold"> <img src="images/repeat.png" alt="">Repeat</h6>
+                        <label class="switch">
+                            <input type="checkbox" role="switch">
+                            <span class="switch-slider"></span>
+                        </label>
+                    </div>
+                    <div class="col-6 d-flex mt-4">
+                        <div class="col-10 d-flex align-items-center" style="gap: 10px;">
+                            <h6 class="heading-icon">Every</h6>
+                            <select class="hwzthat-input w-100" name="repeatInterval">
+                                <option value="Weekly">Weekly</option>
+                                <option value="Monthly">Monthly</option>
+                                <option value="Yearly">Yearly</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-6 d-flex mt-4">
+                        <div class="col-10 d-flex align-items-center" style="gap: 10px;">
+                            <h6 class="heading-icon">On</h6>
+                            <div class="week">
+                                <div class="day" tabindex="0" aria-selected="false">S</div>
+                                <div class="day" tabindex="0" aria-selected="false">M</div>
+                                <div class="day" tabindex="0" aria-selected="false">T</div>
+                                <div class="day" tabindex="0" aria-selected="false">W</div>
+                                <div class="day" tabindex="0" aria-selected="false">T</div>
+                                <div class="day" tabindex="0" aria-selected="false">F</div>
+                                <div class="day" tabindex="0" aria-selected="false">S</div>
+                            </div>
+                            <script>
+                                document.addEventListener('DOMContentLoaded', (event) => {
+                                    const divs = document.querySelectorAll('.day');
+                                    divs.forEach(div => {
+                                        div.addEventListener('click', function () {
+                                            this.setAttribute('aria-selected', this.getAttribute('aria-selected') === 'true' ? 'false' : 'true'); // Toggle selection
+                                        });
+                                    });
+                                });
+                            </script>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mt-4 p-3" style="gap:10px;gap: 10px;justify-content: flex-end;border-top: 1px solid #39248726;">
+                    <button class="site-btn-outline-info hoverbtn px-5" data-dismiss="modal" aria-label="Close">Cancel</button>
+                    <button class="site-btn-success hoverbtn px-5" id="saveBatchBtn" style="background-color: #4165ff;border-color: #4165ff;">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ground/Lane Booking Modal -->
+    <div class="modal fade" id="ground-lane-booking">
+        <div class="modal-dialog modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-header align-items-center">
+                    <h5 class="modal-title" id="groundLaneModalLabel">Ground/ Lane Booking</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" style="max-height: calc(100vh - 180px); overflow: auto;">
+                    <div class="col-12 d-flex flex-wrap g2 sm-g4">
+                        <select id="sportSelect" class="hwzthat-input col-6 col-sm-3" name="sport" style="font-size: 17px;border-color: #000;">
+                            <!-- Sports will be dynamically added here -->
+                        </select>
+                        <label class="col-6 col-sm-4" for="all" style="display: flex;gap: 10px;align-items: center;">
+                            <input name="radio" type="radio" id="indoor" value="Indoor" checked>Indoor
+                        </label>
+                        <label class="col-6 col-sm-4" for="all" style="display: flex;gap: 10px;align-items: center;">
+                            <input name="radio" type="radio" id="outdoor" value="Outdoor">Outdoor
+                        </label>
+                    </div>
+                    <div class="col-12 mt-4">
+                        <table class="lane-table w-100">
+                            <thead>
+                                <tr class="table-head">
+                                    <th style="border-radius: 8px 0px 0px 8px;">Location</th>
+                                    <th>Lane</th>
+                                    <th style="border-radius: 0px 8px 8px 0px;">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="courtTableBody">
+                                <!-- Courts will be dynamically added here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mt-4 p-3" style="gap:10px;gap: 10px;justify-content: flex-end;border-top: 1px solid #39248726;">
+                    <button class="site-btn-outline-info hoverbtn px-5" data-dismiss="modal" aria-label="Close">Cancel</button>
+                    <button class="site-btn-success hoverbtn px-5" id="saveGroundLaneBtn" style="background-color: #4165ff;border-color: #4165ff;">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Discount Modal -->
+    <div class="modal fade" id="add-discount">
+        <div class="modal-dialog modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-header align-items-center">
+                    <h5 class="modal-title" id="discountModalLabel">Add Discount</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" style="max-height: calc(100vh - 180px); overflow: auto;">
+                    <div class="row">
+                        <div class="col-6 mt-3">
+                            <h6 class="mb-2 ">Discount title</h6>
+                            <input type="text" placeholder="Enter discount title" name="discountTitle" class="hwzthat-input w-100">
+                        </div>
+                        <div class="col-6 mt-3">
+                            <h6 class="mb-2 ">Discount</h6>
+                            <input type="text" placeholder="Enter discount % or Discount amount" name="discountValue" class="hwzthat-input w-100">
+                        </div>
+                    </div>
+                    <div class="col-12 mt-3">
+                        <h3 class="batch-subheading" style="font-size: 13px;font-weight: 500;color:#392487"><span style="color: #392487;">+</span>Add more</h3>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mt-4 p-3" style="gap:10px;gap: 10px;justify-content: flex-end;border-top: 1px solid #39248726;">
+                    <button class="site-btn-outline-info hoverbtn px-5" data-dismiss="modal" aria-label="Close">Cancel</button>
+                    <button class="site-btn-success hoverbtn px-5" id="saveDiscountBtn" style="background-color: #4165ff;border-color: #4165ff;">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script src="js/off-canvas.js"></script>
+    <script src="js/template.js"></script>
+    <script>
+document.addEventListener('DOMContentLoaded', async () => {
+    const organizationId = localStorage.getItem('organizationId');
+
+    const coachesSelect = document.getElementById('coachesSelect');
+    const sportSelect = document.getElementById('sportSelect');
+    const courtTableBody = document.getElementById('courtTableBody');
+    const batchContainer = document.getElementById('batchContainer');
+    const discountContainer = document.getElementById('discountContainer');
+    const newCourseForm = document.getElementById('newCourseForm');
+
+    // Fetch and populate coaches
+    const coachesResponse = await fetch(`/api/user/organization/${organizationId}/coaches`);
+    const coaches = await coachesResponse.json();
+    
+    if (Array.isArray(coaches)) {
+        coaches.forEach(coach => {
+            const option = document.createElement('option');
+            option.value = coach._id;
+            option.textContent = `${coach.firstName} ${coach.lastName}`;
+            coachesSelect.appendChild(option);
+        });
+    } else {
+        console.error('Failed to fetch coaches:', coaches);
+    }
+
+  
+    // Handle add batch modal save button
+    document.getElementById('saveBatchBtn').addEventListener('click', () => {
+        const startTime = document.querySelector('input[name="batchStartTime"]').value;
+        const endTime = document.querySelector('input[name="batchEndTime"]').value;
+        const repeatInterval = document.querySelector('select[name="repeatInterval"]').value;
+        console.log(repeatInterval);
+        const selectedDays = Array.from(document.querySelectorAll('.day[aria-selected="true"]')).map(day => day.textContent.trim());
+        const formData = new FormData(newCourseForm);
+        // Include required fields for batch creation
+        const batch = {
+            name: "Batch Name", // Add a way to get this value from the form
+            startDate: formData.get('courseStartDate'),
+            endDate: formData.get('courseEndDate'),
+            timeSlot: `${startTime} - ${endTime}`,
+            days: selectedDays,
+            repeatInterval: repeatInterval,
+            course: "CourseIdPlaceholder" // This will be replaced later with the actual course ID
+        };
+
+        const batchElement = document.createElement('div');
+        batchElement.className = 'time';
+        batchElement.innerHTML = `
+            <div class="action">
+                <div class="edit"><img src="images/edit-2.png" alt=""></div>
+                <div class="delete"><img src="images/delete-2.png" alt=""></div>
+            </div>
+            <div class="duration">
+                <h4>${startTime} - ${endTime} (${repeatInterval})</h4>
+                <p>Days: ${selectedDays.join(', ')}</p>
+            </div>
+        `;
+        batchContainer.appendChild(batchElement);
+        document.getElementById('batchCount').textContent = batchContainer.children.length;
+
+        const batches = JSON.parse(document.getElementById('batchesInput').value);
+        batches.push(batch);
+        document.getElementById('batchesInput').value = JSON.stringify(batches);
+
+        $('#add-batch').modal('hide'); // Close the modal
+    });
+
+    newCourseForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(newCourseForm);
+
+        const batches = JSON.parse(document.getElementById('batchesInput').value);
+        let groundBookings = JSON.parse(document.getElementById('groundBookingsInput').value);
+
+        console.log(batches);
+        // Set default groundBooking if not set
+        if (groundBookings.length === 0) {
+            groundBookings.push({ sport: 'Cricket', court: 'Cricket Court 1', lanes: [] });
+        }
+
+        const discounts = JSON.parse(document.getElementById('discountsInput').value);
+
+        const courseData = {
+            title: formData.get('courseTitle'),
+            description: formData.get('courseDescription'),
+            duration: formData.get('courseDuration'),
+            price: formData.get('courseFee'),
+            location: formData.get('location'),
+            mode: formData.get('mode'),
+            startDate: formData.get('courseStartDate'),
+            endDate: formData.get('courseEndDate'),
+
+            bannerImage: formData.get('bannerImage') ? formData.get('bannerImage').name : '',
+            coaches: [...document.querySelectorAll('#coachesSelect option:checked')].map(option => option.value),
+            groundBookings,
+            discounts
+        };
+
+        try {
+            // Create the course first
+            const courseResponse = await fetch('/api/courses', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'organizationId': organizationId
+                },
+                body: JSON.stringify(courseData)
+            });
+
+            if (!courseResponse.ok) {
+                const error = await courseResponse.json();
+                throw new Error(`Error creating course: ${error.message}`);
+            }
+
+            const newCourse = await courseResponse.json();
+            const courseId = newCourse._id;
+
+            // Create batches with the course ID
+            const batchPromises = batches.map(async (batch) => {
+                batch.course = courseId;
+                const response = await fetch('/api/batches', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'organizationId': organizationId
+                    },
+                    body: JSON.stringify(batch)
+                });
+                if (!response.ok) {
+                    throw new Error('Failed to create batch');
+                }
+                const newBatch = await response.json();
+                return newBatch._id;
+            });
+
+            const batchIds = await Promise.all(batchPromises);
+
+            // Update the course with the batch IDs
+            const updateResponse = await fetch(`/api/courses/${courseId}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'organizationId': organizationId
+                },
+                body: JSON.stringify({ batches: batchIds })
+            });
+
+            if (!updateResponse.ok) {
+                const error = await updateResponse.json();
+                throw new Error(`Error updating course: ${error.message}`);
+            }
+
+            alert('Course created successfully!');
+            window.location.href = '/courses.html';
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again.');
+        }
+    });
+
+    // Handle add ground/lane modal save button
+    document.getElementById('saveGroundLaneBtn').addEventListener('click', () => {
+        const groundLaneContainer = document.getElementById('groundLaneContainer');
+        const sport = sportSelect.options[sportSelect.selectedIndex].text;
+        const selectedCourts = Array.from(courtTableBody.querySelectorAll('input[type="checkbox"]:checked')).map(input => input.parentElement.textContent.trim());
+        const laneDiv = document.createElement('div');
+        laneDiv.className = 'ground-lane';
+        laneDiv.innerHTML = `
+            <h5>${sport}</h5>
+            <p>${selectedCourts.join(', ')}</p>
+        `;
+        groundLaneContainer.appendChild(laneDiv);
+
+        const groundBookings = JSON.parse(document.getElementById('groundBookingsInput').value);
+        groundBookings.push({ sport, court: selectedCourts.length ? selectedCourts[0] : 'Default Court', lanes: selectedCourts });
+        document.getElementById('groundBookingsInput').value = JSON.stringify(groundBookings);
+
+        $('#ground-lane-booking').modal('hide');
+    });
+
+    // Handle add discount modal save button
+    document.getElementById('saveDiscountBtn').addEventListener('click', () => {
+        const discountTitle = document.querySelector('input[name="discountTitle"]').value;
+        const discountValue = document.querySelector('input[name="discountValue"]').value;
+
+        const discountElement = document.createElement('div');
+        discountElement.className = 'discount-text';
+        discountElement.innerHTML = `
+            <div class="count">${discountContainer.children.length + 1}</div>
+            <h3 class="batch-subheading" style="font-size: 12px;font-weight: 500;">${discountTitle} <span>${discountValue}</span></h3>
+        `;
+        discountContainer.appendChild(discountElement);
+
+        const discounts = JSON.parse(document.getElementById('discountsInput').value);
+        discounts.push({ title: discountTitle, value: discountValue });
+        document.getElementById('discountsInput').value = JSON.stringify(discounts);
+
+        $('#add-discount').modal('hide');
+    });
+});
+ 
+    </script>
+</body>
+</html>

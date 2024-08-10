@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="zxx">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<title>ELITE</title>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css">
+
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css">
+		<link rel="stylesheet" href="css/style-1.css">
+	</head>
+	<body>
+		<a><img src="images/logo.png" alt="logo" class="fixed-logo"></a>
+		<div class="social">
+			<a>
+				<img src="images/facebook.png" alt="facebook">
+			</a>
+			<a>
+				<img src="images/instagram.png" alt="instagram">
+			</a>
+
+		</div>
+		<header>
+			<div class="elite_space header-align">
+				<div class="logo header-left">
+					<!-- <img src="images/logo.png" alt="logo"> -->
+				</div>
+				<div class="header-right">
+					<div class="nav">
+						<a href="index.html" class="nav-items active">Home</a>
+						<a class="nav-items">Team</a>
+						<a class="nav-items">Programs</a>
+						<a class="nav-items">About</a>
+						<a class="nav-items">Contact</a>
+					</div>
+					<div class="nav-buttons">
+						<a href="login.html" class="login-btn">
+							<img src="images/login.png" alt="login">
+							Log In
+						</a>
+					</div>
+				</div>
+				<div class="menu">
+					<span></span>
+					<span></span>
+					<span></span>
+				</div>
+			</div>
+		</header>
+		<div class="main">
+			<div class="banner">
+				<div class="slideshow">
+				  <div class="slider">
+					<div class="item">
+					  <img src="images/athlet-bg.png" alt="slider" />
+					</div>
+					<div class="item">
+					  <img src="images/parent-bg.png" alt="slider" />
+					</div>
+					
+				  </div>
+				</div>
+				<div class="slideshow-text">
+				  <div class="item">
+					<h1>
+						Elevate<br> your game<br>like never <br>before
+					</h1>
+					<h5>Are you ready to take your cricket skills to the next level?</h5>
+					<div class="flex-align">
+						<button class="button-elite">get started</button>
+						<button class="button-elite2">contact us</button>
+					</div>
+				  </div>
+				  <div class="item">
+					<h1>
+						Elevate<br> your game<br>like never <br>before2
+					</h1>
+					<h5>Are you ready to take your cricket skills to the next level?</h5>
+					<div class="flex-align">
+						<button class="btn button-elite">get started</button>
+						<button class="btn button-elite2">contact us</button>
+					</div>
+				  </div>
+				</div>
+			</div>
+			<div class="ad-section">
+				<h4>"Experience a learning environment like no other, where technique and talent are nurtured into true excellence. We don't just teach cricket; we shape champions."</h4>
+			</div>
+			<div class="about">
+				<ul class="aboutSlider">
+					<li class="slide">
+						<div class="about-left">
+							<img src="images/parent-bg.png" alt="aslider" />
+						</div>
+						<div class="about-right">
+							<h6>Welcome to Elite Cricket Academy</h6>
+							<h2>Nurturing champions of tomorrow</h2>
+							<p>At Elite Cricket Academy, We are dedicated to providing a  world-class cricketer training experience for players of all ages and skill level. Our state-of-the-art facilities , combined with our team of expert coaches. create an environment where every player can thrive and reach  their full potential</p>
+
+						</div>
+					</li>
+					<li class="slide">
+						<div class="about-left">
+							<img src="images/athlet-bg.png" alt="aslider" />
+						</div>
+						<div class="about-right">
+							<h6>Welcome to Elite Cricket Academy</h6>
+							<h2>Nurturing champions of tomorrow</h2>
+							<p>At Elite Cricket Academy, We are dedicated to providing a  world-class cricketer training experience for players of all ages and skill level. Our state-of-the-art facilities , combined with our team of expert coaches. create an environment where every player can thrive and reach  their full potential</p>
+						</div>
+					</li>
+		
+				</ul>
+			</div> 
+		</div>
+		<script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.js"></script>
+
+		<script type="text/javascript">
+			$(".menu").on('click', function () {
+
+			    var selector = $("body")
+
+			    if (selector.hasClass('open')) {
+			        
+			        selector.removeClass('open');
+			    } else {
+			        
+			        selector.addClass('open');
+			    }
+			});
+		</script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+			  var $slider = $('.slideshow .slider'),
+				  maxItems = $('.item', $slider).length;
+		  
+			  $slider.addClass('slideshow-left').slick({
+				vertical: true,
+				verticalSwiping: true,
+				arrows: false,
+				infinite: true,
+				dots: true,
+				speed: 2000,
+				cssEase: 'cubic-bezier(0.7, 0, 0.3, 1)'
+			  }).on('beforeChange', function(event, slick, currentSlide, nextSlide) {
+				if (currentSlide > nextSlide && nextSlide == 0 && currentSlide == maxItems - 1) {
+				  $('.slideshow-right .slider').slick('slickGoTo', -1);
+				  $('.slideshow-text').slick('slickGoTo', maxItems);
+				} else if (currentSlide < nextSlide && currentSlide == 0 && nextSlide == maxItems - 1) {
+				  $('.slideshow-right .slider').slick('slickGoTo', maxItems);
+				  $('.slideshow-text').slick('slickGoTo', -1);
+				} else {
+				  $('.slideshow-right .slider').slick('slickGoTo', maxItems - 1 - nextSlide);
+				  $('.slideshow-text').slick('slickGoTo', nextSlide);
+				}
+			  });
+		  
+			  // Remove the mousewheel event handling
+		  
+			  $('.slideshow-right .slider').slick({
+				swipe: false,
+				vertical: true,
+				arrows: false,
+				infinite: true,
+				speed: 950,
+				cssEase: 'cubic-bezier(0.7, 0, 0.3, 1)',
+				initialSlide: maxItems - 1
+			  });
+		  
+			  $('.slideshow-text').slick({
+				swipe: false,
+				vertical: true,
+				arrows: false,
+				infinite: true,
+				speed: 900,
+				cssEase: 'cubic-bezier(0.7, 0, 0.3, 1)'
+			  });
+		  
+			  // Auto slide function
+			  function autoSlide() {
+				$('.slideshow-left').slick('slickNext');
+				setTimeout(autoSlide, 5000); // Adjust the interval (3000ms = 3 seconds)
+			  }
+		  
+			  // Start auto sliding
+			  autoSlide();
+			});
+		  </script>
+
+
+		  <script>
+			$(document).ready(function(){
+				$(".aboutSlider").slick({
+					autoplay: true,
+					autoplaySpeed: 3000, // Adjust this value (in milliseconds)
+					infinite: true,
+					slidesToShow: 1,
+					slidesToScroll: 1,
+					arrows: false,
+					dots: true,
+					vertical: true, 
+            		verticalSwiping: true 
+				});
+			});
+		</script>
+		  
+
+	</body>
+</html>

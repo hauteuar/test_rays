@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>TJS</title>
+  <link rel="stylesheet" href="css/style.css">
+
+
+  <link rel="shortcut icon" href="images/favicon.png" />
+
+  <script src="components/sidebar.js" type="text/javascript" defer></script>
+  <script src="components/topnav.js" type="text/javascript" defer></script>
+
+</head>
+
+<body>
+  <div class="container-scroller">
+
+    <topnav-component></topnav-component>
+
+    <div class="container-fluid page-body-wrapper">
+      <sidebar-component data-page="coaches"></sidebar-component>
+
+      <div class="main-panel">
+        
+        <div class="content-wrapper pt-1">
+          <div class="flex-align second-header py-2" style="min-height: 50px;gap:10px">
+            <div class="m-0 " style="display: flex;align-items: center;gap:10px;">
+              <a href="coaches.html" style="color:gray;">Coach</a>
+              <img src="images/arrow-left.png" style="width: 16px;">
+              <span>Coach name S</span>
+            </div>
+            <div class="flex-align2 cursor-pointer" style="gap:5px;">
+              <img src="images/delete2.png" style="width: 15px; height: 15px; object-fit: contain;">
+              <h5>Delete profile</h5>
+             
+            </div>
+          </div>
+          <div class="row m-0 team-row pt-1">
+            <div class="team-member-left hwzthat-coaches">
+                        <div class="" style="display:flex;flex-direction: column;gap:10px">
+                          <div class="coach-card">
+                            <img src="images/coach-dp.png" class="coach-dp">
+                            <div class="coach-card-absolute">
+                              <h4 class="mb-2 text-white">Coach name A</h4>
+                              <h5 class="text-white" style="opacity: .8; font-weight: 300;">Coach name A@11gmail.com</h5>
+                            </div>
+                          </div>
+                          <div class="flex-align2 g1 mt-2">
+                            <button class="btn flex-align2 g1 btn-outline-info" style="padding: 10px  15px; border-radius: 20px; font-size: 12px;">
+                              <img src="images/chat-btn.png" style="width: 15px;">
+                              Chat Now
+                            </button>
+                            <button class="btn flex-align2 g1 btn-outline-info" style="padding: 10px 15px; border-radius: 20px; font-size: 12px;">
+                              <img src="images/schedule-btn.png" style="width: 15px;">
+                              Schedule meeting
+                            </button>
+
+                          </div>
+                          <div class="mt-3">
+                            <h5 class="font-weight-500 mb-1" style="font-size: 14px;">About Me</h5>
+                            <h6 style="font-size: 12px; line-height: 20px; color: #000;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed consectetur sem id porttitor tempor. Nunc sodales, neque nec hendrerit consequat, mauris elit euismod.</h6>
+                          </div>
+                          <div class="mt-3">
+                            <div class="accordion2 flex-align mb-1 cursor-pointer border-bottom pb-2">
+                              <h5 class="font-weight-500" style="font-size: 14px;">Profile details</h5>
+                              <img src="images/arrow-down3.png" style="width: 10px; transform: rotate(-90deg);">
+                            </div>
+                            <div class="panel" style="display: none;">
+                              <h6 style="font-size: 12px; line-height: 20px; color: #000;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed consectetur sem id porttitor tempor. Nunc sodales, neque nec hendrerit consequat, mauris elit euismod.</h6>
+                            </div>
+                          </div>
+                          
+                        </div>
+            </div>
+            <div class="team-member-right">
+              <div class="hwzthat-tabs">
+                <div class="tabs-to-dropdown ">
+                  <div class="nav-wrapper d-flex align-items-center justify-content-between mb-2 card">
+                    <ul class="nav nav-pills d-md-flex" id="pills-tab" role="tablist">
+                      <li class="nav-item" role="presentation">
+                        <a class="nav-link active" id="pills-calendar-tab" data-toggle="pill" href="#pills-calendar " role="tab" aria-controls="pills-calendar " aria-selected="true">Calendar</a>
+                      </li>
+                      <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="pills-working_hours-tab" data-toggle="pill" href="#pills-working_hours" role="tab" aria-controls="pills-working_hours" aria-selected="false">Working hours</a>
+                      </li>
+                      <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="pills-leave-tab" data-toggle="pill" href="#pills-leave" role="tab" aria-controls="pills-leave" aria-selected="false">Leave</a>
+                      </li>
+                      <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="pills-payment-tab" data-toggle="pill" href="#pills-payment" role="tab" aria-controls="pills-payment" aria-selected="false">Payment</a>
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="tab-content" id="pills-tabContent">
+                    <div class="tab-pane fade active show" id="pills-calendar" role="tabpanel" aria-labelledby="pills-calendar-tab">
+                      <div>
+                        <div class="p-3 flex-align g3 card" style="flex-direction: row;">
+                          <div class="flex-align2 g3 px-4">
+                            <img src="images/arrow-left-3.png" style="width: 15px;">
+                            <b class="px-2" style="font-size: 14px;">May 2023</b>
+                            <img src="images/arrow-right-3.png" style="width: 15px;">
+                          </div>
+                          <ul class="nav nav-pills d-md-flex tab-type-3" id="pills-tab2" role="tablist">
+                            <li class="nav-item" role="presentation">
+                              <a class="nav-link active" id="pills-month-tab" data-toggle="pill" href="#pills-month" role="tab" aria-controls="pills-month" aria-selected="true">Month</a>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                              <a class="nav-link" id="pills-week-tab" data-toggle="pill" href="#pills-week" role="tab" aria-controls="pills-week" aria-selected="false">Week</a>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                              <a class="nav-link" id="pills-day-tab" data-toggle="pill" href="#pills-day" role="tab" aria-controls="pills-day" aria-selected="false">Day</a>
+                            </li>
+                          </ul>
+                          
+
+                        </div>
+                        <div class="tab-content" id="pills-tabContent2">
+                          <div class="tab-pane fade active show" id="pills-month" role="tabpanel" aria-labelledby="pills-month-tab">
+                            <div class="calender-table3 card" style="border-radius: 0 0 10px 10px;">
+                              <table>
+                                <thead>
+                                  <tr>
+                                    <th>Su</th>
+                                    <th>Mo</th>
+                                    <th>Tu</th>
+                                    <th>We</th>
+                                    <th>Th</th>
+                                    <th>fr</th>
+                                    <th>Sa</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td>1</td>
+                                    <td class="active">2</td>
+                                    <td>3</td>
+                                    <td class="active">4</td>
+                                    <td>5</td>
+                                  </tr>
+                                  <tr>
+                                    <td>6</td>
+                                    <td>7</td>
+                                    <td>8</td>
+                                    <td>9</td>
+                                    <td>10</td>
+                                    <td>11</td>
+                                    <td>12</td>
+                                  </tr>
+                                  <tr>
+                                    <td>13</td>
+                                    <td class="active">14</td>
+                                    <td>15</td>
+                                    <td class="active">16</td>
+                                    <td>17</td>
+                                    <td class="active">18</td>
+                                    <td>19</td>
+                                  </tr>
+                                  <tr>
+                                    <td>20</td>
+                                    <td>21</td>
+                                    <td>22</td>
+                                    <td>23</td>
+                                    <td>24</td>
+                                    <td>25</td>
+                                    <td>26</td>
+                                  </tr>
+                                  <tr>
+                                    <td>27</td>
+                                    <td class="active">28</td>
+                                    <td>29</td>
+                                    <td class="selected">30</td>
+                                    <td>31</td>
+                                    <td class="next-month">1</td>
+                                    <td class="next-month">2</td>
+                                  </tr>
+                                  
+                                </tbody>
+                              </table>
+                            </div>
+                            <div class="mt-4">
+                              <div class="flex-align g2">
+                                <h5 class="font-weight-600">Schedules for May 30, 2023</h5>
+                                <h6 class="text-12"><span class="text-gray">Total </span>3</h6>
+                              </div>
+                              <div class="w-100" style="overflow: auto;">
+                                <table class="w-100 mt-2">
+                                  <tbody>
+                                    <tr data-href="coach-course.html" class="bg-white mt-2" style="width: 100%; display:table;">
+                                      <td class="p-3" style="width:25%;">
+                                        <h6 class="text-gray text-12 mb-2">Course</h6>
+                                        <h5>Fundamentals of Cricket</h5>
+                                      </td>
+                                      <td class="p-3" style="width:25%;">
+                                        <h6 class="text-gray text-12 mb-2">Batch</h6>
+                                        <h5>10:00 am-11:00 am</h5>
+                                      </td>
+                                      <td class="p-3" style="width:25%;">
+                                        <h6 class="text-gray text-12 mb-2">Students</h6>
+                                        <h5>20</h5>
+                                      </td>
+                                      <td class="p-3" style="width:25%;">
+                                        <h6 class="text-gray text-12 mb-2">Days</h6>
+                                        <h5>Weekly, Mo-Tu-We</h5>
+                                      </td>
+                                    </tr>
+                                    <tr data-href="coach-course.html" class="bg-white mt-2" style="width: 100%; display:table;">
+                                      <td class="p-3" style="width:25%;">
+                                        <h6 class="text-gray text-12 mb-2">Course</h6>
+                                        <h5>Package D</h5>
+                                      </td>
+                                      <td class="p-3" style="width:25%;">
+                                        <h6 class="text-gray text-12 mb-2">Batch</h6>
+                                        <h5>12:00 pm-01:30 pm</h5>
+                                      </td>
+                                      <td class="p-3" style="width:25%;">
+                                        <h6 class="text-gray text-12 mb-2">Students</h6>
+                                        <h5>10</h5>
+                                      </td>
+                                      <td class="p-3" style="width:25%;">
+                                        <h6 class="text-gray text-12 mb-2">Days</h6>
+                                        <h5>Weekly, Mo-Tu-We</h5>
+                                      </td>
+                                    </tr>
+                                    <tr data-href="coach-course.html" class="bg-white mt-2" style="width: 100%; display:table;">
+                                      <td class="p-3" style="width:25%;">
+                                        <h6 class="text-gray text-12 mb-2">Course</h6>
+                                        <h5>Package C</h5>
+                                      </td>
+                                      <td class="p-3" style="width:25%;">
+                                        <h6 class="text-gray text-12 mb-2">Batch</h6>
+                                        <h5>102:00 pm-03:00 pm</h5>
+                                      </td>
+                                      <td class="p-3" style="width:25%;">
+                                        <h6 class="text-gray text-12 mb-2">Students</h6>
+                                        <h5>8</h5>
+                                      </td>
+                                      <td class="p-3" style="width:25%;">
+                                        <h6 class="text-gray text-12 mb-2">Days</h6>
+                                        <h5>Weekly, Mo-Tu-We</h5>
+                                      </td>
+                                    </tr>
+                                    
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="tab-pane fade" id="pills-week" role="tabpanel" aria-labelledby="pills-week-tab">
+                            Week
+                          </div>
+                          <div class="tab-pane fade" id="pills-day" role="tabpanel" aria-labelledby="pills-day-tab">
+                            <div class="vertical-table card" style="border-radius: 0 0 10px 10px;">
+                              <table class="w-100">
+                                <tr>
+                                  <th>6am</th>
+                                  <td></td>
+                                </tr>
+                                <tr>
+                                  <th>7am</th>
+                                  <td></td>
+                                </tr>
+                                <tr>
+                                  <th>8am</th>
+                                  <td></td>
+                                </tr>
+                                <tr>
+                                  <th>9am</th>
+                                  <td></td>
+                                </tr>
+                                <tr>
+                                  <th>10am</th>
+                                  <td class="day-sec">
+                                    <div class="day-sec-absolute" style="height: 65px;">
+                                      <div>
+                                        <h5 class="mb-2">Package A</h5>
+                                        <h5 class="text-gray">10:00 am-11:30 am</h5>
+                                      </div>
+                                      <h5 class="text-gray">Students 5</h5>
+
+
+                                    </div>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <th>11am</th>
+                                  <td></td>
+                                </tr>
+                                <tr>
+                                  <th>12am</th>
+                                  <td></td>
+                                </tr>
+                                <tr>
+                                  <th>1pm</th>
+                                  <td></td>
+                                </tr>
+                                <tr>
+                                  <th>2pm</th>
+                                  <td></td>
+                                </tr>
+                                <tr>
+                                  <th>3pm</th>
+                                  <td></td>
+                                </tr>
+                              </table>
+                            </div>
+                            <div class="mt-4">
+                              <div class="flex-align g2">
+                                <h5 class="font-weight-600">Batch assignment for May 30, 2023</h5>
+                                <h6 class="text-12"><span class="text-gray">Total </span>3</h6>
+                              </div>
+                              <div class="w-100" style="overflow: auto;">
+                                <table class="w-100 mt-2">
+                                  <tbody>
+                                    <tr class="bg-white mt-2" style="width: 100%; display:table;">
+                                      <td class="p-3" style="width:25%;">
+                                        <h6 class="text-gray text-12 mb-2">Course</h6>
+                                        <h5>Fundamentals of Cricket</h5>
+                                      </td>
+                                      <td class="p-3" style="width:25%;">
+                                        <h6 class="text-gray text-12 mb-2">Batch</h6>
+                                        <h5>10:00 am-11:00 am</h5>
+                                      </td>
+                                      <td class="p-3" style="width:25%;">
+                                        <h6 class="text-gray text-12 mb-2">Students</h6>
+                                        <h5>20</h5>
+                                      </td>
+                                      <td class="p-3" style="width:25%;">
+                                        <h6 class="text-gray text-12 mb-2">Days</h6>
+                                        <h5>Weekly, Mo-Tu-We</h5>
+                                      </td>
+                                    </tr>
+                                   
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                    </div>
+                    <div class="tab-pane fade" id="pills-working_hours" role="tabpanel" aria-labelledby="pills-working_hours-tab">
+                      <div class="card p-md-4 p-2">
+                        <div class="flex-align2 g3 m-2">
+                          <div class="flex-align2 g2" style="min-width: 150px;">
+                            <div class="toggle">
+                              <input type="checkbox" name="" checked>
+                              <span class="toggle-bar"></span>
+                            </div>
+                            <h5>Monday</h5>
+                          </div>
+                          <div class="flex-align2 g2">
+                            <input type="time" value="11:30" class="hwzthat-input2" id="timeInput">
+                            <h6 class="m-0 px-md-4">to</h6>
+                            <input type="time" value="01:00" class="hwzthat-input2" id="timeInput">
+                          </div>
+                        </div>
+                        <div class="flex-align2 g3 m-2">
+                          <div class="flex-align2 g2" style="min-width: 150px;">
+                            <div class="toggle">
+                              <input type="checkbox" name="" checked>
+                              <span class="toggle-bar"></span>
+                            </div>
+                            <h5>Tuesday</h5>
+                          </div>
+                          <div class="flex-align2 g2">
+                            <input type="time" value="11:30" class="hwzthat-input2" id="timeInput">
+                            <h6 class="m-0 px-md-4">to</h6>
+                            <input type="time" value="01:00" class="hwzthat-input2" id="timeInput">
+                          </div>
+                        </div>
+                        <div class="flex-align2 g3 m-2">
+                          <div class="flex-align2 g2" style="min-width: 150px;">
+                            <div class="toggle">
+                              <input type="checkbox" name="" checked>
+                              <span class="toggle-bar"></span>
+                            </div>
+                            <h5>Wednesday</h5>
+                          </div>
+                          <div class="flex-align2 g2">
+                            <input type="time" value="11:30" class="hwzthat-input2" id="timeInput">
+                            <h6 class="m-0 px-md-4">to</h6>
+                            <input type="time" value="01:00" class="hwzthat-input2" id="timeInput">
+                          </div>
+                        </div>
+                        <div class="flex-align2 g3 m-2">
+                          <div class="flex-align2 g2" style="min-width: 150px;">
+                            <div class="toggle">
+                              <input type="checkbox" name="" checked>
+                              <span class="toggle-bar"></span>
+                            </div>
+                            <h5>Thursday</h5>
+                          </div>
+                          <div class="flex-align2 g2">
+                            <input type="time" value="11:30" class="hwzthat-input2" id="timeInput">
+                            <h6 class="m-0 px-md-4">to</h6>
+                            <input type="time" value="01:00" class="hwzthat-input2" id="timeInput">
+                          </div>
+                        </div>
+                        <div class="flex-align2 g3 m-2">
+                          <div class="flex-align2 g2" style="min-width: 150px;">
+                            <div class="toggle">
+                              <input type="checkbox" name="" checked>
+                              <span class="toggle-bar"></span>
+                            </div>
+                            <h5>Friday</h5>
+                          </div>
+                          <div class="flex-align2 g2">
+                            <input type="time" value="11:30" class="hwzthat-input2" id="timeInput">
+                            <h6 class="m-0 px-md-4">to</h6>
+                            <input type="time" value="01:00" class="hwzthat-input2" id="timeInput">
+                          </div>
+                        </div>
+                        <div class="flex-align2 g3 m-2">
+                          <div class="flex-align2 g2" style="min-width: 150px;">
+                            <div class="toggle">
+                              <input type="checkbox" name="" checked>
+                              <span class="toggle-bar"></span>
+                            </div>
+                            <h5>Saturday</h5>
+                          </div>
+                          <div class="flex-align2 g2">
+                            <input type="time" value="11:30" class="hwzthat-input2" id="timeInput">
+                            <h6 class="m-0 px-md-4">to</h6>
+                            <input type="time" value="01:00" class="hwzthat-input2" id="timeInput">
+                          </div>
+                        </div>
+                        <div class="flex-align2 g3 m-2">
+                          <div class="flex-align2 g2" style="min-width: 150px;">
+                            <div class="toggle">
+                              <input type="checkbox" name="" checked>
+                              <span class="toggle-bar"></span>
+                            </div>
+                            <h5>Sunday</h5>
+                          </div>
+                          <div class="flex-align2 g2">
+                            <input type="time" value="11:30" class="hwzthat-input2" id="timeInput">
+                            <h6 class="m-0 px-md-4">to</h6>
+                            <input type="time" value="01:00" class="hwzthat-input2" id="timeInput">
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+                    <div class="tab-pane fade" id="pills-leave" role="tabpanel" aria-labelledby="pills-leave-tab">
+                      <div class="row px-3 py-1 mx-0" style="background-color:#E5E7F1; border-radius: 4px;">
+                        <div class="col-md-3 col-6 not-last-border-right-before p-3">
+                          <h5 class="text-gray mb-2">Total applied leaves</h5>
+                          <h6 class="font-weight-600">6</h6>
+                        </div>
+                        <div class="col-md-3 col-6 not-last-border-right-before p-3">
+                          <h5 class="text-gray mb-2">Approved</h5>
+                          <h6 class="font-weight-600">5</h6>
+                        </div>
+                        <div class="col-md-3 col-6 not-last-border-right-before p-3">
+                          <h5 class="text-gray mb-2">Pending approval</h5>
+                          <h6 class="font-weight-600">1</h6>
+                        </div>
+                        <div class="col-md-3 col-6 not-last-border-right-before p-3">
+                          <h5 class="text-gray mb-2">Available leaves</h5>
+                          <h6 class="font-weight-600">6</h6>
+                        </div>
+
+                      </div>
+                      <div class="card team-table mt-3">
+                        <table>
+                          <thead>
+                            <tr>
+                              <th>Leave type</th>
+                              <th>Start date</th>
+                              <th>End date</th>
+                              <th>Duration</th>
+                              <th>Status</th>
+                              
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td style="font-weight: 600;">Casual</td>
+                              <td style="font-weight: 600;">11-02-2024</td>
+                              <td style="font-weight: 600;">13-02-2024</td>
+                              <td style="font-weight: 600;">2days</td>
+                              <td class="d-flex g2">
+                                <button class="btn btn-outline-success px-2" style="border-radius: 5px;">Approve</button>
+                                <button class="btn btn-outline-danger px-2" style="border-radius: 5px;">Reject</button>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td style="font-weight: 600;">Casual</td>
+                              <td style="font-weight: 600;">11-02-2024</td>
+                              <td style="font-weight: 600;">13-02-2024</td>
+                              <td style="font-weight: 600;">1days</td>
+                              <td class="flex-align2 g1">
+                                <span class="bg-success" style="width: 10px;height: 10px; border-radius:50%;"></span> Approved
+                              </td>
+                            </tr>
+                            <tr>
+                              <td style="font-weight: 600;">Sick</td>
+                              <td style="font-weight: 600;">11-02-2024</td>
+                              <td style="font-weight: 600;">13-02-2024</td>
+                              <td style="font-weight: 600;">1days</td>
+                              <td class="flex-align2 g1">
+                                <span class="bg-success" style="width: 10px;height: 10px; border-radius:50%;"></span> Approved
+                              </td>
+                            </tr>
+                            <tr>
+                              <td style="font-weight: 600;">Casual</td>
+                              <td style="font-weight: 600;">11-02-2024</td>
+                              <td style="font-weight: 600;">13-02-2024</td>
+                              <td style="font-weight: 600;">1days</td>
+                              <td class="flex-align2 g1">
+                                <span class="bg-success" style="width: 10px;height: 10px; border-radius:50%;"></span> Approved
+                              </td>
+                            </tr>
+                            <tr>
+                              <td style="font-weight: 600;">Casual</td>
+                              <td style="font-weight: 600;">11-02-2024</td>
+                              <td style="font-weight: 600;">13-02-2024</td>
+                              <td style="font-weight: 600;">1days</td>
+                              <td class="flex-align2 g1">
+                                <span class="bg-danger" style="width: 10px;height: 10px; border-radius:50%;"></span> Rejected
+                              </td>
+                            </tr>
+                            <tr>
+                              <td style="font-weight: 600;">Sick</td>
+                              <td style="font-weight: 600;">11-02-2024</td>
+                              <td style="font-weight: 600;">13-02-2024</td>
+                              <td style="font-weight: 600;">1days</td>
+                              <td class="flex-align2 g1">
+                                <span class="bg-success" style="width: 10px;height: 10px; border-radius:50%;"></span> Approved
+                              </td>
+                            </tr>
+                            
+                           
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                    <div class="tab-pane fade" id="pills-payment" role="tabpanel" aria-labelledby="pills-payment-tab">
+                      <div class="card p-md-4 p-2">
+                        <div class="my-2 flex-align2" style="gap: 50px;">
+                          <label class="flex-align2 g2 cursor-pointer" for="hourly" style="min-width: 150px;">
+                            <input type="radio" id="hourly" name="pay" checked>
+                            <h5>Hourly pay</h5>
+                          </label>
+                          <div class="flex-align2" >
+                            <input class="hwzthat-input2" type="text" value="5" style="width: 50px; border-radius: 4px 0 0 4px;">
+                            <select style="width: fit-content; border-radius: 0 4px 4px 0;">
+                              <option>CAD</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="my-2">
+                          <label class="flex-align2 g2 cursor-pointer" for="monthly" style="min-width: 150px;">
+                            <input type="radio" id="monthly" name="pay">
+                            <h5>Monthly pay</h5>
+                          </label>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>  
+                       
+              </div>
+                      
+            </div>
+          
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+  <script src="js/off-canvas.js"></script>
+  <script src="js/template.js"></script>
+ 
+
+
+  <script>
+    var acc = document.getElementsByClassName("accordion2");
+    var i;
+    
+    for (i = 0; i < acc.length; i++) {
+      acc[i].addEventListener("click", function() {
+        this.classList.toggle("active");
+        var panel = this.nextElementSibling;
+        if (panel.style.display === "flex") {
+          panel.style.display = "none";
+        } else {
+          panel.style.display = "flex";
+        }
+      });
+    }
+    </script>
+
+    <script>
+      $(document).ready(function(){
+          $('table tr').click(function(){
+              window.location = $(this).data('href');
+              return false;
+          });
+      });
+    </script>
+    
+</body>
+
+</html>

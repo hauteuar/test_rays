@@ -1,0 +1,317 @@
+/*=========== TABLE OF CONTENTS ===========
+1. Common CSS
+2. Page CSS
+==========================================*/
+
+/*-------------------------------------
+  1. Common CSS
+--------------------------------------*/
+.column-one__forgot-password {
+  color: var(--red_a700) !important;
+  font-family: GT Walsheim Pro !important;
+  font-weight: 500 !important;
+}
+
+.column-one__social-icon--google {
+  height: 42px;
+  width: 42px;
+}
+
+/*-------------------------------------
+  2. Page CSS
+--------------------------------------*/
+.stackscreenshot_2024-one {
+  height: 1116px;
+  background-color: var(--black_900);
+  width: 100%;
+  position: relative;
+}
+
+.rowscreenshot20 {
+  flex: 1;
+  display: flex;
+  align-items: start;
+  position: absolute;
+  left: 0px;
+  bottom: 0px;
+  right: 0px;
+  top: 0px;
+  height: max-content;
+  margin: auto;
+  @media only screen and (max-width: 1050px) {
+    flex-direction: column;
+    position: relative;
+  }
+}
+
+.frame-2627__image-1 {
+  height: 1116px;
+  align-self: center;
+  width: 24%;
+  object-fit: cover;
+  @media only screen and (max-width: 1050px) {
+    width: 100%;
+  }
+}
+
+.screenshot2024-1 {
+  height: 198px;
+  margin-left: -576px;
+  position: relative;
+  width: 100%;
+  object-fit: cover;
+  @media only screen and (max-width: 1440px) {
+    height: auto;
+  }
+
+  @media only screen and (max-width: 1050px) {
+    margin-left: 0px;
+  }
+}
+
+.rowpassword {
+  padding-left: 56px;
+  padding-right: 56px;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  left: 0px;
+  bottom: 0px;
+  right: 0px;
+  top: 0px;
+  height: max-content;
+  margin: auto;
+  @media only screen and (max-width: 1050px) {
+    flex-direction: column;
+    position: relative;
+    padding-left: var(--space-2xl);
+    padding-right: var(--space-2xl);
+  }
+
+  @media only screen and (max-width: 550px) {
+    padding-left: var(--space-xl);
+    padding-right: var(--space-xl);
+  }
+}
+
+.rowdescription {
+  width: 54%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  @media only screen and (max-width: 1050px) {
+    flex-direction: column;
+    width: 100%;
+  }
+}
+
+.rowdescription__text {
+  margin-bottom: 342px;
+  font-family: GT Walsheim Pro !important;
+  z-index: 1;
+  align-self: end;
+  position: relative;
+  width: 54%;
+  line-height: 42px;
+  @media only screen and (max-width: 1440px) {
+    width: 54%;
+  }
+
+  @media only screen and (max-width: 1050px) {
+    align-self: auto;
+    width: 100%;
+    font-size: 22px;
+  }
+}
+
+.rowdescription__image {
+  height: 1116px;
+  margin-left: -272px;
+  position: relative;
+  width: 44%;
+  object-fit: cover;
+  @media only screen and (max-width: 1050px) {
+    width: 100%;
+    margin-left: 0px;
+  }
+}
+
+.column-one {
+  margin-bottom: 166px;
+  margin-left: -200px;
+  gap: 32px;
+  align-self: end;
+  position: relative;
+  background-color: var(--white_a700);
+  box-shadow: var(--shadow-xs);
+  display: flex;
+  width: 32%;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--space-4xl);
+  border-radius: var(--radius-md);
+  @media only screen and (max-width: 1050px) {
+    align-self: auto;
+    width: 100%;
+    margin-left: 0px;
+  }
+
+  @media only screen and (max-width: 550px) {
+    padding: var(--space-xl);
+  }
+}
+
+.column-one__images {
+  width: 26%;
+  @media only screen and (max-width: 1440px) {
+    width: 100%;
+  }
+
+  @media only screen and (max-width: 1050px) {
+    width: 100%;
+  }
+}
+
+.column-one__image--whatsapp {
+  height: 92px;
+  margin-left: 24px;
+  margin-right: 22px;
+  width: 92px;
+  object-fit: cover;
+  @media only screen and (max-width: 1050px) {
+    margin-left: 0px;
+    margin-right: 0px;
+  }
+}
+
+.column-one__image--whatsapp-small {
+  height: 24px;
+  object-fit: cover;
+  width: 100%;
+  @media only screen and (max-width: 1440px) {
+    height: auto;
+  }
+
+  @media only screen and (max-width: 1050px) {
+    height: auto;
+  }
+}
+
+.column-one__form {
+  margin-bottom: 8px;
+  gap: var(--space-3xl);
+  display: flex;
+  width: 90%;
+  flex-direction: column;
+  align-items: end;
+  @media only screen and (max-width: 1440px) {
+    width: 100%;
+  }
+
+  @media only screen and (max-width: 1050px) {
+    width: 100%;
+  }
+}
+
+.column-one__username-row {
+  padding-top: var(--space-2xl);
+  padding-bottom: var(--space-2xl);
+  align-self: stretch;
+  display: flex;
+  border-bottom: 1px solid var(--red_a700);
+}
+
+.column-one__username {
+  color: var(--black_900_cc) !important;
+  font-family: GT Walsheim Pro !important;
+}
+
+.column-one__password-input {
+  color: var(--black_900_cc);
+  font-family: GT Walsheim Pro;
+  border-bottom-width: 1px;
+  border-color: var(--red_a700);
+  align-self: stretch;
+}
+
+.column-one__login-row {
+  align-self: stretch;
+}
+
+.column-one__login-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.column-one__signup-row {
+  margin-top: 28px;
+  margin-left: 78px;
+  margin-right: 78px;
+  gap: var(--space-2xl);
+  display: flex;
+  align-self: stretch;
+  justify-content: center;
+  flex-wrap: wrap;
+  @media only screen and (max-width: 1050px) {
+    margin-left: 0px;
+    margin-right: 0px;
+  }
+}
+
+.column-one__signup-text {
+  color: var(--black_900_01) !important;
+  font-family: GT Walsheim Pro !important;
+}
+
+.column-one__separator-text {
+  color: var(--black_900_01) !important;
+  margin-top: 10px;
+  font-family: GT Walsheim Pro !important;
+}
+
+.column-one__social-row {
+  margin-top: 12px;
+  width: 30%;
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-2xl);
+  @media only screen and (max-width: 1440px) {
+    width: 100%;
+  }
+
+  @media only screen and (max-width: 1050px) {
+    width: 100%;
+  }
+}
+
+.frame-2627__image {
+  height: 1116px;
+  width: 32%;
+  object-fit: cover;
+  position: absolute;
+  right: 0px;
+  bottom: 0px;
+  top: 0px;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.description {
+  font-family: GT Walsheim Pro !important;
+  width: 46%;
+  line-height: 69px;
+  position: absolute;
+  left: 9%;
+  top: 31%;
+  margin: auto;
+  @media only screen and (max-width: 1050px) {
+    font-size: 38px;
+  }
+
+  @media only screen and (max-width: 550px) {
+    font-size: 32px;
+  }
+}

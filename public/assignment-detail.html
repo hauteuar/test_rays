@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Assignment Detail</title>
+  <link rel="stylesheet" href="vendors/ti-icons/css/themify-icons.css">
+  <link rel="stylesheet" href="css/style-coach.css">
+  <link rel="stylesheet" href="css/text-editor.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/mobile.css">
+  <link rel="stylesheet" href="css/tab.css">
+  <link rel="shortcut icon" href="images/favicon.png" />
+  <script src="components/sidebar.js" type="text/javascript" defer></script>
+  <script src="components/topnav.js" type="text/javascript" defer></script>
+</head>
+
+<body>
+  <div class="container-scroller">
+    <topnav-component></topnav-component>
+    <div class="container-fluid page-body-wrapper">
+      <sidebar-component data-page="assignment-detail"></sidebar-component>
+      <div class="main-panel">
+        <div class="flex-align second-header px-4 py-2" style="border-bottom: 1px solid #D9D8D8;min-height: 60px;gap:10px">
+          <h4 class="m-0">Assignment Detail</h4>
+          <button id="editBtn" class="site-btn-info hoverbtn px-5">Edit</button>
+        </div>
+        <div class="content-wrapper">
+          <div class="row">
+            <div class="col-md-12" style="min-height: 50px;">
+              <div style="display: flex;gap:10px;align-items: center;">
+                <a href="assignment-view.html"><img src="images/image1/arrow-left-circle.png" style="width: 35px;height: 35px;"></a>
+                <h5 id="taskTitle" style="font-weight: 600;margin-bottom: 0px;">Loading...</h5>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="card p-3 h-100">
+                <div class="pb-2">
+                  <div style="position: relative;">
+                    <div id="mediaContainer" class="rounded-top" style="width: 100%;">
+                      <!-- Media content will be dynamically loaded here -->
+                    </div>
+                  </div>
+                  <div class="flex-align g2 py-2 px-3 rounded-bottom" style="background: #6F8393;">
+                    <img src="images/Rays-eye-logo-white.png" class="rounded" style="width: 60px;">
+                    <h6 class="m-0 text-white" style="font-size:14px;">Annotate video</h6>
+                  </div>
+                  <div class="" style="padding-top:10px;">
+                    <div class="d-flex align-items-center" style="gap:8px;">
+                      <img src="images/image1/user.png" width="30px" height="30px">
+                      <h6 id="assignedTo" style="margin: 0;font-weight: 600; border-right: 1px solid gray;padding-right:8px;">Loading...</h6>
+                      <h6 id="taskDate" class="text-info m-0" style="font-weight:500;border-right: 1px solid gray;padding-right:8px;">Loading...</h6>
+                      <h6 id="taskTime" class="text-info m-0" style="font-weight:500;">Loading...</h6>
+                    </div>
+                    <p id="taskDescription" style="margin-left: 40px;font-size: 12px;line-height: 18px;">Loading...</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 pt-4 pt-md-0 pl-md-2">
+              <div class="card" style="overflow:hidden;">
+                <div class="editor">
+                  <form method="post">
+                    <textarea id="assignmentDescription" disabled></textarea>
+                  </form>
+                </div>
+              </div>
+              <div id="dropFileCard" class="card p-3 mt-3 drop-file" style="border: 1px dashed #bdbdbd;aspect-ratio: 1/.5;" disabled>
+                <h6 style="font-size: 14px;">Drop files here or browse</h6>
+                <div class="flex-align" style="max-width: 320px;gap:30px;">
+                  <div class="drop-file-card" id="recordBtn" style="border: 1px solid #19AF79;background: #fff;">
+                    <img src="images/record.png">
+                    <h6>Record</h6>
+                  </div>
+                  <div class="drop-file-card" id="uploadFileBtn" style="border: 1px solid #19AF79;background: #fff;">
+                    <img src="images/device.png">
+                    <h6>My Device</h6>
+                  </div>
+                  <div class="drop-file-card" id="cameraBtn" style="border: 1px solid #19AF79;background: #fff;">
+                    <img src="images/camera2.png">
+                    <h6>Camera</h6>
+                  </div>
+                </div>
+              </div>
+              <div class="d-flex align-items-center mt-3" style="gap:10px;justify-content: flex-end;">
+                <button id="cancelBtn" class="site-btn-outline-info hoverbtn px-5">Cancel</button>
+                <button id="sendBtn" class="site-btn-success hoverbtn px-5" disabled>Send</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.ckeditor.com/ckeditor5/34.1.0/classic/ckeditor.js"></script>
+  <script src="js/off-canvas.js"></script>
+  <script src="js/template.js"></script>
+  <script>
+    $(document).ready(function() {
+      const taskId = new URLSearchParams(window.location.search).get('taskId');
+      const organizationId = localStorage.getItem('organizationId'); // Assuming org ID is stored in local storage
+      let recordedChunks = [];
+      let mediaRecorder;
+      let editorInstance;
+
+      // Initialize CKEditor for the description editor
+      ClassicEditor
+        .create(document.querySelector('#assignmentDescription'))
+        .then(editor => {
+          editorInstance = editor;
+          editor.enableReadOnlyMode('assignmentDescription');
+        })
+        .catch(error => {
+          console.error('Error initializing CKEditor:', error);
+        });
+
+      // Fetch the task details
+      fetch(`/api/tasks/${taskId}`, {
+        headers: { 'organizationId': organizationId }
+      })
+      .then(response => response.json())
+      .then(task => {
+        displayTaskDetails(task);
+      })
+      .catch(error => console.error('Error fetching task:', error));
+
+      function displayTaskDetails(task) {
+        $('#taskTitle').text(task.title || 'No Title');
+        $('#assignedTo').text(task.assignedTo.map(student => student.firstName + ' ' + student.lastName).join(', '));
+        $('#taskDate').text(new Date(task.createdAt).toDateString());
+        $('#taskTime').text(new Date(task.createdAt).toLocaleTimeString());
+        $('#taskDescription').text(task.description || 'No Description');
+
+        if (task.media && Object.keys(task.media).length > 0) {
+          const mediaKey = Object.keys(task.media)[0];
+          const mediaUrl = task.media[mediaKey];
+          const mediaType = mediaUrl.match(/^data:(.+);base64,/)[1]; // Extract MIME type directly
+
+          let mediaElement;
+
+          if (mediaType.startsWith('video/')) {
+            // Video Player
+            mediaElement = `<video controls width="100%">
+                              <source src="${mediaUrl}" type="${mediaType}">
+                              Your browser does not support the video tag.
+                            </video>`;
+          } else if (mediaType.startsWith('audio/')) {
+            // Audio Player
+            mediaElement = `<audio controls>
+                              <source src="${mediaUrl}" type="${mediaType}">
+                              Your browser does not support the audio element.
+                            </audio>`;
+          } else if (mediaType.startsWith('image/')) {
+            // Image
+            mediaElement = `<img src="${mediaUrl}" alt="Media" style="width: 100%;">`;
+          } else {
+            mediaElement = `<p>Unsupported media type.</p>`;
+          }
+
+          $('#mediaContainer').html(mediaElement);
+        } else {
+          $('#mediaContainer').html('<p>No media available</p>');
+        }
+
+        editorInstance.setData(task.description || '');
+      }
+
+      // Enable editing mode
+      $('#editBtn').on('click', function() {
+        editorInstance.enableReadOnlyMode('assignmentDescription');
+        $('#dropFileCard').prop('disabled', false);
+        $('#sendBtn').prop('disabled', false);
+      });
+
+      // Handle file upload
+      $('#uploadFileBtn').on('click', function() {
+        $('<input type="file" accept="image/*,video/mp4,audio/mp3">').on('change', function(event) {
+          const file = event.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+              const mediaType = file.type;
+              let mediaElement;
+
+              if (mediaType.startsWith('video/')) {
+                mediaElement = `<video controls width="100%">
+                                  <source src="${e.target.result}" type="${mediaType}">
+                                  Your browser does not support the video tag.
+                                </video>`;
+              } else if (mediaType.startsWith('audio/')) {
+                mediaElement = `<audio controls>
+                                  <source src="${e.target.result}" type="${mediaType}">
+                                  Your browser does not support the audio element.
+                                </audio>`;
+              } else if (mediaType.startsWith('image/')) {
+                mediaElement = `<img src="${e.target.result}" alt="Media" style="width: 100%;">`;
+              }
+
+              $('#mediaContainer').html(mediaElement);
+              // Store the file to be uploaded later
+              recordedChunks.push({
+                mediaType: mediaType,
+                data: e.target.result
+              });
+            };
+            reader.readAsDataURL(file);
+          }
+        }).click();
+      });
+
+      // Handle recording video
+      $('#cameraBtn').on('click', async function() {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+          mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/mp4' });
+
+          mediaRecorder.ondataavailable = function(event) {
+            if (event.data.size > 0) {
+              recordedChunks.push(event.data);
+            }
+          };
+
+          mediaRecorder.onstop = function() {
+            const blob = new Blob(recordedChunks, { type: 'video/mp4' });
+            const url = URL.createObjectURL(blob);
+            $('#mediaContainer').html(`<video controls width="100%"><source src="${url}" type="video/mp4">Your browser does not support the video tag.</video>`);
+            recordedChunks = [{ mediaType: 'video/mp4', data: url }];
+          };
+
+          mediaRecorder.start();
+          setTimeout(() => mediaRecorder.stop(), 5000); // Stop recording after 5 seconds for demo purposes
+        } catch (error) {
+          console.error('Error recording video:', error);
+        }
+      });
+
+      // Handle recording audio
+      $('#recordBtn').on('click', async function() {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/mp3' });
+
+          mediaRecorder.ondataavailable = function(event) {
+            if (event.data.size > 0) {
+              recordedChunks.push(event.data);
+            }
+          };
+
+          mediaRecorder.onstop = function() {
+            const blob = new Blob(recordedChunks, { type: 'audio/mp3' });
+            const url = URL.createObjectURL(blob);
+            $('#mediaContainer').html(`<audio controls><source src="${url}" type="audio/mp3">Your browser does not support the audio element.</audio>`);
+            recordedChunks = [{ mediaType: 'audio/mp3', data: url }];
+          };
+
+          mediaRecorder.start();
+          setTimeout(() => mediaRecorder.stop(), 5000); // Stop recording after 5 seconds for demo purposes
+        } catch (error) {
+          console.error('Error recording audio:', error);
+        }
+      });
+
+      $('#sendBtn').on('click', function() {
+        const updatedTask = {
+          title: $('#taskTitle').text(),
+          description: editorInstance.getData(),
+          media: recordedChunks.reduce((media, chunk) => {
+            media[chunk.mediaType] = chunk.data;
+            return media;
+          }, {})
+        };
+
+        // Send updated task details to the server
+        fetch(`/api/tasks/${taskId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'organizationId': organizationId
+          },
+          body: JSON.stringify(updatedTask)
+        })
+        .then(response => response.json())
+        .then(data => {
+          alert('Task updated successfully');
+          window.location.href = `assignment-view.html?taskId=${taskId}`;
+        })
+        .catch(error => console.error('Error updating task:', error));
+      });
+    });
+  </script>
+</body>
+
+</html>

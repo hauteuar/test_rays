@@ -1,0 +1,365 @@
+@media only screen and (max-width:860px) and (min-width:480px) {
+    .course-main {
+        width: 100%;
+        padding-right: unset;
+    }
+
+    .coaches-dropdown .pl-0 {
+        gap: 10px;
+        justify-content: space-around;
+    }
+
+    .course-main .package-count {
+        font-size: 12px !important;
+    }
+
+    .radios {
+        gap: unset;
+        justify-content: space-around;
+    }
+
+    .package-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .package .bottom .ribbon h4 {
+        font-size: 8px;
+    }
+
+    .package .bottom .ribbon {
+        padding: 6px 10px;
+        top: 20%;
+    }
+
+    .package h4 {
+        font-size: 12px;
+    }
+
+    .course-main {
+        width: 100%;
+        padding: 15px;
+    }
+
+    .course_details .row {
+        flex-direction: row;
+    }
+    .course-details .action-zone-add-student-body .list h3{
+        font-size: 7px;
+    }
+    .course_details .row .col-4 {
+        margin-top: 40px;
+        width: 100% !important;
+        max-width: 100%;
+    }
+
+    .course_details .row .col-8 {
+        margin-top: 40px;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .course_details .package .bottom .ribbon {
+        padding: 10px;
+        top: 16%;
+    }
+
+    .course_details .package .bottom .ribbon h4 {
+        font-size: 12px;
+    }
+
+    .course_details .nav-pills .nav-link {
+        padding: 0.5rem 1rem;
+    }
+
+    .course_details .nav-pills {
+        margin-bottom: 40px;
+    }
+
+    .batch-add-student .dashboard {
+        flex-direction: row;
+    }
+
+    .batch-add-student .dashboard .item {
+        padding: 7px;
+        margin-top: 0;
+
+    }
+
+    .batch-add-student .dashboard .item .subheading {
+        font-size: 11px !important;
+    }
+
+    .batch-add-student .dashboard .item .mt-2 {
+        font-size: 10px;
+    }
+
+    #add-student-to-batch .two-lists {
+        flex-direction: row;
+    }
+
+    #add-student-to-batch .second-row .student {
+        transform: translateY(0px) !important;
+    }
+
+    #add-student-to-batch .second-row {
+        margin-top: 0px;
+    }
+
+    #assign-coach-to-batch .two-lists {
+        flex-direction: column;
+    }
+
+    #assign-coach-to-batch .student {
+        transform: translateY(0px) !important;
+    }
+
+    #assign-coach-to-batch .second-row {
+        margin-top: 50px;
+    }
+
+    #payment-status table td,
+    #payment-status table th {
+        padding: 5px;
+        font-size: 12px;
+    }
+
+    #payment-status .dashboard .box .money {
+        font-size: 11px;
+    }
+
+    #payment-status .dashboard .box .des {
+        font-size: 10px;
+    }
+
+    .add-course .form-container .form-body {
+        padding: 2rem;
+        width: 100%;
+    }
+
+    .discount-text .count {
+        padding: 14px;
+    }
+
+    .week .day {
+        width: 24px;
+        height: 32px;
+        padding: 8px;
+        font-size: 10px;
+    }
+
+    .top-search input {
+        font-size: 10px;
+        padding-right: 0px;
+    }
+
+    .times .time .duration h4,
+    .ground-lanes .lane h4 {
+        font-size: 13px;
+    }
+
+    .lane-table tbody tr td {
+        padding-left: 0px !important;
+        font-size: 13px;
+    }
+
+    .lane-table tbody tr td label {
+        font-size: 13px;
+    }
+
+    .lane-table th {
+        padding: 10px 7px 9px 20px;
+        font-size: 13px;
+    }
+
+    .billing .main-tab .nav-link {
+        padding: 0.5rem 1rem;
+    }
+
+    .student-list input[type="range"] {
+        width: 40%;
+    }
+
+    .student-list .full h4 {
+        padding: 6px;
+        font-size: 8px !important;
+    }
+
+    .billing-table tbody tr td {
+        padding: 5px;
+        font-size: 8px;
+    }
+
+    .billing-header {
+        padding: 10px 0px 15px 0px;
+    }
+
+    .billing-table thead th {
+        font-size: 9px;
+    }
+    .course-based-dashboard {
+        padding: 10px;
+        flex-direction: row;
+        align-items: start;
+    }
+
+    .course-based-dashboard .item {
+        padding: 4px 0px;
+    }
+
+    .course-based-dashboard .item h4.bold {
+        font-size: 12px;
+    }
+
+    .course_name .nav-item .nav-link {
+        font-size: 8px;
+        padding: unset;
+    }
+
+    .course-based-table {
+        margin-top: 20px;
+    }
+
+    #coach .top-section {
+        padding: 5px;
+    }
+
+    #coach .top-section .right select {
+        width: 100% !important;
+        font-size: 12px;
+    }
+
+    #coach .top-section .profile {
+        flex-direction: column;
+    }
+
+    #coach .top-section .right .mpt {
+        font-size: 12px;
+    }
+
+    #coach .top-section .right {
+        flex-direction: column;
+        justify-content: space-evenly;
+    }
+
+    #payment-details .dashboard .item-name {
+        font-size: 12px;
+    }
+
+    #payment-details .dashboard {
+        padding: 13px 0px;
+    }
+
+    #payment-details .modal-dialog .modal-content .modal-body {
+        padding: 15px 5px 80px 5px;
+    }
+
+    #payment-details table tbody td {
+        font-size: 13px;
+    }
+
+    #payment-details .dashboard .des {
+        font-size: 11px;
+    }
+
+    #payment-details .top-section .batch .batch-time h4,
+    #payment-details .top-section .course .course-name h4 {
+        font-size: 10px;
+    }
+
+    .table-container {
+        overflow-x: auto;
+    }
+
+    .table-container::-webkit-scrollbar {
+        display: none;
+    }
+
+    .billing-header .profile h4 {
+        font-size: 12px;
+    }
+
+    #coach-payment-details .dashboard .item-name {
+        font-size: 12px;
+    }
+
+    #coach-payment-details .dashboard {
+        padding: 13px 0px;
+    }
+
+    #coach-payment-details .modal-dialog .modal-content .modal-body {
+        padding: 15px 5px 80px 5px;
+    }
+
+    #coach-payment-details table tbody td {
+        font-size: 13px;
+    }
+
+    #coach-payment-details .dashboard .des {
+        font-size: 11px;
+    }
+
+    #coach-payment-details .top-section .batch .batch-time h4,
+    #coach-payment-details .top-section .course .course-name h4 {
+        font-size: 10px;
+    }
+
+    .invoice-table thead th {
+        font-size: 12px;
+    }
+
+    #invoice-format .w-20 {
+        width: 16%;
+    }
+
+    .invoice-container {
+        padding: 10px 0px;
+    }
+
+    .invoice-full .back-button {
+        left: -45px;
+    }
+
+    .invoice-container .headings .bottom-top {
+        flex-direction: row;
+        align-items: start;
+        row-gap: 10px;
+    }
+
+    .invoice-container .headings .bottom-top .item .profile {
+        margin-top: 10px;
+    }
+
+    .invoice-full {
+        width: 85%;
+    }
+
+    .pdf-buttons .left button {
+        padding: 7px;
+        font-size: 8px;
+    }
+
+    .pdf-buttons .right button {
+        padding: 6px 17px;
+    }
+
+    .pdf-buttons .left {
+        column-gap: 5px;
+    }
+
+    .pdf {
+        padding: 20px;
+    }
+
+    .pdf .header h2 {
+        font-size: 25px;
+    }
+
+    .bottom-table tbody tr td {
+        font-size: 12px;
+    }
+
+    .course-details .action-zone-add-student-body .list .person h4{
+        font-size: 10px;
+    }
+
+}

@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Course details</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/mobile.css">
+    <link rel="stylesheet" href="css/tab.css">
+    <link rel="shortcut icon" href="images/1.png" />
+    <script src="components/sidebar.js" type="text/javascript" defer></script>
+    <script src="components/topnav.js" type="text/javascript" defer></script>
+    <style>
+        .list {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+        }
+
+        .list .person {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .list .person img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        .list .person h4 {
+            margin: 0;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .list .status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5px 10px;
+            border-radius: 20px;
+            background-color: #4DD192;
+            color: white;
+            font-size: 12px;
+        }
+
+        .list img.delete {
+            cursor: pointer;
+            width: 20px;
+            height: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-scroller">
+        <topnav-component></topnav-component>
+        <div class="container-fluid page-body-wrapper">
+            <sidebar-component data-page="courses"></sidebar-component>
+            <div class="course-main add-course course_details">
+                <div class="row justify-content-between">
+                    <div class="mb-3 mt-2 heading">
+                        <h4 class="m-0" style="font-weight: 400; color: rgb(104, 104, 104);"><a href="courses.html" style="color:#5c5c5c;">Course</a></h4>
+                        <img src="images/arrow-right-3.png" alt="">
+                        <h4 class="m-0" id="courseTitle" style="font-weight: 650;">Course Title</h4>
+                    </div>
+                    <a class="dropdown-item add-batch" data-toggle="modal" data-target="#add-batch" style="width: 163px; background-color: transparent;"><span>+</span>Add new batch</a>
+                </div>
+                <div class="row">
+                    <div class="col-4">
+                        <div class="package" style="height: unset;">
+                            <div class="package-image" style="height: 190px;">
+                                <img id="courseBanner" src="images/summer-camp.jpg" alt="">
+                                <div class="status-ribbon" style="background-image: url('images/active.png');" id="courseStatus">
+                                    <h4>Active</h4>
+                                </div>
+                            </div>
+                            <div class="bottom">
+                                <div class="text">
+                                    <h4 id="courseTitleBottom">Course title</h4>
+                                </div>
+                                <div class="course-details mt-1">
+                                    <h4><span>Duration: </span><span id="courseDuration"></span></h4>
+                                    <span>|</span>
+                                    <h4><span>Batches: </span><span id="batchCount">0</span></h4>
+                                </div>
+                                <div class="ribbon">
+                                    <h4 id="coursePrice">$200</h4>
+                                </div>
+                                <div class="course-details mt-3">
+                                    <h4><span>Start date: </span><span id="courseStartDate">12 Jan 2024</span></h4>
+                                    <h4><span>End date: </span><span id="courseEndDate">12 Jan 2025</span></h4>
+                                </div>
+                            </div>
+                            <div class="after-bottom">
+                                <h3 class="batch-subheading" style="font-size: 14px;font-weight: 600;">Description</h3>
+                                <div class="description">
+                                    <ol id="courseDescription">
+                                        <!-- Description will be dynamically loaded here -->
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-8">
+                        <h4 class="subheading" style="font-size: 17px;font-weight: 700;">Batches</h4>
+                        <ul class="nav nav-pills side-tab-pills mt-2" id="batchesTab" role="tablist" style="width:auto;border-bottom: 1px solid #ddd;">
+                            <!-- Batches will be dynamically loaded here -->
+                        </ul>
+                        <div class="tab-content w-100 mt-1" id="batchesTabContent">
+                            <!-- Batch details will be dynamically loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for adding new batch -->
+    <div class="modal fade" id="add-batch">
+        <div class="modal-dialog modal-md" role="document" style="max-width: 990px;">
+            <div class="modal-content">
+                <div class="modal-header align-items-center">
+                    <h5 class="modal-title" id="coachModalLabel">Add New Batch</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" style="max-height: calc(100vh - 180px); overflow: auto;">
+                    <div class="row" style="row-gap:20px">
+                        <div class="col-6">
+                            <h6 class="mb-2">Batch Name</h6>
+                            <input type="text" placeholder="Enter batch name" name="batchName" class="hwzthat-input w-100">
+                        </div>
+                        <div class="col-6">
+                            <h6 class="mb-2">Days</h6>
+                            <input type="text" placeholder="Enter days" name="batchDays" class="hwzthat-input w-100">
+                        </div>
+                        <div class="col-6">
+                            <h6 class="mb-2">Time</h6>
+                            <input type="text" placeholder="Enter time" name="batchTime" class="hwzthat-input w-100">
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mt-4 p-3" style="gap:10px; justify-content: flex-end; border-top: 1px solid #39248726;">
+                    <button class="site-btn-outline-info hoverbtn px-5" data-dismiss="modal" aria-label="Close">Cancel</button>
+                    <button class="site-btn-success hoverbtn px-5" onclick="addBatch()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for adding student to batch -->
+    <div class="modal fade" id="add-student-to-batch">
+        <div class="modal-dialog modal-md" role="document" style="max-width: 990px;">
+            <div class="modal-content">
+                <div class="modal-header align-items-center">
+                    <h5 class="modal-title" id="coachModalLabel">Add Students</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" style="max-height: calc(100vh - 180px); overflow: auto;">
+                    <div class="row">
+                        <div class="col-6 student">
+                            <div class="left">
+                                <h4 class="subheading">Students <span>(15)</span></h4>
+                            </div>
+                            <div class="right">
+                                <h4 class="subheading" style="font-weight: 400; white-space: nowrap;"> Sort by</h4>
+                                <select class="hwzthat-input w-100 mt-2" name="" aria-placeholder="Under 16">
+                                    <option value="Under 16">Under 16</option>
+                                    <option value="Under 10">Under 10</option>
+                                    <option value="Under 5">Under 5</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex two-lists" style="column-gap: 30px;">
+                        <div class="student-list-container col-6 mt-3" id="studentsNotEnrolled">
+                            <!-- Students not enrolled will be dynamically added here -->
+                        </div>
+                        <div class="student-list-container col-6 mt-3" id="coachesNotAssigned">
+                            <!-- Coaches not assigned will be dynamically added here -->
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center mt-3 p-3" style="gap:10px; justify-content: flex-end;">
+                        <button class="site-btn-outline-info hoverbtn px-5" data-dismiss="modal" aria-label="Close">Cancel</button>
+                        <button class="site-btn-success hoverbtn px-5 disabled" id="saveStudentCoachButton" onclick="assignStudentCoach()">Add</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for editing batch -->
+    <div class="modal fade" id="edit-batch-modal">
+        <div class="modal-dialog modal-md" role="document" style="max-width: 990px;">
+            <div class="modal-content">
+                <div class="modal-header align-items-center">
+                    <h5 class="modal-title">Edit Batch</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" style="max-height: calc(100vh - 180px); overflow: auto;">
+                    <div class="row" style="row-gap:20px">
+                        <div class="col-6">
+                            <h6 class="mb-2">Batch Name</h6>
+                            <input type="text" placeholder="Enter batch name" id="editBatchName" class="hwzthat-input w-100">
+                        </div>
+                        <div class="col-6">
+                            <h6 class="mb-2">Days</h6>
+                            <input type="text" placeholder="Enter days" id="editBatchDays" class="hwzthat-input w-100">
+                        </div>
+                        <div class="col-6">
+                            <h6 class="mb-2">Time</h6>
+                            <input type="text" placeholder="Enter time" id="editBatchTime" class="hwzthat-input w-100">
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mt-4 p-3" style="gap:10px; justify-content: flex-end;">
+                    <button class="site-btn-outline-info hoverbtn px-5" data-dismiss="modal" aria-label="Close">Cancel</button>
+                    <button class="site-btn-success hoverbtn px-5" onclick="updateBatch()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const organizationId = localStorage.getItem('organizationId');
+        let selectedBatchId;
+
+        // Fetch course details on page load
+        document.addEventListener('DOMContentLoaded', fetchCourseDetails);
+
+        async function fetchCourseDetails() {
+            try {
+                const courseId = new URLSearchParams(window.location.search).get('courseId');
+                const response = await fetch(`/api/courses/${courseId}`, {
+                    headers: { 'organizationId': organizationId }
+                });
+                const course = await response.json();
+
+                populateCourseDetails(course);
+                loadBatches(course.batches);
+            } catch (error) {
+                console.error('Error fetching course details:', error);
+            }
+        }
+
+        function populateCourseDetails(course) {
+            document.getElementById('courseBanner').src = `/images/${course.bannerImage}`;
+            document.getElementById('courseTitle').innerText = course.title;
+            document.getElementById('courseTitleBottom').innerText = course.title;
+            document.getElementById('courseDuration').innerText = course.duration;
+            document.getElementById('coursePrice').innerText = `$${course.price}`;
+            document.getElementById('courseStartDate').innerText = new Date(course.startDate).toLocaleDateString();
+            document.getElementById('courseEndDate').innerText = new Date(course.endDate).toLocaleDateString();
+            document.getElementById('courseDescription').innerHTML = `<li>${course.description}</li>`;
+            document.getElementById('batchCount').innerText = course.batches.length;
+        }
+
+        async function loadBatches(batchIds) {
+            const batchesTab = document.getElementById('batchesTab');
+            const batchesTabContent = document.getElementById('batchesTabContent');
+
+            batchesTab.innerHTML = '';
+            batchesTabContent.innerHTML = '';
+
+            for (let index = 0; index < batchIds.length; index++) {
+                const batchId = batchIds[index];
+                const batch = await fetchBatchDetails(batchId);
+                console.log(batch);
+                if (batch) {
+                    createBatchTab(batch, index === 0);
+                    createBatchContent(batch, index === 0);
+                }
+            }
+        }
+
+        async function fetchBatchDetails(batchId) {
+            try {
+                const response = await fetch(`/api/batches/${batchId}`, {
+                    headers: { 'organizationId': organizationId }
+                });
+
+                if (!response.ok) {
+                    console.error(`Batch not found for ID: ${batchId}`);
+                    return null;
+                }
+
+                return await response.json();
+            } catch (error) {
+                console.error('Error fetching batch details:', error);
+                return null;
+            }
+        }
+
+        function createBatchTab(batch, isActive) {
+            const batchesTab = document.getElementById('batchesTab');
+            const tabId = `batch-${batch._id}`;
+
+            batchesTab.innerHTML += `
+                <li class="nav-item">
+                    <a class="nav-link ${isActive ? 'active' : ''}" id="${tabId}" data-toggle="pill" href="#batch-content-${batch._id}" role="tab">
+                        ${Array.isArray(batch.days) ? batch.days.join(', ') : ''} ${batch.timeSlot || ''}
+                    </a>
+                </li>
+            `;
+        }
+
+        function createBatchContent(batch, isActive) {
+    const batchesTabContent = document.getElementById('batchesTabContent');
+    const tabContentId = `batch-content-${batch._id}`;
+
+    batchesTabContent.innerHTML += `
+        <div class="tab-pane fade ${isActive ? 'show active' : ''}" id="${tabContentId}" role="tabpanel">
+            <div class="batch-add-student">
+                <div class="dashboard row">
+                    <div class="col-3 item">
+                        <h4 class="subheading">${Array.isArray(batch.days) ? batch.days.join(', ') : ''}</h4>
+                        <h4 class="mt-2" style="font-size: 12px; font-weight: 400; color: #7c7c7c;">Weekly</h4>
+                    </div>
+                    <div class="col-2 item">
+                        <h4 class="subheading">${batch.students.length}</h4>
+                        <h4 class="mt-2" style="font-size: 12px; font-weight: 400; color: #7c7c7c;">Enrolled students</h4>
+                    </div>
+                    <div class="col-3 item">
+                        <h4 class="subheading">${batch.coaches.length}</h4>
+                        <h4 class="mt-2" style="font-size: 12px; font-weight: 400; color: #7c7c7c;">Assigned coaches</h4>
+                    </div>
+                    <div class="col-4 item">
+                        <div class="text">
+                            <h4 class="subheading" style="font-size: 13px; font-weight: 700; color:#DE9508;">${batch.status}</h4>
+                            <h4 class="mt-2" style="font-size: 12px; font-weight: 400; color: #7c7c7c;">Status</h4>
+                        </div>
+                        <div class="action">
+                            <img src="images/edit-2.png" alt="" onclick="editBatch('${batch._id}')">
+                            <img src="images/delete-2.png" alt="" onclick="deleteBatch('${batch._id}')">
+                        </div>
+                    </div>
+                </div>
+                <div class="row course-details" style="padding-bottom: 22px;">
+                    <div class="col-6" style="padding-right: 0;">
+                        <div class="action-zone-add-student-head">
+                            <h4 style="font-size: 16px; font-weight: 600;">Enrolled students <span id="student-count-${batch._id}"></span></h4>
+                            <a data-toggle="modal" data-target="#add-student-to-batch" onclick="setSelectedBatch('${batch._id}')">
+                                <h3 style="font-size: 16px; font-weight: 500; color:#392487"><span style="color: #392487;">+</span>Add student</h3>
+                            </a>
+                        </div>
+                        <div class="action-zone-add-student-body" id="batch-students-${batch._id}">
+                            <!-- Students will be dynamically added here -->
+                        </div>
+                    </div>
+                    <div class="col-6" style="padding-left: 0;">
+                        <div class="action-zone-add-coach-head">
+                            <h4 style="font-size: 16px; font-weight: 600">Enrolled coaches <span id="coach-count-${batch._id}"></span></h4>
+                            <a data-toggle="modal" data-target="#add-student-to-batch" onclick="setSelectedBatch('${batch._id}')">
+                                <h3 style="font-size: 16px; font-weight: 500; color:#392487"><span style="color: #392487;">+</span>Add coach</h3>
+                            </a>
+                        </div>
+                        <div class="action-zone-add-coach-body" id="batch-coaches-${batch._id}">
+                            <!-- Coaches will be dynamically added here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    loadBatchStudents(batch._id);
+    loadBatchCoaches(batch._id);
+}
+async function loadBatchStudents(batchId) {
+    const studentContainer = document.getElementById(`batch-students-${batchId}`);
+    const courseId = new URLSearchParams(window.location.search).get('courseId');
+    studentContainer.innerHTML = '';
+
+    try {
+        const response = await fetch(`/api/user/assigned-students/${courseId}/${batchId}`, {
+            headers: { 'organizationId': organizationId }
+        });
+
+        if (!response.ok) {
+            throw new Error('Error fetching assigned students');
+        }
+
+        const students = await response.json();
+        console.log('Students under this batch', students);
+        document.getElementById(`student-count-${batchId}`).innerText = `(${students.length})`;
+
+        students.forEach(student => {
+            studentContainer.innerHTML += `
+                <div class="list">
+                    <div class="person">
+                        <img src="${student.image || 'images/default-user.png'}" alt="">
+                        <h4>${student.firstName} ${student.lastName}</h4>
+                    </div>
+                    <img class="delete" src="images/delete-2.png" alt="" onclick="removeStudentFromBatch('${batchId}', '${student._id}')">
+                </div>
+            `;
+        });
+    } catch (error) {
+        console.error('Error loading students:', error);
+    }
+}
+
+async function loadBatchCoaches(batchId) {
+    const coachContainer = document.getElementById(`batch-coaches-${batchId}`);
+    const courseId = new URLSearchParams(window.location.search).get('courseId');
+    coachContainer.innerHTML = '';
+
+    try {
+        const response = await fetch(`/api/user/assigned-coaches/${courseId}/${batchId}`, {
+            headers: { 'organizationId': organizationId }
+        });
+
+        if (!response.ok) {
+            throw new Error('Error fetching assigned coaches');
+        }
+
+        const coaches = await response.json();
+        document.getElementById(`coach-count-${batchId}`).innerText = `(${coaches.length})`;
+
+        coaches.forEach(coach => {
+            coachContainer.innerHTML += `
+                <div class="list">
+                    <div class="person">
+                        <img src="${coach.image || 'images/default-coach.png'}" alt="">
+                        <h4>${coach.firstName} ${coach.lastName}</h4>
+                    </div>
+                    <img class="delete" src="images/delete-2.png" alt="" onclick="removeCoachFromBatch('${batchId}', '${coach._id}')">
+                </div>
+            `;
+        });
+    } catch (error) {
+        console.error('Error loading coaches:', error);
+    }
+}
+        function setSelectedBatch(batchId) {
+            selectedBatchId = batchId;
+            const courseId = new URLSearchParams(window.location.search).get('courseId');
+            fetchStudentsNotEnrolled(courseId);
+            fetchCoachesNotAssigned(batchId);
+        }
+
+        async function fetchStudentsNotEnrolled(courseId) {
+            try {
+                const response = await fetch(`/api/user/not-enrolled/${courseId}`, {
+                    headers: { 'organizationId': organizationId }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const students = await response.json();
+                populateStudentsNotEnrolled(students);
+            } catch (error) {
+                console.error('Error fetching students not enrolled:', error);
+            }
+        }
+
+        function populateStudentsNotEnrolled(students) {
+            const studentContainer = document.getElementById('studentsNotEnrolled');
+            studentContainer.innerHTML = '';
+
+            students.forEach(student => {
+                studentContainer.innerHTML += `
+                    <div class="list">
+                        <div class="left">
+                            <div class="checkbox">
+                                <input type="checkbox" name="student" value="${student._id}" onchange="toggleAddButton()">
+                            </div>
+                            <img src="${student.image || 'images/default-user.png'}" alt="">
+                            <h6 class="student-name">${student.firstName} ${student.lastName}</h6>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        async function fetchCoachesNotAssigned(batchId) {
+            try {
+                const response = await fetch(`/api/user/not-assigned/${batchId}`, {
+                    headers: { 'organizationId': organizationId }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const coaches = await response.json();
+                populateCoachesNotAssigned(coaches);
+            } catch (error) {
+                console.error('Error fetching coaches not assigned:', error);
+            }
+        }
+
+        function populateCoachesNotAssigned(coaches) {
+            const coachContainer = document.getElementById('coachesNotAssigned');
+            coachContainer.innerHTML = '';
+
+            coaches.forEach(coach => {
+                coachContainer.innerHTML += `
+                    <div class="list">
+                        <div class="left">
+                            <div class="checkbox">
+                                <input type="checkbox" name="coach" value="${coach._id}" onchange="toggleAddButton()">
+                            </div>
+                            <img src="${coach.image || 'images/default-coach.png'}" alt="">
+                            <h6 class="student-name">${coach.firstName} ${coach.lastName}</h6>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+// Toggle the Add button state and attach event listener when appropriate
+function toggleAddButton() {
+    const studentCheckboxes = document.querySelectorAll('#studentsNotEnrolled input[name="student"]:checked');
+    const coachCheckboxes = document.querySelectorAll('#coachesNotAssigned input[name="coach"]:checked');
+    const addButton = document.getElementById('saveStudentCoachButton');
+
+    // Ensure we remove any previous event listeners to avoid multiple triggers
+    addButton.removeEventListener('click', assignStudentCoach);
+
+    if (studentCheckboxes.length > 0 || coachCheckboxes.length > 0) {
+        addButton.classList.remove('disabled');
+        // Attach the event listener only when the button is enabled
+        addButton.addEventListener('click', assignStudentCoaches);
+        console.log("called assing");
+    } else {
+        addButton.classList.add('disabled');
+    }
+}
+
+// Prevent modal from closing when a checkbox is clicked
+document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+    checkbox.addEventListener('click', function(event) {
+        event.stopPropagation();
+        toggleAddButton();  // Ensure toggleAddButton is called when a checkbox is clicked
+    });
+});
+
+async function assignStudentCoaches() {
+    const studentIds = Array.from(document.querySelectorAll('#studentsNotEnrolled input[name="student"]:checked')).map(input => input.value);
+    const coachIds = Array.from(document.querySelectorAll('#coachesNotAssigned input[name="coach"]:checked')).map(input => input.value);
+    
+    console.log('studentIds:', studentIds);
+    console.log('coachIds:', coachIds);
+    
+    const assignData = {
+        studentIds,
+        coachIds,
+        batchId: selectedBatchId,
+        courseId: new URLSearchParams(window.location.search).get('courseId') // Ensure courseId is passed
+    };
+
+    try {
+        const response = await fetch('/api/user/assign', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'organizationId': organizationId
+            },
+            body: JSON.stringify(assignData)
+        });
+
+        if (response.ok) {
+            console.log('Students and coaches successfully assigned.');
+            $('#add-student-to-batch').modal('hide');
+            fetchCourseDetails(); // Refresh the course details to reflect changes
+        } else {
+            console.error('Error assigning student/coach:', response.statusText);
+        }
+    } catch (error) {
+        console.error('Error assigning student/coach:', error);
+    }
+}
+
+// Ensure modal doesn't close on checkbox clicks
+document.querySelectorAll('.modal').forEach(modal => {
+    modal.addEventListener('click', function(event) {
+        event.stopPropagation();
+    });
+});
+        async function addBatch() {
+            const batchName = document.querySelector('[name="batchName"]').value;
+            const batchDays = document.querySelector('[name="batchDays"]').value.split(',').map(day => day.trim());
+            const batchTime = document.querySelector('[name="batchTime"]').value;
+            const courseId = new URLSearchParams(window.location.search).get('courseId');
+
+            const batchData = {
+                name: batchName,
+                days: batchDays,
+                timeSlot: batchTime,
+                startDate: new Date(),
+                endDate: new Date(),
+                repeatInterval: "Weekly",
+                course: courseId
+            };
+
+            try {
+                const response = await fetch('/api/batches', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'organizationId': organizationId
+                    },
+                    body: JSON.stringify(batchData)
+                });
+
+                if (response.ok) {
+                    $('#add-batch').modal('hide');
+                    fetchCourseDetails();
+                } else {
+                    console.error('Error adding batch:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error adding batch:', error);
+            }
+        }
+
+        async function assignStudentCoach() {
+            const studentIds = Array.from(document.querySelectorAll('#studentsNotEnrolled input[name="student"]:checked')).map(input => input.value);
+            const coachIds = Array.from(document.querySelectorAll('#coachesNotAssigned input[name="coach"]:checked')).map(input => input.value);
+
+            const assignData = {
+                studentIds,
+                coachIds,
+                batchId: selectedBatchId
+            };
+
+            try {
+                const response = await fetch('/api/batches/assign', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'organizationId': organizationId
+                    },
+                    body: JSON.stringify(assignData)
+                });
+
+                if (response.ok) {
+                    $('#add-student-to-batch').modal('hide');
+                    fetchCourseDetails();
+                } else {
+                    console.error('Error assigning student/coach:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error assigning student/coach:', error);
+            }
+        }
+
+        async function removeStudentFromBatch(batchId, studentId) {
+            try {
+                const response = await fetch(`/api/batches/remove-student/${batchId}/${studentId}`, {
+                    method: 'DELETE',
+                    headers: { 'organizationId': organizationId }
+                });
+
+                if (response.ok) {
+                    fetchCourseDetails();
+                } else {
+                    console.error('Error removing student:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error removing student:', error);
+            }
+        }
+
+        async function removeCoachFromBatch(batchId, coachId) {
+            try {
+                const response = await fetch(`/api/batches/remove-coach/${batchId}/${coachId}`, {
+                    method: 'DELETE',
+                    headers: { 'organizationId': organizationId }
+                });
+
+                if (response.ok) {
+                    fetchCourseDetails();
+                } else {
+                    console.error('Error removing coach:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error removing coach:', error);
+            }
+        }
+
+        function editBatch(batchId) {
+            selectedBatchId = batchId;
+            fetchBatchADetails(batchId);
+        }
+
+        async function fetchBatchADetails(batchId) {
+            try {
+                const response = await fetch(`/api/batches/${batchId}`, {
+                    headers: { 'organizationId': organizationId }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const batch = await response.json();
+                populateBatchDetails(batch);
+               // $('#edit-batch-modal').modal('show');
+            } catch (error) {
+                console.error('Error fetching batch details:', error);
+            }
+        }
+
+        function populateBatchDetails(batch) {
+            document.getElementById('editBatchName').value = batch.name;
+            document.getElementById('editBatchDays').value = Array.isArray(batch.days) ? batch.days.join(', ') : '';
+            document.getElementById('editBatchTime').value = batch.timeSlot;
+        }
+
+        async function updateBatch() {
+            const batchData = {
+                name: document.getElementById('editBatchName').value,
+                days: document.getElementById('editBatchDays').value.split(', ').map(day => day.trim()),
+                timeSlot: document.getElementById('editBatchTime').value
+            };
+
+            try {
+                const response = await fetch(`/api/batches/${selectedBatchId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'organizationId': organizationId
+                    },
+                    body: JSON.stringify(batchData)
+                });
+
+                if (response.ok) {
+                    $('#edit-batch-modal').modal('hide');
+                    fetchCourseDetails();
+                } else {
+                    console.error('Error updating batch:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error updating batch:', error);
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Corporate Admin Dashboard</title>
+  <link rel="stylesheet" href="/css/corp.css">
+</head>
+<body>
+  <%- include('partials/header') %>
+  <div class="dashboard-container">
+    <h2>Organizations</h2>
+    <ul id="organizationList">
+      <% organizations.forEach(function(org) { %>
+        <li>
+          <h3><%= org.name %></h3>
+          <p>Domain: <%= org.domain %></p>
+          <p>Theme Color: <%= org.theme_color %></p>
+          <img src="<%= org.logo_url %>" alt="<%= org.name %> Logo">
+        </li>
+      <% }) %>
+    </ul>
+  </div>
+</body>
+</html>

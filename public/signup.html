@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="zxx">
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<title>ELITE</title>
+		<link rel="stylesheet" href="css/style-1.css">
+		<style>
+			.register-container{
+				display: flex;
+				flex-wrap: wrap;
+				height: 100vh;
+				overflow: hidden;
+			}
+			.register-left{
+				width: 40%;
+				position: relative;
+				height: 100vh;
+			}
+			.register-right{
+				width: 60%;
+				height: 100vh;
+				overflow: auto;
+				padding: 40px;
+				display: flex;
+				flex-direction: column;
+				gap: 30px;
+				justify-content: space-between;
+			}
+			.register-logo{
+				position: absolute;
+				left: 50%;
+				top: 50%;
+				transform: translate(-50%, -50%);
+				width: 200px;
+				object-fit: contain;
+			}
+
+			  .middle-card-container{
+				display: flex;
+				flex-wrap: wrap;
+				gap: 20px;
+				justify-content: center;
+			  }
+			  .card{
+				padding: 20px;
+				border-radius: 10px;
+				width: fit-content;
+				min-width: 200px;
+				transition: .3s;
+			  }
+			  .card:hover{
+				transform: translateY(-10px);
+			  }
+			  @media(max-width: 990px){
+				.register-left, .register-right{
+					width: 50%;
+					height: auto;
+				}
+			}
+
+				@media(max-width: 768px){
+					.register-left, .register-right{
+						width: 100%;
+					}
+					.register-container{
+						overflow: auto;
+					}
+					.register-right{
+						justify-content: flex-start;
+						padding: 20px;
+						gap: 20px;
+					}
+					.back-header{
+						position: fixed;
+						top:20px;
+						left: 20px;
+					}
+					.card{
+
+						min-width: 150px;
+					}
+	
+				  
+			  }
+		</style>
+
+
+	</head>
+	<body>
+		<!-- <a><img src="images/logo.png" alt="logo" class="fixed-logo"></a> -->
+		<div class="social">
+			<a>
+				<img src="images/facebook.png" alt="facebook">
+			</a>
+			<a>
+				<img src="images/instagram.png" alt="instagram">
+			</a>
+		</div>
+		
+		<div class="main">
+			<div class="register-container">
+				<div class="register-left">
+					<img src="images/register-bg.png" class="w-100" alt="bg" style="height: 100%; object-fit:cover;">
+					<img src="images/logo.png" class="register-logo" alt="logo"> 
+
+				</div>
+				<div class="register-right">
+					<div class="flex-align back-header">
+						<a href="login.html"><img src="images/back-arrow.png" style="width: 22px;" alt="arrow"></a>
+						<h4 style="font-family:  gt-walsheim4">Registration</h4>
+					</div>
+					<div class="middle-card">
+						<div class="middle-card-container">
+							<a href="athlet.html" class="card bg-white text-center">
+								<img src="images/athlet-dp.png" class="circle" style="width: 80px; height:80px;" alt="athlet">
+								<h6 class="text-center text-dark mt-1" style="font-weight: 600;">Athlete</h6>
+							</a>
+							<a href="parent.html" class="card bg-white text-center">
+								<img src="images/parent-dp.png" class="circle" style="width: 80px; height:80px;" alt="parent">
+								<h6 class="text-center text-dark mt-1" style="font-weight: 600;">Parent</h6>
+							</a>
+
+						</div>
+
+					</div>
+					<div class="w-100" style="margin-top: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 15px;">
+						Powered by 
+						<img src="images/rays-sports.png" style="width: 150px;" alt="logo">
+					</div>
+				</div>
+
+			</div>
+			
+		</div>
+		
+		
+
+	</body>
+</html>

@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="zxx">
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<title>ELITE</title>
+		<link rel="stylesheet" href="css/style-1.css">
+		<style>
+			.register-container{
+				display: flex;
+				flex-wrap: wrap;
+				height: 100vh;
+				overflow: hidden;
+			}
+			.register-left{
+				width: 40%;
+				position: relative;
+				height: 100vh;
+			}
+			.register-right{
+				width: 60%;
+				height: 100vh;
+				overflow: auto;
+				padding: 40px;
+				display: flex;
+				flex-direction: column;
+				gap: 30px;
+			}
+            .upload{
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                flex-direction: column;
+            }
+			
+            .upload-container{
+                position: relative;
+                width: fit-content;
+                overflow: hidden;
+                width: 80px;
+                height: 80px;
+                text-align: center;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+                border-radius: 50%;
+                background-color: var(--color5);
+                border: 1px dashed var(--color1);
+            }
+            .upload-container input{
+                opacity: 0;
+                z-index: 99;
+                height: 100%;
+                width: 100%;
+                position: absolute;
+                left: 0;
+                top: 0;
+            }
+			  .upload-icon{
+                width: 25px;
+                height: 25px;
+                
+              }
+			  .form-2{
+                display: flex;
+                flex-wrap: wrap;
+                margin-left: -10px;
+                margin-right: -10px;
+              }
+              .form-2 > *{
+                width: 50%;
+                padding: 10px;
+              }
+              .form-2 label{
+                display: flex;
+                margin-bottom: 5px;
+              }
+              .d-none{
+                display: none;
+              }
+              .required{
+                display: flex;
+              }
+              .input-field2 input, .input-field2 select{
+                background: var(--color5);
+                padding: 12px;
+                border-radius: 4px;
+                border: 1px solid rgb(255 255 255 / 20%);
+                color: var(--color1);
+                width: 100%;
+                outline: none;
+              }
+              .input-field2 select option{
+                background-color: var(--color4);
+              }
+              .accordion-content {
+                height: 0px;
+                opacity: 0;
+                display: flex;
+                align-items: center;
+                gap: 2rem;
+                overflow: hidden;
+                transition: .3s;
+              }
+              .open .accordion-content {
+                height: 100%;
+                opacity: 1;
+                padding: 1rem 0;
+              }
+                li{
+                    list-style: none;
+                }   
+                li h5{
+                    border-bottom: 1px solid var(--color5);
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding-bottom: 10px;
+                    cursor: pointer;
+                }         
+			  @media(max-width: 990px){
+				.register-left, .register-right{
+					width: 50%;
+					height: auto;
+				}
+			}
+
+				@media(max-width: 768px){
+                    
+					.register-left, .register-right{
+						width: 100%;
+					}
+					.register-container{
+						overflow: auto;
+					}
+					.register-right{
+						padding: 20px;
+						gap: 20px;
+					}
+					.back-header{
+						position: fixed;
+						top:20px;
+						left: 20px;
+					}
+
+				  
+			  }
+              @media(max-width: 480px){
+                .form-2 > *{
+                    width: 100%;
+                  }
+                }
+		</style>
+
+
+	</head>
+	<body>
+		<!-- <a><img src="images/logo.png" alt="logo" class="fixed-logo"></a> -->
+		<div class="social">
+			<a>
+				<img src="images/facebook.png" alt="facebook">
+			</a>
+			<a>
+				<img src="images/instagram.png" alt="instagram">
+			</a>
+		</div>
+		
+		<div class="main">
+			<div class="register-container">
+				<div class="register-left">
+					<img src="images/parent-bg.png" class="w-100" alt="bg" style="height: 100%; object-fit:cover;">
+				</div>
+				<div class="register-right">
+					<div class="flex-align back-header">
+						<a href="signup.html"><img src="images/back-arrow.png" style="width: 22px;" alt="arrow"></a>
+						<h4 style="font-family:  gt-walsheim4">Parent information</h4>
+					</div>
+					<div class="form-container">
+                        <div class="upload">
+                            <label>Profile photo</label>
+                            <div class="upload-container">
+                                <img src="images/upload.png" class="upload-icon">
+                                <input type="file">
+                                <p class="mt-1" style="font-size: 12px; line-height:12px;">Upload</p>
+                            </div>
+                        </div>
+                        <div class="form-2  mt-4 mt-4">
+                            <div class="input-field2">
+                                <label>First name <span class="d-none required text-danger">*</span></label>
+                                <input placeholder="Enter first name" type="text">
+                            </div>
+                            <div class="input-field2">
+                                <label>Last name <span class="d-none required text-danger">*</span></label>
+                                <input placeholder="Enter last name" type="text">
+                            </div>
+                            <div class="input-field2">
+                                <label>Date of  birth <span class="d-none required text-danger">*</span></label>
+                                <input placeholder="Enter first name" type="date">
+                            </div>
+                            <div class="input-field2">
+                                <label>gender <span class="d-none required text-danger">*</span></label>
+                                <select>
+                                    <option>Male</option>
+                                    <option>Fermale</option>
+                                    <option>others</option>
+                                </select>
+                            </div>
+                            <div class="input-field2">
+                                <label>Email ID <span class="d-none required text-danger">*</span></label>
+                                <input placeholder="Enter email id" type="text">
+                            </div>
+                            <div class="input-field2">
+                                <label>Contact Number <span class="d-none required text-danger">*</span></label>
+                                <input placeholder="Enter contact number" type="text">
+                            </div>
+                            <div class="input-field2">
+                                <label>Emergency Contact Number <span class="d-none required text-danger">*</span></label>
+                                <input placeholder="Enter Emergency Contact Number" type="text">
+                            </div>
+                        </div>
+                        <ul>
+                            <li class="accordion-item mt-4" onclick="openAccordion(0)">
+                              <h5 id="heading1" tabindex="0" role="button" aria-expanded="false" aria-controls="content1">
+                                <span>Address</span>
+                                <img src="images/arrow-down.png" style="width: 14px;">
+                              </h5>
+                              <div class="accordion-content" id="content1" role="region" aria-labelledby="heading1">
+                                <div class="form-2  mt-4">
+                                    <div class="input-field2">
+                                        <label>Street Address</label>
+                                        <input placeholder="Enter street address" type="text">
+                                    </div>
+                                    <div class="input-field2">
+                                        <label>Apartment, Suite, or Unit Number </label>
+                                        <input placeholder="Enter Apartment, Suite, or Unit Number" type="text">
+                                    </div>
+                                    <div class="input-field2">
+                                        <label>City</label>
+                                        <input placeholder="Enter city" type="text">
+                                    </div>
+                                    <div class="input-field2">
+                                        <label>State/Province</label>
+                                        <select>
+                                            <option disabled selected>Enter State/Province</option>
+                                            <option>Kerala</option>
+                                        </select>
+                                    </div>
+                                    <div class="input-field2">
+                                        <label>Postal Code/ZIP Code</label>
+                                        <input placeholder="Enter Postal Code/ZIP Code" type="text">
+                                    </div>
+                                    <div class="input-field2">
+                                        <label>Country</label>
+                                        <select>
+                                            <option disabled selected>Select Country</option>
+                                            <option>india</option>
+                                        </select>
+                                    </div>
+                                    
+                                </div>
+                              </div>
+                            </li>
+                            <li class="accordion-item mt-4" onclick="openAccordion(1)">
+                              <h5 id="heading2" tabindex="0" role="button" aria-expanded="false" aria-controls="content2">
+                                <span>Set your password</span>
+                              </h5>
+                              <div class="accordion-content" id="content2" role="region" aria-labelledby="heading2">
+                                <div class="form-2 w-100 mt-4">
+                                    <div>
+                                        <div class="input-field2">
+                                            <label>Street Address</label>
+                                            <input placeholder="Enter street address" type="text">
+                                        </div>
+                                        <div class="input-field2 mt-4">
+                                            <label>Apartment, Suite, or Unit Number </label>
+                                            <input placeholder="Enter Apartment, Suite, or Unit Number" type="text">
+                                        </div>
+                                    </div>
+                                    <div class="input-field2" style="padding-left: 20px;">
+                                      <h6 style="opacity:.5;">Password must:</h6>
+                                      <ul id="passwordCriteria" style="list-style: none; padding-left: 0;">
+                                          <li id="length" class="invalid"><span style="opacity:.5; margin-right:5px;">✘</span> At least 8 characters</li>
+                                          <li id="capital" class="invalid"><span style="opacity:.5; margin-right:5px;">✘</span> One small letter</li>
+                                          <li id="special" class="invalid"><span style="opacity:.5; margin-right:5px;">✘</span> One capital letter</li>
+                                          <li id="match" class="invalid"><span style="opacity:.5; margin-right:5px;">✘</span> One number or symbol</li>
+                                      </ul>
+                                  </div>
+                                  
+                                    
+                                </div>
+                              </div>
+                            </li>
+                            
+                        </ul>
+                        <h6 class="mt-4">
+                            I have read and agree to the
+                            <a class="text-danger" style="text-decoration: underline;">terms and conditions</a>
+                        </h6>
+                        <button class="btn button-elite2 text-white w-100 mt-4" style="padding: 15px; border-radius:6px;">Register</button>
+                        <h6 class="mt-4">
+                           Already have an account?
+                            <a href="login.html" class="text-danger" style="font-weight: 700;">Login</a>
+                        </h6>
+                          
+                        
+					</div>
+				</div>
+			</div>
+		</div>
+		
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+          // Accordion setup
+          const accordionItems = document.querySelectorAll('.accordion-item');
+      
+          accordionItems.forEach((item, index) => {
+              const content = item.querySelector('.accordion-content');
+              const heading = item.querySelector('h5');
+      
+              // Initialize all items as open
+              item.classList.add('open');
+              heading.setAttribute('aria-expanded', 'true');
+              content.style.height = '100%';
+      
+              // Toggle accordion on click
+              heading.addEventListener('click', () => {
+                  const isOpen = item.classList.toggle('open');
+                  heading.setAttribute('aria-expanded', isOpen);
+                  content.style.height = isOpen ? '100%' : '0';
+              });
+      
+              // Toggle accordion on enter/space keypress
+              heading.addEventListener('keydown', (event) => {
+                  if (event.key === 'Enter' || event.key === ' ') {
+                      const isOpen = item.classList.toggle('open');
+                      heading.setAttribute('aria-expanded', isOpen);
+                      content.style.height = isOpen ? '100%' : '0';
+                  }
+              });
+      
+              // Prevent accordion from closing when clicking on content
+              content.addEventListener('click', (event) => {
+                  event.stopPropagation();
+              });
+          });
+      
+          // Password validation setup
+          const passwordInput = document.getElementById('password');
+          const confirmPasswordInput = document.getElementById('confirmPassword');
+          const criteria = {
+              length: document.getElementById('length'),
+              capital: document.getElementById('capital'),
+              special: document.getElementById('special'),
+              match: document.getElementById('match')
+          };
+      
+          passwordInput.addEventListener('input', validatePassword);
+          confirmPasswordInput.addEventListener('input', validatePassword);
+      
+          function validatePassword() {
+              const password = passwordInput.value;
+              const confirmPassword = confirmPasswordInput.value;
+      
+              // Length validation
+              if (password.length >= 8) {
+                  setCriteria(criteria.length, true);
+              } else {
+                  setCriteria(criteria.length, false);
+              }
+      
+              // Capital letter validation
+              if (/[A-Z]/.test(password)) {
+                  setCriteria(criteria.capital, true);
+              } else {
+                  setCriteria(criteria.capital, false);
+              }
+      
+              // Special character or number validation
+              if (/[0-9!@#$%^&*]/.test(password)) {
+                  setCriteria(criteria.special, true);
+              } else {
+                  setCriteria(criteria.special, false);
+              }
+      
+              // Password match validation
+              if (password === confirmPassword && password !== '') {
+                  setCriteria(criteria.match, true);
+              } else {
+                  setCriteria(criteria.match, false);
+              }
+          }
+      
+          function setCriteria(element, isValid) {
+              if (isValid) {
+                  element.classList.remove('invalid');
+                  element.classList.add('valid');
+                  element.querySelector('span').textContent = '✔';
+                  element.querySelector('span').style.color = 'green';
+              } else {
+                  element.classList.remove('valid');
+                  element.classList.add('invalid');
+                  element.querySelector('span').textContent = '✘';
+                  element.querySelector('span').style.color = 'red';
+              }
+          }
+      
+          // Form submission
+          document.getElementById('registrationForm').addEventListener('submit', async function(event) {
+              event.preventDefault();
+      
+              const formData = new FormData(this);
+              const data = {};
+              formData.forEach((value, key) => data[key] = value);
+      
+              const response = await fetch('/auth/register/parent', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify(data)
+              });
+      
+              if (response.ok) {
+                  alert('Registration successful');
+                  window.location.href = '/login';
+              } else {
+                  const error = await response.json();
+                  alert('Registration failed: ' + error.error);
+              }
+          });
+      });
+      </script>
+         
+	</body>
+</html>

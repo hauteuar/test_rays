@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Coach Status</title>
+  <link rel="stylesheet" href="vendors/ti-icons/css/themify-icons.css">
+  <link rel="stylesheet" href="css/style-coach.css">
+  <link rel="stylesheet" href="css/text-editor.css">
+  <link rel="shortcut icon" href="images/favicon.png" />
+</head>
+<body>
+  <div class="container-scroller">
+    <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+      <div class="text-center navbar-brand-wrapper d-flex align-items-center pl-2">
+        <button class="navbar-toggler navbar-toggler max-991 align-self-center" type="button" data-toggle="minimize">
+          <img src="images/menu.png" class="mr-2 icon-menu pt-3" alt="menubar" style="width: 20px;" />
+        </button>
+        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+          <img src="images/menu.png" class="mr-2 icon-menu pt-3" alt="menubar" style="width: 20px;" />
+        </button>
+        <a class="navbar-brand brand-logo" href="index.html"><img src="images/logo.png" class="mr-2" alt="logo"/></a>
+      </div>
+      <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+        <ul class="navbar-nav mr-lg-2">
+          <li class="nav-item nav-search d-none d-lg-block" style="margin:0;padding-top: 15px;color: #428737;font-style: italic;font-size: 14px;">
+            Dreams into Reality
+          </li>
+        </ul>
+        <ul class="navbar-nav navbar-nav-right">
+          <li class="nav-item ">
+            <a class="nav-link">
+              <img src="images/message.png" width="20">
+              <span style="color: #000;margin-left: 5px;font-size: 14px;">Messages</span>
+            </a>
+          </li>
+          <li class="nav-item nav-logout dropdown">
+            <a class="nav-link " href="#" data-toggle="dropdown" id="profileDropdown">
+              <img src="images/logout.png" alt="profile"/>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
+              <a class="dropdown-item">
+                <i class="ti-power-off text-primary"></i>
+                Logout
+              </a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <div class="container-fluid page-body-wrapper">
+      <nav class="sidebar sidebar-offcanvas" id="sidebar">
+        <ul class="nav">
+          <li class="nav-item mb-1">
+            <div class="text-center">
+              <img src="images/user.png" class="image-edit-in-mini-sidebar" style="width:100%;padding: 5px 25px 10px 25px;">
+              <h4 class="hide-in-mini-sidebar" style="font-size:16px;font-weight: 600;">John Doe</h4>
+              <h4 class="hide-in-mini-sidebar" style="color: #006ABA;font-size:12px;">Head Coach</h4>
+            </div>
+          </li>
+          <li class="nav-item">
+            <div class="nav-link">
+              <img src="images/dashboard.png">
+              <span class="menu-title">Dashboard</span>
+            </div>
+          </li>
+          <li class="nav-item active">
+            <div class="nav-link">
+              <img src="images/my-task-active.png">
+              <span class="menu-title">Assignment</span>
+            </div>
+          </li>
+          <a href="live-practice.html">
+          <li class="nav-item">
+            <div class="nav-link">
+              <img src="images/live-practice.png">
+              <span class="menu-title">Live Practice</span>
+            </div>
+          </li>
+          </a>
+          <li class="nav-item">
+            <div class="nav-link">
+              <img src="images/fitness.png">
+              <span class="menu-title">Fitness Testing</span>
+            </div>
+          </li>
+          <li class="nav-item">
+            <div class="nav-link">
+              <img src="images/messages.png">
+              <span class="menu-title">Message</span>
+            </div>
+          </li>
+          <li class="nav-item">
+            <div class="nav-link">
+              <img src="images/my-team.png">
+              <span class="menu-title">My Team</span>
+            </div>
+          </li>
+          <li class="nav-item">
+            <div class="nav-link">
+              <img src="images/courses.png">
+              <span class="menu-title">Courses</span>
+            </div>
+          </li>
+          <li class="nav-item">
+            <div class="nav-link">
+              <img src="images/biometrics.png">
+              <span class="menu-title">Biometrics</span>
+            </div>
+          </li>
+          <li class="nav-item hide-in-mini-sidebar" style="margin-top:70px;">
+            <div class="text-center">
+              <img src="images/copyright.png">
+              <h6 class="" style="font-size: 11px;line-height: 16px;">Copyright 2023 Rays Sports. <br>
+                All rights reserved.</h6>
+            </div>
+          </li>
+        </ul>
+      </nav>
+      <div class="main-panel">
+        <div class="flex-align second-header px-4 py-2" style="border-bottom: 1px solid #D9D8D8;min-height: 60px;gap:10px">
+          <h4 class="m-0">Assignments</h4>
+        </div>
+        <div class="content-wrapper">
+          <div class="row">
+            <div class="col-md-12" style="min-height: 50px;">
+              <div style="display: flex;gap:10px;align-items: center;">
+                <a href="assignment-view.html"><img src="images/image1/arrow-left-circle.png" style="width: 35px;height: 35px;"></a>
+                <h5 style="font-weight: 600;margin-bottom: 0px;">T20 Batting</h5>
+              </div>
+            </div>
+          </div>
+          <div class="row m-0">
+            <div class="col-md-3" style="padding: 0;">
+              <div class="card h-100">
+                <div class="message-card-header pt-1" style="border-bottom:none;">
+                  <div class="search-message">
+                    <input placeholder="Search players" type="text">
+                    <img src="images/search.png">
+                  </div>
+                </div>               
+                <div class="px-3 pb-2 pt-1">
+                  <div class="pl-4 pr-2 py-1">
+                    <div class="flex-align select-cancel-tab">
+                      <h6 class="m-0 text-gray" style="font-size:12px;">Players</h6>
+                      <h6 class="m-0 text-gray" style="font-size:12px;">Status</h6>
+                    </div>
+                  </div>            
+                </div>
+                <div class="message-card-body" style="height:auto;">
+                  <div class="message-list-child" style="gap: 20px;">
+                    <div class="check-box comparison-checkbox">
+                      <input type="checkbox" class="check" id="player1" name="player" value="Player">
+                      <span class="custom-check"></span>
+                    </div>
+                    <label class="w-100" for="player1">
+                      <div class="dp-name">
+                        <img src="images/user3.png">
+                        <div class="flex-align w-100 g2" style="flex-wrap: nowrap;">
+                          <h5 class="m-0">Alexander</h5>
+                          <h5 class="m-0 text-success">Submitted</h5>
+                        </div>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+                <div class="message-card-body" style="height:auto;">
+                  <div class="message-list-child" style="gap: 20px;">
+                    <div class="check-box comparison-checkbox">
+                      <input type="checkbox" class="check" id="player2" name="player" value="Player">
+                      <span class="custom-check"></span>
+                    </div>
+                    <label class="w-100" for="player2">
+                      <div class="dp-name">
+                        <img src="images/user4.png">
+                        <div class="flex-align w-100 g2" style="flex-wrap: nowrap;">
+                          <h5 class="m-0">Ricardo</h5>
+                          <h5 class="m-0 text-danger">Not Submitted</h5>
+                        </div>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+                <div class="message-card-body" style="height:auto;">
+                  <div class="message-list-child" style="gap: 20px;">
+                    <div class="check-box comparison-checkbox">
+                      <input type="checkbox" class="check" id="player3" name="player" value="Player">
+                      <span class="custom-check"></span>
+                    </div>
+                    <label class="w-100" for="player3">
+                      <div class="dp-name">
+                        <img src="images/user3.png">
+                        <div class="flex-align w-100 g2" style="flex-wrap: nowrap;">
+                          <h5 class="m-0">Alexander</h5>
+                          <h5 class="m-0 text-success">Submitted</h5>
+                        </div>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+                <div class="message-card-body" style="height:auto;">
+                  <div class="message-list-child" style="gap: 20px;">
+                    <div class="check-box comparison-checkbox">
+                      <input type="checkbox" class="check" id="player4" name="player" value="Player">
+                      <span class="custom-check"></span>
+                    </div>
+                    <label class="w-100" for="player4">
+                      <div class="dp-name">
+                        <img src="images/user4.png">
+                        <div class="flex-align w-100 g2" style="flex-wrap: nowrap;">
+                          <h5 class="m-0">Ricardo</h5>
+                          <h5 class="m-0 text-success">Submitted</h5>
+                        </div>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+                <div class="message-card-body" style="height:auto;">
+                  <div class="message-list-child" style="gap: 20px;">
+                    <div class="check-box comparison-checkbox">
+                      <input type="checkbox" class="check" id="player5" name="player" value="Player">
+                      <span class="custom-check"></span>
+                    </div>
+                    <label class="w-100" for="player5">
+                      <div class="dp-name">
+                        <img src="images/user3.png">
+                        <div class="flex-align w-100 g2" style="flex-wrap: nowrap;">
+                          <h5 class="m-0">Alexander</h5>
+                          <h5 class="m-0 text-success">Submitted</h5>
+                        </div>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+                <div class="message-card-body" style="height:auto;">
+                  <div class="message-list-child" style="gap: 20px;">
+                    <div class="check-box comparison-checkbox">
+                      <input type="checkbox" class="check" id="player6" name="player" value="Player">
+                      <span class="custom-check"></span>
+                    </div>
+                    <label class="w-100" for="player6">
+                      <div class="dp-name">
+                        <img src="images/user4.png">
+                        <div class="flex-align w-100 g2" style="flex-wrap: nowrap;">
+                          <h5 class="m-0">Ricardo</h5>
+                          <h5 class="m-0 text-danger">Not Submitted</h5>
+                        </div>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+                <div class="message-card-body" style="height:auto;">
+                  <div class="message-list-child" style="gap: 20px;">
+                    <div class="check-box comparison-checkbox">
+                      <input type="checkbox" class="check" id="player7" name="player" value="Player">
+                      <span class="custom-check"></span>
+                    </div>
+                    <label class="w-100" for="player7">
+                      <div class="dp-name">
+                        <img src="images/user3.png">
+                        <div class="flex-align w-100 g2" style="flex-wrap: nowrap;">
+                          <h5 class="m-0">Alexander</h5>
+                          <h5 class="m-0 text-success">Submitted</h5>
+                        </div>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-9" style="padding:0 0 0 12px;">
+              <div class="card p-3" style="min-height:60vh">
+                <div class="pb-2 d-flex g2">
+                  <div class="" style="padding-top:10px;width: 55%;">
+                    <div class="d-flex align-items-center" style="gap:8px;">
+                      <img src="images/image1/user.png" width="25px" height="25px">
+                      <h6 style="margin: 0;font-weight: 500; border-right: 1px solid gray;padding-right:8px;font-size: 14px;">John Doe</h6>
+                      <h6 class="text-info m-0" style="font-weight:500;border-right: 1px solid gray;padding-right:8px;font-size: 10px;">Sunday, 16 April</h6>
+                      <h6 class="text-info m-0" style="font-weight:500;font-size: 10px;">11.45 am</h6>
+                    </div>
+                    <p style="margin-left: 35px;font-size: 12px;line-height: 18px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec.</p>
+                  </div>
+                  <div style="width: 45%;">
+                    <div style="position: relative;">
+                      <img src="images/image1/assest-cricketer.png" class="rounded-top" style="width: 100%;">
+                      <img src="images/image1/play-btn.png" class="play-btn" style="width: 40px;height: 40px;">
+                    </div>
+                    <div class="flex-align g2 py-2 px-3 rounded-bottom" style="background: #6F8393;">
+                      <img src="images/Rays-eye-logo-white.png" class="rounded" style="width: 60px;">
+                      <h6 class="m-0 text-white" style="font-size:14px;">Annotate video</h6>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row m-0">
+                <div class="col-md-6" style="padding: 0 6px 0 0;">
+                  <div class="card mt-3" style="overflow:hidden;">
+                    <div class="editor">
+                      <form method="post" style="height:240px;">
+                        <textarea id="assignmentDescription"></textarea>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6" style="padding: 0px 6px;">
+                  <div class="card p-3 mt-3 drop-file" style="border: 1px dashed #bdbdbd;aspect-ratio:1/.7;">
+                    <h6 style="font-size: 14px;">Drop files here or browse</h6>
+                    <div class="flex-align" style="max-width: 320px;gap:30px;">
+                      <div class="drop-file-card" style="border: 1px solid #19AF79;background: #fff;">
+                        <img src="images/record.png">
+                        <h6>Record</h6>
+                      </div>
+                      <div class="drop-file-card" style="border: 1px solid #19AF79;background: #fff;">
+                        <img src="images/device.png">
+                        <h6>My Device</h6>
+                      </div>
+                      <div class="drop-file-card" style="border: 1px solid #19AF79;background: #fff;">
+                        <img src="images/camera2.png">
+                        <h6>Camera</h6>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="d-flex align-items-center mt-3" style="gap:10px;justify-content: flex-end;">
+                <button class="site-btn-outline-info text-success hoverbtn px-5" style="border: 1px solid #19AF79;">Send All</button>
+                <button class="site-btn-success hoverbtn px-5">Send</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="vendors/js/vendor.bundle.base.js"></script>
+  <script src="js/off-canvas.js"></script>
+  <script src="js/template.js"></script>
+  <script src="js/tinymce-text-editor.min.js"></script>
+  <script>
+    tinymce.init({
+      selector: "#assignmentDescription"
+    });
+
+    function myFunc() {
+      console.log(document.getElementById("assignmentDescription").value);
+    }
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Package details</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/mobile.css">
+    <link rel="stylesheet" href="css/tab.css">
+    <link rel="shortcut icon" href="images/1.png" />
+    <script src="components/sidebar.js" type="text/javascript" defer></script>
+    <script src="components/topnav.js" type="text/javascript" defer></script>
+    <style>
+        @media only screen and (max-width:480px) {
+            .package-details .package-container {
+                grid-template-columns: repeat(1, 1fr);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-scroller">
+        <topnav-component></topnav-component>
+        <div class="container-fluid page-body-wrapper">
+            <sidebar-component data-page="packages"></sidebar-component>
+            <div class="course-main add-course package_details">
+                <div class="row justify-content-between">
+                    <div class="mb-3 mt-2 heading">
+                        <h4 class="m-0" style="font-weight: 400; color: rgb(104, 104, 104);"><a href="courses.html" style="color:#5c5c5c;">Package</a></h4>
+                        <img src="images/arrow-right-3.png" alt="">
+                        <h4 class="m-0" id="packageTitle" style="font-weight: 650;">Package Title</h4>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4">
+                        <div class="package" style="height: unset;">
+                            <div class="package-image" style="height: 190px;">
+                                <img id="packageBanner" src="images/summer-camp.jpg" alt="">
+                                <div class="status-ribbon" style="background-image: url('images/active.png');" id="packageStatus">
+                                    <h4>Active</h4>
+                                </div>
+                            </div>
+                            <div class="bottom">
+                                <div class="text">
+                                    <h4 id="packageTitleBottom">Package Title</h4>
+                                </div>
+                                <div class="course-details mt-1">
+                                    <h4><span>Courses: </span><span id="courseCount">0</span></h4>
+                                </div>
+                                <div class="ribbon">
+                                    <h4 class="cross" id="packageOriginalPrice">$200</h4>
+                                    <h4 id="packageDiscountedPrice">$150</h4>
+                                </div>
+                                <div class="course-details mt-3">
+                                    <h4><span>Start date: </span><span id="packageStartDate">12 Jan 2024</span></h4>
+                                    <h4><span>End date: </span><span id="packageEndDate">12 Jan 2025</span></h4>
+                                </div>
+                            </div>
+                            <div class="after-bottom">
+                                <div class="added-discount">
+                                    <h3 class="mt-3" style="font-size: 14px;font-weight: 600;">Added discounts</h3>
+                                    <div class="discount-text" id="packageDiscounts">
+                                        <!-- Discounts will be dynamically loaded here -->
+                                    </div>
+                                </div>
+                                <h3 class="batch-subheading" style="font-size: 14px;font-weight: 600;">Description</h3>
+                                <div class="description">
+                                    <ol id="packageDescription">
+                                        <!-- Description will be dynamically loaded here -->
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-8 package-details">
+                        <h4 class="subheading" style="font-size: 16px;font-weight: 600;"><span id="courseCountTop">0</span> courses</h4>
+                        <div class="package-container" id="coursesContainer">
+                            <!-- Courses will be dynamically loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', fetchPackageDetails);
+
+        async function fetchPackageDetails() {
+            try {
+                const packageId = new URLSearchParams(window.location.search).get('packageId');
+                const organizationName = localStorage.getItem('organizationName');
+
+                const response = await fetch(`/api/packages/${packageId}`, {
+                    headers: {
+                        'organizationName': organizationName
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const packageData = await response.json();
+                console.log("Fetched package data:", packageData);
+
+                document.getElementById('packageBanner').src = `/images/${packageData.bannerImage || 'summer-camp.jpg'}`;
+                document.getElementById('packageTitle').innerText = packageData.name;
+                document.getElementById('packageTitleBottom').innerText = packageData.name;
+                document.getElementById('packageOriginalPrice').innerText = `$${packageData.fee}`;
+                document.getElementById('packageDiscountedPrice').innerText = `$${packageData.discount}`;
+                document.getElementById('packageStartDate').innerText = new Date(packageData.startDate).toLocaleDateString();
+                document.getElementById('packageEndDate').innerText = new Date(packageData.endDate).toLocaleDateString();
+                document.getElementById('courseCount').innerText = packageData.courses.length;
+                document.getElementById('courseCountTop').innerText = packageData.courses.length;
+
+                populateDescription(packageData.description);
+                populateDiscounts(packageData.discount);
+                displayCourses(packageData.courses);
+            } catch (error) {
+                console.error('Error fetching package details:', error);
+            }
+        }
+
+        function populateDescription(description) {
+            const descriptionElement = document.getElementById('packageDescription');
+            descriptionElement.innerHTML = '';
+            const li = document.createElement('li');
+            li.textContent = description;
+            descriptionElement.appendChild(li);
+        }
+
+        function populateDiscounts(discount) {
+            const discountsElement = document.getElementById('packageDiscounts');
+            discountsElement.innerHTML = '';
+            const discountDiv = document.createElement('div');
+            discountDiv.classList.add('discount-text');
+            discountDiv.innerHTML = `
+                <div class="count">${discount}%</div>
+                <h3 class="batch-subheading" style="font-size: 12px;font-weight: 500;">${discount}% discount</h3>
+            `;
+            discountsElement.appendChild(discountDiv);
+        }
+
+        function displayCourses(courses) {
+            const coursesContainer = document.getElementById('coursesContainer');
+            coursesContainer.innerHTML = '';
+            courses.forEach(course => {
+                const courseElement = document.createElement('a');
+                courseElement.href = `course-details.html?courseId=${course._id}`;
+                courseElement.innerHTML = `
+                    <div class="package">
+                        <div class="package-image">
+                            <img src="/images/${course.bannerImage || 'summer-camp.jpg'}" alt="">
+                            <div class="status-ribbon" style="background-image: url('images/${course.status}.png');">
+                                <h4>${course.status}</h4>
+                            </div>
+                        </div>
+                        <div class="bottom">
+                            <div class="text">
+                                <h4>${course.title}</h4>
+                            </div>
+                            <div class="course-details">
+                                <h4><span>Duration: </span>${course.duration}</h4>
+                                <span>|</span>
+                                <h4><span>Batches: </span>${course.batches.length}</h4>
+                            </div>
+                            <div class="ribbon">
+                                <h4>$${course.price}</h4>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                coursesContainer.appendChild(courseElement);
+            });
+        }
+    </script>
+</body>
+
+</html>
+ 

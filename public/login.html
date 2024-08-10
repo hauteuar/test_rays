@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="zxx">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>ELITE</title>
+  <link rel="stylesheet" href="css/style-1.css">
+</head>
+<body>
+  <div class="social">
+    <a>
+      <img src="images/facebook.png" alt="facebook">
+    </a>
+    <a>
+      <img src="images/instagram.png" alt="instagram">
+    </a>
+  </div>
+  <header>
+    <div class="elite_space header-align">
+      <div class="logo header-left"></div>
+      <div class="header-right">
+        <div class="nav">
+          <a href="index.html" class="nav-items active">Home</a>
+          <a class="nav-items">Team</a>
+          <a class="nav-items">Programs</a>
+          <a class="nav-items">About</a>
+          <a class="nav-items">Contact</a>
+        </div>
+      </div>
+      <div class="menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </header>
+  <div class="main">
+    <div class="login elite_y_space">
+      <div class="elite_space login-row">
+        <div class="login-left">
+          <h1>Welcome to Elite Cricket Academy</h1>
+          <h5>"Experience a learning environment like no other, where technique and talent are nurtured into true excellence. We don't just teach cricket; we shape champions."</h5>
+        </div>
+        <div class="login-right">
+          <div class="login-card">
+            <img src="images/logo2.png" style="margin: 0 auto; display: flex; width:120px;" alt="logo">
+            <form id="loginForm">
+              <div class="input-field">
+                <input type="email" id="email" name="email" required>
+                <label for="username">Email</label>
+              </div>
+              <div class="input-field">
+                <input type="password" id="password" name="password" required>
+                <label for="password">Password</label>
+              </div>
+              <h6 class="text-danger text-right w-100">Forgot password?</h6>
+              <button type="submit" class="btn button-elite2 w-100" style="border-radius: 6px;">Log In</button>
+            </form>
+            <div class="login-card-bottom">
+              <h6 class="text-dark">
+                Don’t have account?
+                <a href="signup.html" class="text-danger">Sign Up</a>
+              </h6>
+              <h6 class="text-dark">Or</h6>
+              <div class="login-card-bottom-icons">
+                <a><img src="images/google-icon.png" alt="google"></a>
+                <a><img src="images/facebook-icon.png" alt="facebook"></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="elite-container">
+      <div class="elite-row elite_space elite_y_space">
+        <div class="elite-col-6">
+          <img src="images/mobile-screens.png" class="w-100" alt="mobile">
+        </div>
+        <div class="elite-col-6 elite-right-text" style="display: flex; flex-direction:column; gap:20px;">
+          <h3 style="max-width: 380px;">Download our customized <span class="text-danger" style="font-weight: 900;">“HWZTHAT”</span> mobile app by scanning the QR code below.</h3>
+          <div class="flex-align" style="margin-left: -15px; gap:0;">
+            <div class="w-50" style="padding: 15px;">
+              <img src="images/scanner.png" alt="scanner" class="w-100">
+            </div>
+            <div class="w-50" style="padding: 15px; display:flex;flex-direction:column;gap:15px;">
+              <img src="images/apple-store.png" alt="app-store" class="w-100">
+              <img src="images/playstore.png" alt="playstore" class="w-100">
+            </div>
+          </div>
+        </div>
+        <div class="w-100" style="margin-top: 50px; display: flex; justify-content: center; align-items: flex-end; gap: 15px;">
+          Powered by 
+          <img src="images/rays-sports.png" style="width: 150px;" alt="logo">
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer class="footer1">
+    <div class="copywrite elite_space">© 2024 by Elite Cricket Academy.</div>
+  </footer>
+  <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.js"></script>
+
+  <script type="text/javascript">
+    $(".menu").on('click', function () {
+      var selector = $("body")
+      if (selector.hasClass('open')) {
+        selector.removeClass('open');
+      } else {
+        selector.addClass('open');
+      }
+    });
+
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      console.log("Email:", email); // Debug log
+      console.log("Password:", password); // Debug log
+      try {
+        const response = await fetch('/auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ email, password })
+        });
+        const result = await response.json();
+        if (response.ok) {
+          localStorage.setItem('token', result.token);
+          localStorage.setItem('user', email);
+          if (result.organization) {
+            localStorage.setItem('org_id', result.organization);
+          } else {
+            localStorage.removeItem('org_id'); // Remove if undefined
+          }
+          if (result.role === 'org_admin') {
+            window.location.href = '/booking_management.html';
+          } else if (result.role === 'corp_admin') {
+            window.location.href = '/corp_admin/dashboard';
+          } else if (result.role === 'coach') {
+            window.location.href = '/assignmentview.html';
+          } else {
+            window.location.href = '/student_tasks.html';
+          }
+        } else {
+          alert(result.error);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred during login. Please try again.');
+      }
+    });
+  </script>
+</body>
+</html>
