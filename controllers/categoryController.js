@@ -23,10 +23,10 @@ exports.getCategoriesWithCoaches = async (req, res) => {
 
 // Get coaches by category
 exports.getCoachesByCategory = async (req, res) => {
-  try {
-    const { categoryId } = req.params;
-    const category = await Category.findById(categoryId).populate('coaches');
+  const { categoryId } = req.params;
 
+  try {
+    const category = await Category.findById(categoryId).populate('coaches').exec();
     if (!category) {
       return res.status(404).json({ error: 'Category not found' });
     }

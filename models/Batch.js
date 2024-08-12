@@ -1,5 +1,26 @@
 const mongoose = require('mongoose');
 
+// Define the schema for tracking student payments within a batch
+const studentPaymentSchema = new mongoose.Schema({
+  studentId: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'User', 
+    required: true 
+  },
+  paymentStatus: { 
+    type: String, 
+    enum: ['pending', 'completed', 'failed'], 
+    default: 'pending' 
+  },
+  paymentAmount: { 
+    type: Number, 
+    required: true 
+  },
+  paymentDate: { 
+    type: Date 
+  },
+}, { _id: false });
+
 const batchSchema = new mongoose.Schema({
   name: { type: String, required: true }, // Name for the batch
   startDate: { type: Date, required: true },
@@ -8,8 +29,17 @@ const batchSchema = new mongoose.Schema({
   days: [String], // Example: ["Monday", "Wednesday", "Friday"]
   repeatInterval: { type: String, enum: ['Weekly', 'Monthly', 'Yearly'], required: true },
   course: { type: mongoose.Schema.Types.ObjectId, ref: 'Course', required: true },
-  students: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }], // Reference to User model for students
-  coaches: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }] // Reference to User model for coaches
+  students: [{ 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'User' 
+  }], // Reference to User model for students
+  coaches: [{ 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'User' 
+  }], // Reference to User model for coaches
+
+  // Array of payment statuses for each student in the batch
+  studentPayments: [studentPaymentSchema],
 }, { timestamps: true });
 
 module.exports = mongoose.models.Batch || mongoose.model('Batch', batchSchema);

@@ -10,6 +10,10 @@ router.get('/profile', authMiddleware, userController.getUserProfile);
 
 router.get('/', authMiddleware,  userController.getAllUsers);
 
+router.get('/:organizationId', authMiddleware,  userController.getAllUsersByOrg);
+
+
+
 // Get a specific user by ID
 router.get('/:id', authMiddleware, userController.getUserById);
 
@@ -33,7 +37,7 @@ router.get('/not-enrolled/:courseId',  authMiddleware, userController.getStudent
 router.get('/not-assigned/:batchId', authMiddleware, userController.getCoachesNotAssigned);
 
 router.post('/assign', authMiddleware, userController.assignStudentsToCoach);
-router.post('/add-coach', userController.addCoach);
+router.post('/organization/:organizationId/add-coach', userController.addCoach);
 
 // Route to get students assigned to a specific batch
 router.get('/assigned-students/:courseId/:batchId',authMiddleware,  userController.getAssignedStudents);
@@ -43,6 +47,9 @@ router.get('/assigned-coaches/:courseId/:batchId', authMiddleware, userControlle
 
 router.get('/assigned-student/:courseId/:coachId', authMiddleware, userController.getAssignedCoachesByCourseId);
 
+router.get('/student/:organizationId/:studentId', authMiddleware, userController.getStudentsById);
+// Get all students for a given organization
 
+router.get('/organization/:organizationId/students', authMiddleware, userController.getOrgStudents);
 
 module.exports = router;

@@ -129,7 +129,7 @@
               </div>
               <div class="col-6">
                 <h6 class="mb-2 required">Date of birth</h6>
-                <input type="date" name="dateOfBirth" class="hwzthat-input2 w-100">
+                <input type="date" name="dob" class="hwzthat-input2 w-100">
               </div>
               <div class="col-6">
                 <h6 class="mb-2 required">Gender</h6>
@@ -475,9 +475,10 @@
       } else {
         data.profilePhoto = '';
       }
-  
+      data.categoryId = document.getElementById('category-select').value;
       try {
-        const response = await fetch('/api/user/add-coach', {
+
+        const response = await fetch(`/api/user/organization/${organizationId}/add-coach`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

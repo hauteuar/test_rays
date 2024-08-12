@@ -6,14 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Hwzthat</title>
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="vendors/ti-icons/css/themify-icons.css">
+    
     <link rel="shortcut icon" href="images/favicon.png" />
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 
     <!-- Bootstrap and jQuery JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
@@ -46,15 +46,18 @@
                 </ul>
                 <div class="d-flex" style="gap:10px;white-space: nowrap;">
                   <a href="new-schedule.html"><button id="schedule-btn" class="btn site-btn-success hoverbtn" style="margin-top: -7px;">+ New schedule</button></a>
-                  <div id="student-btn" class="dropdown" style="display: none;">
-                    <button class="btn dropdown-toggle site-btn-success hoverbtn" style="margin-top: -7px; color: blue;"
-                      data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                      + New student
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-right">
-                      <a class="dropdown-item text-success py-2" href="#" data-toggle="modal" data-target="#addStudentModal">Add manually</a>
-                    </div>
+                  
+
+                <div  id="student-btn" class="dropdown" style=" display: none;">
+                  <button  class="btn dropdown-toggle site-btn-success hoverbtn" style="margin-top: -7px;" 
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    + New student
+                  </button>
+                  <div class="dropdown-menu dropdown-menu-right" >
+                    <a href="athlet.html" class="dropdown-item text-success py-2" href="#">Add manually</a>
+                    <a class="dropdown-item text-success py-2" href="#" data-toggle="modal" data-target="#linkModal">Generate invitation link</a>
                   </div>
+                </div>
                 </div>
               </div>
               <div class="tab-content mt-3" id="pills-tabContent">
@@ -242,7 +245,9 @@
       </div>
     </div>
 
-    <script src="vendors/js/vendor.bundle.base.js"></script>
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
     <script src="js/off-canvas.js"></script>
     <script src="js/template.js"></script>
 
@@ -286,18 +291,20 @@
   function fetchStudents(organizationName) {
     const token = localStorage.getItem('token');
     const accessToken = `Bearer ${token}`;
-
-    fetch('/api/students/org-student-list-by-org-name', {
+    const organizationId = localStorage.getItem('organizationId')
+    
+    fetch(`/api/user/organization/${organizationId}/students`, {
       method: 'GET',
       headers: {
         'Authorization': accessToken,
-        'organization-name': organizationName // Ensure the organization name is correctly set in the headers
+        'organizationId': organizationId // Ensure the organization name is correctly set in the headers
       }
     })
     .then(response => response.json())
     .then(data => {
-      if (data && data.students) {
-        loadStudents(data.students);
+      console.log(data);
+      if (data) {
+        loadStudents(data);
       }
     })
     .catch(error => console.error('Error:', error));
@@ -315,6 +322,7 @@
               <img src="images/dots.png" data-toggle="dropdown" id="moreDropdown" style="height: 12px;width: 12px;object-fit: contain;cursor: pointer;">
             </div>
             <div class="cursor-pointer" data-toggle="modal" data-target="#studentModal" data-id="${student._id}">
+
               <img src="${student.profilePicture || 'images/user-placeholder.png'}" width="70" class=" mb-2 mx-auto">
               <div class="mt-1">
                 <h4>${student.firstName} ${student.lastName}</h4>
@@ -339,10 +347,11 @@
   function fetchStudentDetails(studentId) {
     const token = localStorage.getItem('token');
     const accessToken = `Bearer ${token}`;
-
-    fetch(`/api/students/${studentId}`, {
+    const organizationId = localStorage.getItem('organizationId');
+    fetch(`/api/user/student/${organizationId}/${studentId}`, {
       headers: {
-        'Authorization': accessToken
+        'Authorization': accessToken,
+        'organizationId': organizationId
       }
     })
     .then(response => response.json())

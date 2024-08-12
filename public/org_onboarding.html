@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Stripe Onboarding & Payments</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/mobile.css">
+    <link rel="stylesheet" href="css/tab.css">
+    <link rel="shortcut icon" href="images/1.png" />
+
+    <script src="components/sidebar.js" type="text/javascript" defer></script>
+    <script src="components/topnav.js" type="text/javascript" defer></script>
+</head>
+
+<body>
+    <div class="container-scroller">
+        <div class="container-fluid page-body-wrapper">
+            <sidebar-component data-page="billing"></sidebar-component>
+            <topnav-component></topnav-component>
+            <div class="course-main billing">
+                <div class="row justify-content-between">
+                    <div class="mb-3 mt-2 heading">
+                        <h4 style="font-weight: 650;margin-left: 0.7rem;">Stripe Onboarding & Payments</h4>
+                    </div>
+                </div>
+
+                <!-- Onboarding Section -->
+                <div class="stripe-onboarding">
+                    <h4 style="font-weight: 650;">Onboard with Stripe</h4>
+                    <form id="onboarding-form">
+                        <div class="form-group">
+                            <label for="onboard-email">Organization Email</label>
+                            <input type="email" id="onboard-email" name="email" class="hwzthat-input" required>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="hwzthat-btn">Create Account</button>
+                        </div>
+                    </form>
+
+                    <div id="onboarding-result" style="margin-top: 20px;"></div>
+                </div>
+
+                <!-- Fetch Account and Payment Details Section -->
+                <div class="stripe-info" style="margin-top: 40px;">
+                    <h4 style="font-weight: 650;">Fetch Account and Payment Details</h4>
+                    <form id="fetch-details-form">
+                        <div class="form-group">
+                            <label for="uniqueCode">Enter Unique Code</label>
+                            <input type="text" id="uniqueCode" name="uniqueCode" class="hwzthat-input" required>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="hwzthat-btn">Fetch Details</button>
+                        </div>
+                    </form>
+
+                    <!-- Display Results -->
+                    <div id="account-details" style="margin-top: 20px;"></div>
+                    <div id="transaction-status" style="margin-top: 20px;"></div>
+                </div>
+
+                <!-- Payment Checkout Section -->
+                <div class="stripe-payment" style="margin-top: 40px;">
+                    <h4 style="font-weight: 650;">Make a Payment</h4>
+                    <form id="payment-form">
+                        <div class="form-group">
+                            <label for="transactionId">Transaction ID</label>
+                            <input type="text" id="transactionId" name="transactionId" class="hwzthat-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="amount">Amount (USD)</label>
+                            <input type="number" id="amount" name="amount" class="hwzthat-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="productName">Product Name</label>
+                            <input type="text" id="productName" name="productName" class="hwzthat-input" required>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="hwzthat-btn">Checkout</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Onboard with Stripe
+        document.getElementById('onboarding-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const email = document.getElementById('onboard-email').value;
+
+            try {
+                const response = await fetch('https://api-payments.rayssportsnetwork.com/create-account', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email })
+                });
+
+                const result = await response.json();
+                if (response.status === 200) {
+                    document.getElementById('onboarding-result').innerHTML = `
+                        <p>Account created successfully!</p>
+                        <p>Unique Code: ${result.uniqueCode}</p>
+                        <p>Payouts Enabled: ${result.payouts_enabled}</p>
+                    `;
+                } else {
+                    document.getElementById('onboarding-result').innerHTML = `<p>Error: ${result.error}</p>`;
+                }
+            } catch (error) {
+                console.error('Error during onboarding:', error);
+                alert('Failed to create account.');
+            }
+        });
+
+        // Fetch Account and Payment Details
+        document.getElementById('fetch-details-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const uniqueCode = document.getElementById('uniqueCode').value;
+
+            try {
+                const accountResponse = await fetch(`https://api-payments.rayssportsnetwork.com/get-account/${uniqueCode}`);
+                const accountData = await accountResponse.json();
+
+                document.getElementById('account-details').innerHTML = `
+                    <h5>Account Details:</h5>
+                    <pre>${JSON.stringify(accountData, null, 2)}</pre>
+                `;
+
+                const transactionResponse = await fetch(`https://api-payments.rayssportsnetwork.com/get-transaction/${uniqueCode}`);
+                const transactionData = await transactionResponse.json();
+
+                document.getElementById('transaction-status').innerHTML = `
+                    <h5>Transaction Status:</h5>
+                    <pre>${JSON.stringify(transactionData, null, 2)}</pre>
+                `;
+            } catch (error) {
+                console.error('Error fetching details:', error);
+                alert('Failed to fetch account or transaction details.');
+            }
+        });
+
+        // Checkout Payment
+        document.getElementById('payment-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const transactionId = document.getElementById('transactionId').value;
+            const amount = document.getElementById('amount').value;
+            const productName = document.getElementById('productName').value;
+            const uniqueCode = "some-unique-code"; // Replace with actual unique code
+            const clientId = "hwzthat"; // Example clientId
+            const callbackUrl = "https://your-callback-url.com"; // Replace with actual callback URL
+
+            try {
+                const response = await fetch('https://api-payments.rayssportsnetwork.com/checkout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        clientId,
+                        callbackUrl,
+                        transactionId,
+                        uniqueCode,
+                        productName,
+                        amount: parseFloat(amount),
+                        successUrl: window.location.origin + '/success',
+                        cancelUrl: window.location.origin + '/cancel'
+                    })
+                });
+
+                const result = await response.json();
+                if (response.status === 200) {
+                    window.location.href = result.url; // Redirect to Stripe payment page
+                } else {
+                    alert('Payment initiation failed: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Error initiating payment:', error);
+                alert('Failed to initiate payment.');
+            }
+        });
+    </script>
+</body>
+
+</html>

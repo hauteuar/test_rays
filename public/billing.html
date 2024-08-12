@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Stripe Payments and Invoices</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/mobile.css">
+    <link rel="stylesheet" href="css/tab.css">
+    <link rel="shortcut icon" href="images/1.png" />
+
+    <script src="components/sidebar.js" type="text/javascript" defer></script>
+    <script src="components/topnav.js" type="text/javascript" defer></script>
+</head>
+
+<body>
+    <div class="container-scroller">
+        <div class="container-fluid page-body-wrapper">
+            <sidebar-component data-page="billing"></sidebar-component>
+            <topnav-component></topnav-component>
+            <div class="course-main billing">
+                <div class="row justify-content-between">
+                    <div class="mb-3 mt-2 heading">
+                        <h4 style="font-weight: 650;margin-left: 0.7rem;">Stripe Payments & Invoices</h4>
+                    </div>
+                </div>
+
+                <!-- Section to Fetch Payment Status and Invoices -->
+                <div class="stripe-info">
+                    <form id="fetch-details-form">
+                        <div class="form-group">
+                            <label for="uniqueCode">Enter Unique Code</label>
+                            <input type="text" id="uniqueCode" name="uniqueCode" class="hwzthat-input" required>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="hwzthat-btn">Fetch Details</button>
+                        </div>
+                    </form>
+
+                    <!-- Display Results -->
+                    <div id="payment-details" style="margin-top: 20px;"></div>
+                    <div id="invoice-details" style="margin-top: 20px;"></div>
+                </div>
+
+                <!-- Section to Post Payment -->
+                <div class="stripe-payment" style="margin-top: 40px;">
+                    <h4 style="font-weight: 650;">Make a Payment</h4>
+                    <form id="payment-form">
+                        <div class="form-group">
+                            <label for="transactionId">Transaction ID</label>
+                            <input type="text" id="transactionId" name="transactionId" class="hwzthat-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="amount">Amount (USD)</label>
+                            <input type="number" id="amount" name="amount" class="hwzthat-input" required>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="hwzthat-btn">Make Payment</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Fetch Payment and Invoice Details
+        document.getElementById('fetch-details-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const uniqueCode = document.getElementById('uniqueCode').value;
+
+            try {
+                const paymentResponse = await fetch(`/api/stripe/get-transactions/${uniqueCode}`);
+                const invoiceResponse = await fetch(`/api/stripe/get-payouts/${uniqueCode}`);
+                
+                const paymentData = await paymentResponse.json();
+                const invoiceData = await invoiceResponse.json();
+
+                document.getElementById('payment-details').innerHTML = `
+                    <h5>Payment Details:</h5>
+                    <pre>${JSON.stringify(paymentData, null, 2)}</pre>
+                `;
+
+                document.getElementById('invoice-details').innerHTML = `
+                    <h5>Invoice Details:</h5>
+                    <pre>${JSON.stringify(invoiceData, null, 2)}</pre>
+                `;
+            } catch (error) {
+                console.error('Error fetching details:', error);
+                alert('Failed to fetch payment or invoice details.');
+            }
+        });
+
+        // Post a Payment
+        document.getElementById('payment-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const transactionId = document.getElementById('transactionId').value;
+            const amount = document.getElementById('amount').value;
+
+            try {
+                const response = await fetch('/api/stripe/checkout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ transactionId, amount, uniqueCode: "some-unique-code" }) // Replace with actual unique code
+                });
+
+                const result = await response.json();
+                if (result.url) {
+                    window.location.href = result.url; // Redirect to Stripe payment page
+                } else {
+                    alert('Payment initiation failed.');
+                }
+            } catch (error) {
+                console.error('Error making payment:', error);
+                alert('Failed to initiate payment.');
+            }
+        });
+    </script>
+</body>
+
+</html>

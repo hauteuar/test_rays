@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Checkout</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/mobile.css">
+  <link rel="stylesheet" href="css/tab.css">
+  <link rel="shortcut icon" href="images/1.png" />
+
+  <script src="components/sidebar.js" type="text/javascript" defer></script>
+  <script src="components/topnav.js" type="text/javascript" defer></script>
+</head>
+
+<body>
+  <div class="container-scroller">
+    <div class="container-fluid page-body-wrapper">
+      <sidebar-component data-page="checkout"></sidebar-component>
+      <topnav-component></topnav-component>
+      <div class="course-main billing">
+        <div class="row justify-content-between">
+          <div class="mb-3 mt-2 heading">
+            <h4 style="font-weight: 650;margin-left: 0.7rem;">Checkout</h4>
+          </div>
+        </div>
+
+        <div class="checkout-container">
+          <div id="cart-items"></div>
+          <div class="checkout-summary">
+            <h5>Total Amount: $<span id="total-amount">0</span></h5>
+            <button id="checkout-button" class="hwzthat-btn">Proceed to Payment</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  // Load cart items
+function loadCartItems() {
+  const cart = JSON.parse(localStorage.getItem('cart')) || { items: [], totalAmount: 0 };
+  const cartItemsContainer = document.getElementById('cart-items');
+  cartItemsContainer.innerHTML = '';
+
+  let totalAmount = 0;
+
+  // Loop through the items array within the cart object
+  cart.items.forEach((item, index) => {
+    totalAmount += item.price * item.quantity;
+
+    const cartItem = document.createElement('div');
+    cartItem.classList.add('cart-item');
+    cartItem.innerHTML = `
+      <div class="item-details">
+        <p>Type: ${item.type}</p>
+        <p>Price: $${item.price}</p>
+        <p>Quantity: 
+          <button class="quantity-btn" onclick="updateQuantity(${index}, -1)">-</button>
+          ${item.quantity}
+          <button class="quantity-btn" onclick="updateQuantity(${index}, 1)">+</button>
+        </p>
+        <button class="remove-btn" onclick="removeCartItem(${index})">Remove</button>
+      </div>
+    `;
+    cartItemsContainer.appendChild(cartItem);
+  });
+
+  document.getElementById('total-amount').textContent = totalAmount.toFixed(2);
+}
+
+// Update item quantity
+function updateQuantity(index, change) {
+  const cart = JSON.parse(localStorage.getItem('cart')) || { items: [], totalAmount: 0 };
+  if (cart.items[index].quantity + change > 0) {
+    cart.items[index].quantity += change;
+    cart.totalAmount += change * cart.items[index].price; // Update the total amount
+    localStorage.setItem('cart', JSON.stringify(cart));
+    loadCartItems();
+  }
+}
+
+// Remove item from cart
+function removeCartItem(index) {
+  const cart = JSON.parse(localStorage.getItem('cart')) || { items: [], totalAmount: 0 };
+  const item = cart.items[index];
+  cart.totalAmount -= item.price * item.quantity; // Deduct the amount of the removed item
+  cart.items.splice(index, 1);
+  localStorage.setItem('cart', JSON.stringify(cart));
+  loadCartItems();
+  updateCartIcon(); // Update the cart count in the topnav
+}
+
+// Proceed to payment
+document.getElementById('checkout-button').addEventListener('click', async function() {
+  const cart = JSON.parse(localStorage.getItem('cart')) || { items: [], totalAmount: 0 };
+  if (cart.items.length === 0) {
+    alert('Your cart is empty.');
+    return;
+  }
+
+  // Dummy API request simulation for payment
+  try {
+    const response = await fetch('/api/stripe/checkout', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ cart }) // Send cart to server for processing
+    });
+
+    const result = await response.json();
+    if (result.url) {
+      window.location.href = result.url; // Redirect to payment gateway
+    } else {
+      alert('Payment initiation failed.');
+    }
+  } catch (error) {
+    console.error('Error processing payment:', error);
+    alert('Failed to initiate payment.');
+  }
+});
+
+// Initial load
+loadCartItems();
+
+  </script>
+</body>
+
+</html>

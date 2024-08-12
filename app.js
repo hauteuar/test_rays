@@ -38,6 +38,8 @@ const courseRoutes = require('./routes/courseRoutes');
 const batchRoutes = require('./routes/batchRoutes');
 const taskRoutes = require('./routes/taskRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
+const sportRoutes = require('./routes/sportRoutes');
+const bookingRoutes = require('./routes/bookingRoutes');
 
 app.use('/auth', authRoutes);
 app.use('/organizations', organizationRoutes);
@@ -46,6 +48,8 @@ app.use('/api/courses', courseRoutes);
 app.use('/api/batches', batchRoutes);
 app.use('/api/tasks', taskRoutes);
 app.use('/api/categories', categoryRoutes);
+app.use('/api/sport', sportRoutes);
+app.use('/api/book', bookingRoutes);
 
 app.get('/', (req, res) => {
   res.redirect('/auth/login');

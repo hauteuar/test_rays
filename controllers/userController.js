@@ -1,5 +1,8 @@
 const User = require('../models/Users');
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
+const Category = require('../models/Category');
+const batch = require('../models/Batch');
 
 exports.getUserProfile = async (req, res) => {
   try {
@@ -10,6 +13,32 @@ exports.getUserProfile = async (req, res) => {
     res.json(user);
   } catch (error) {
     console.error('Error fetching user profile:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+exports.getStudentsById = async (req, res) => {
+  const { organizationId, studentId } = req.params;
+
+  //const organizationId = req.headers.organizationid;
+  console.log(organizationId, studentId);
+  try {
+    // Find the student by ID and organization ID
+    const student = await User.findOne({
+      _id: studentId,
+      role: 'student',
+      'organizations.org_id': organizationId
+    })
+    .populate('organizations.org_id') // Populate the organization details
+    .exec();
+
+    if (!student) {
+      return res.status(404).json({ error: 'Student not found in the specified organization' });
+    }
+
+    res.json(student);
+  } catch (error) {
+    console.error('Error fetching student profile:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };
@@ -25,6 +54,17 @@ exports.getAllUsers = async (req, res) => {
   }
 };
 
+// Get all users
+exports.getAllUsersByOrg = async (req, res) => {
+  const organizationId = req.params.organizationId;
+  try {
+    const users = await User.find({'organizations.org_id': organizationId });
+    res.json(users);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
 // Get a specific user by ID
 exports.getUserById = async (req, res) => {
   try {
@@ -56,6 +96,22 @@ exports.getCoaches = async (req, res) => {
   }
 };
 
+// Get all coaches for a given organization
+exports.getOrgStudents = async (req, res) => {
+  const organizationId = req.params.organizationId;
+  console.log('Organization ID from request:', organizationId);
+
+  try {
+    // Check the data in the database
+    const students = await User.find({ role: 'student', 'organizations.org_id': organizationId });
+    //console.log('Coaches found:', coaches);
+
+    res.json(students);
+  } catch (error) {
+    console.error('Error fetching coaches:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
 // Create a new user
 exports.createUser = async (req, res) => {
   const userData = req.body;
@@ -142,12 +198,13 @@ exports.getCoachesNotAssigned = async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 };
+
 exports.assignStudentsToCoach = async (req, res) => {
   try {
-    const { studentIds, coachIds, batchId, courseId } = req.body;
+    const { studentIds, coachIds, batchId, courseId, paymentAmounts } = req.body;
 
-    if (!batchId || !studentIds || !coachIds || !courseId) {
-      return res.status(400).send({ error: 'Missing batchId, studentIds, coachIds, or courseId' });
+    if (!batchId || !studentIds || !coachIds || !courseId || !paymentAmounts) {
+      return res.status(400).send({ error: 'Missing batchId, studentIds, coachIds, courseId, or paymentAmounts' });
     }
 
     const organizationId = req.headers.organizationid;
@@ -156,6 +213,32 @@ exports.assignStudentsToCoach = async (req, res) => {
       return res.status(400).send({ error: 'Missing organization ID' });
     }
 
+    // Update students in the batch and set payment status
+    const batch = await Batch.findById(batchId);
+    if (!batch) {
+      return res.status(404).send({ error: 'Batch not found' });
+    }
+
+    studentIds.forEach((studentId, index) => {
+      // Check if student is already assigned to the batch
+      const existingPayment = batch.studentPayments.find(sp => sp.studentId.toString() === studentId);
+      if (!existingPayment) {
+        batch.studentPayments.push({
+          studentId,
+          paymentAmount: paymentAmounts[index],
+          paymentStatus: 'pending', // Start with pending status
+        });
+      }
+
+      // Ensure the student is in the students array
+      if (!batch.students.includes(studentId)) {
+        batch.students.push(studentId);
+      }
+    });
+
+    await batch.save();
+
+    // Update User model for students
     await User.updateMany(
       { _id: { $in: studentIds }, 'organizations.org_id': organizationId },
       {
@@ -195,6 +278,7 @@ exports.assignStudentsToCoach = async (req, res) => {
       }
     );
 
+    // Update User model for coaches
     await User.updateMany(
       { _id: { $in: coachIds }, 'organizations.org_id': organizationId },
       {
@@ -234,7 +318,7 @@ exports.assignStudentsToCoach = async (req, res) => {
       }
     );
 
-    res.status(200).send({ message: 'Students and coaches successfully assigned to the batch.' });
+    res.status(200).send({ message: 'Students and coaches successfully assigned to the batch with payment status.' });
   } catch (error) {
     console.error('Error assigning students to coach:', error);
     res.status(500).send({ error: 'Internal server error' });
@@ -287,6 +371,9 @@ exports.getAssignedCoaches = async (req, res) => {
   }
 };
 
+
+
+
 exports.getAssignedCoachesByCourseId = async (req, res) => {
   const { courseId, coachId } = req.params;
   const organizationId = req.headers.organizationid;
@@ -310,8 +397,10 @@ exports.getAssignedCoachesByCourseId = async (req, res) => {
   }
 };
 
-// Create a new coach
 exports.addCoach = async (req, res) => {
+  const organizationId = req.params.organizationId;
+  console.log(organizationId);
+
   try {
     const {
       firstName,
@@ -322,9 +411,8 @@ exports.addCoach = async (req, res) => {
       contactNumber,
       emergencyContactNumber,
       address,
-      
-      organizationId,
-      permissions
+      permissions,
+      category // Assuming the category name or ID is passed in the body
     } = req.body;
 
     // Check if a coach with the same email already exists
@@ -333,6 +421,21 @@ exports.addCoach = async (req, res) => {
       return res.status(400).json({ error: 'Email already in use' });
     }
 
+    // Find the category by name or ID
+    let categoryDoc;
+    if (mongoose.Types.ObjectId.isValid(category)) {
+      categoryDoc = await Category.findById(category);
+    } else {
+      categoryDoc = await Category.findOne({ name: category });
+    }
+
+    if (!categoryDoc) {
+      return res.status(404).json({ error: 'Category not found' });
+    }
+
+    // Hash the password before saving
+    const hashedPassword = await bcrypt.hash('password123', 10); // Use a secure password policy
+    
     // Create a new coach
     const newCoach = new User({
       firstName,
@@ -343,13 +446,22 @@ exports.addCoach = async (req, res) => {
       contactNumber,
       emergencyContactNumber,
       address,
-      password: 'password123', // Ensure password hashing is done before saving
+      password: hashedPassword, // Store the hashed password
       role: 'coach',
-      organizationId: organizationId, // Convert to ObjectId
       permissions,
+      organizations: [
+        {
+          org_id: organizationId,
+          courses: [] // Initialize with empty courses, can be populated later
+        }
+      ]
     });
 
     await newCoach.save();
+
+    // Add the coach to the specified category
+    categoryDoc.coaches.push(newCoach._id);
+    await categoryDoc.save();
 
     res.status(201).json({ message: 'Coach added successfully', coach: newCoach });
   } catch (error) {

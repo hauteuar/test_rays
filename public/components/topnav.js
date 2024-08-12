@@ -4,11 +4,9 @@ class topnav extends HTMLElement {
   }
 
   connectedCallback() {
-   
     this.innerHTML = `
     <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
       <div class="text-center navbar-brand-wrapper d-flex align-items-center pl-2">
-        
         <button class="navbar-toggler navbar-toggler max-991 align-self-center" type="button" data-toggle="minimize">
           <img src="images/menu.png" class="mr-2 icon-menu" alt="menubar" style="width: 20px;" />
         </button>
@@ -18,18 +16,20 @@ class topnav extends HTMLElement {
         <a class="navbar-brand brand-logo" href="#"><img src="images/logo.png" class="mr-2" alt="logo"/></a>
       </div>
       <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
-        
         <ul class="navbar-nav mr-lg-2">
-          <li class="nav-item nav-search d-none d-lg-block" style="margin:0;color: #428737;font-style: italic;font-size: 14px;">
-           
-          </li>
+          <li class="nav-item nav-search d-none d-lg-block" style="margin:0;color: #428737;font-style: italic;font-size: 14px;"></li>
         </ul>
         <ul class="navbar-nav navbar-nav-right">
-          <li class="nav-item ">
-            <a class="position-relative p-0" >
+          <li class="nav-item">
+            <a class="position-relative p-0" href="#" id="cart-icon">
+              <img src="images/cart.png" class="icon5">
+              <span id="cart-count" style="background-color: #FF862F;width:16px;height:16px;position: absolute;top: 5px;right: -5px;border-radius: 50%;font-size: 10px;text-align: center;line-height: 16px;color: #fff;"></span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="position-relative p-0">
               <img src="images/message.png" class="icon5">
               <span style="background-color: #FF862F;width:8px;height:8px;position: absolute;top: 5px;right: -5px;border-radius: 50%;"></span>
-              <!-- <span style="color: #000;margin-left: 5px;font-size: 14px;">Messages</span> -->
             </a>
           </li>
           <li class="nav-item nav-logout dropdown">
@@ -37,7 +37,6 @@ class topnav extends HTMLElement {
               <img src="images/logout.png" class="icon5 p-0" alt="profile"/>
             </a>
             <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
-             
               <a class="dropdown-item">
                 <i class="ti-power-off text-primary"></i>
                 Logout
@@ -47,9 +46,22 @@ class topnav extends HTMLElement {
         </ul>
       </div>
     </nav>
-
-     
     `;
+
+    // Initialize cart count
+    this.updateCartCount();
+
+    // Add event listener for cart icon click
+    document.getElementById('cart-icon').addEventListener('click', () => {
+      window.location.href = '/checkout.html'; // Redirect to the checkout page
+    });
+  }
+
+  updateCartCount() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const cartCount = cart.length;
+    const cartCountElement = document.getElementById('cart-count');
+    cartCountElement.textContent = cartCount > 0 ? cartCount : '';
   }
 }
 

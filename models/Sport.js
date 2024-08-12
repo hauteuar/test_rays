@@ -1,8 +1,20 @@
 const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
-const SportSchema = new mongoose.Schema({
-  name: { type: String, required: true, unique: true },
-  organization: { type: mongoose.Schema.Types.ObjectId, ref: 'Organization', required: true } // Add organization field
+const SportSchema = new Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  organizationId: {
+    type: Schema.Types.ObjectId,
+    ref: 'Organization',
+    required: true,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 module.exports = mongoose.model('Sport', SportSchema);

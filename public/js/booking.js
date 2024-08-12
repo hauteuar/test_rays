@@ -1,34 +1,12 @@
 $(document).ready(function () {
   let view = 'daily'; // Initialize the view variable
   let filteredSportId = null; // Initialize a variable to store the filtered sport ID
-
-  function fetchUserProfile() {
-    const token = localStorage.getItem('token');
-    console.log(token);
-
-    $.ajax({
-      url: '/api/user/profile', // Corrected URL string
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      success: function(response) {
-        console.log(response);
-        const data = response; 
-        const organizationName = data.organizationName;
-        localStorage.setItem('organizationName', organizationName);
-      },
-      error: function(error) {
-        console.error('Error fetching user profile', error);
-      }
-    });
-  }
-
-  fetchUserProfile();
-
-  const organizationName = localStorage.getItem('organizationName');
-  console.log(organizationName);
+  let organizationId = localStorage.getItem('organizationId'); // Retrieve organizationId from local storage
+  let sports = [];
+  let allCourts = []; // Stores all courts across all sports
+  let courtsBySport = {}; // Stores courts per sport as an object with sportId as key
+  let bookings = [];
+  let users = [];
 
   function toggleVisibility() {
     if ($('#pills-day-tab').hasClass('active')) {
@@ -50,49 +28,19 @@ $(document).ready(function () {
 
   $('#pills-tab2 a').on('shown.bs.tab', function (event) {
     toggleVisibility();
-    loadBookings(); // Re-load bookings to reflect the new view
+    loadBookings(() => {
+      initializeCalendar(view); // Re-initialize calendar after loading bookings
+    });
   });
-
-  console.log(view); // For debugging, to check the value of the view variable
-
-  // Separate script for the second set of tabs
-  let view2 = 'daily'; // Initialize the view variable
-
-  function toggleVisibility2() {
-    if ($('#pills-day2-tab').hasClass('active')) {
-      view2 = 'daily';
-      $('.for-day2').show();
-      $('.for-weekly2').hide();
-    } else if ($('#pills-week2-tab').hasClass('active')) {
-      view2 = 'weekly';
-      $('.for-day2').hide();
-      $('.for-weekly2').show();
-    } else {
-      $('.for-day2').hide();
-      $('.for-weekly2').hide();
-    }
-    console.log('View2 updated to:', view2); // For debugging, to check the value of the view2 variable
-  }
-
-  toggleVisibility2(); // Initial call to set the visibility based on the active tab
-
-  $('#pills-tabContent2 a').on('shown.bs.tab', function (event) {
-    toggleVisibility2();
-  });
-
-  console.log(view2); // For debugging, to check the value of the view2 variable
-
-  if ($('#pills-week-tab').hasClass('active')) {
-    view = 'weekly';
-  } else {
-    view = 'daily';
-  }
-
-  console.log(view);
 
   // Set current date for date pickers
   const currentDate = new Date().toISOString().split('T')[0];
   $('#startDate, #endDate, #startDateNotActive, #endDateNotActive').val(currentDate);
+  $('#startDate, #endDate, #startDateNotActive, #endDateNotActive').datepicker({
+    dateFormat: 'yy-mm-dd', // ISO format
+    changeMonth: true,
+    changeYear: true
+  });
 
   // Display current date in a readable format
   const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -103,32 +51,63 @@ $(document).ready(function () {
   weekEnd.setDate(weekStart.getDate() + 6);
   $('#current-date-week').text(`${weekStart.toLocaleDateString(undefined, weekOptions)} - ${weekEnd.toLocaleDateString(undefined, weekOptions)}`);
 
-  // Global variables to hold sports and courts data
-  let sports = [];
-  let courts = [];
-  let bookings = [];
-  let users = [];
+  function fetchUserProfile() {
+    const token = localStorage.getItem('token');
+    console.log('Token:', token);
 
-  // Load initial calendar view
-  //fetchUserProfile();
-  loadBookings();
-  loadSports();
-  loadAllCourts();
-  loadUsers();
-
-  // Fetch and display bookings on the calendar
-  function loadBookings() {
     $.ajax({
-      url: '/api/bookings',
+      url: '/api/user/profile',
       method: 'GET',
-      headers: { 'organizationName': organizationName },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
       success: function (response) {
-        bookings = response; // Store bookings globally
-        // Clear existing bookings on the calendar
-        $('.calendar .booking-block').remove();
+        console.log('User Profile:', response);
+        organizationId = response.organizationId;
+        localStorage.setItem('organizationId', organizationId);
+        console.log('Organization ID set:', organizationId);
 
-        // Initialize calendar with time slots
-        initializeCalendar(view);
+        // Now that organizationId is set, load the necessary data
+        loadSports(() => {
+          loadAllCourts(() => {
+            loadBookings(() => {
+              initializeCalendar(view); // Initialize calendar after loading all necessary data
+            });
+          });
+        });
+        loadUsers();
+      },
+      error: function (error) {
+        console.error('Error fetching user profile', error);
+      }
+    });
+  }
+
+  if (!organizationId) {
+    fetchUserProfile(); // Fetch the user profile and set the organization ID
+  } else {
+    console.log('Organization ID from local storage:', organizationId);
+    loadSports(() => {
+      loadAllCourts(() => {
+        loadBookings(() => {
+          initializeCalendar(view); // Initialize calendar after loading all necessary data
+        });
+      });
+    });
+    loadUsers();
+  }
+
+  // Function to load bookings and display on the calendar
+  function loadBookings(callback) {
+    $.ajax({
+      url: '/api/book/bookings',
+      method: 'GET',
+      headers: { 'organizationId': organizationId },
+      success: function (response) {
+        console.log('Booking Info:', response);
+        bookings = response; // Store bookings globally
+        if (typeof callback === 'function') callback();
       },
       error: function (error) {
         console.error('Error fetching bookings:', error);
@@ -138,6 +117,7 @@ $(document).ready(function () {
 
   // Initialize calendar with time slots
   function initializeCalendar(view) {
+    console.log('Initializing Calendar with Courts:', allCourts);
     const timeSlots = ['8 am', '9 am', '10 am', '11 am', '12 pm', '1 pm', '2 pm', '3 pm', '4 pm', '5 pm', '6 pm', '7 pm', '8 pm'];
     const calendarBody = $('.calendar tbody');
     const calendarHead = $('.calendar thead tr');
@@ -148,8 +128,8 @@ $(document).ready(function () {
       $('#current-date-day').show();
       $('#current-date-week').hide();
       calendarHead.append('<th>Time</th>');
-      courts.forEach(court => {
-        const sport = sports.find(s => s._id === court.sport);
+      allCourts.forEach(court => {
+        const sport = sports.find(s => String(s._id) === String(court.sportId));
         if (sport) {
           calendarHead.append(`<th>${sport.name}<br>${court.name}</th>`);
         }
@@ -158,44 +138,65 @@ $(document).ready(function () {
       timeSlots.forEach(time => {
         const row = $('<tr></tr>');
         row.append(`<td>${time}</td>`);
-        courts.forEach(() => {
-          row.append('<td class="open-slot" style="cursor: pointer;">+</td>');
+        allCourts.forEach(() => {
+          row.append('<td class="open-slot" style="cursor: url(\'images/plus-sign.png\'), pointer;"> </td>');
         });
         calendarBody.append(row);
       });
 
       bookings.forEach(function (booking) {
-        const court = courts.find(court => court._id === booking.court);
-        if (!court) return; // If court is not found, skip this booking
+        console.log('Processing booking:', booking);
+
+        const bookingCourtId = String(booking.courtId._id);
+        const courtIndex = allCourts.findIndex(court => String(court._id) === bookingCourtId);
+
+        if (courtIndex === -1) {
+          console.log('Court not found for booking:', bookingCourtId);
+          return;
+        }
 
         const startTime = new Date(booking.startTime);
         const endTime = new Date(booking.endTime);
-
-        // Calculate the position and length of the booking block based on the start and end times
         const startHour = startTime.getHours();
         const endHour = endTime.getHours();
         const duration = endHour - startHour;
 
-        // Find the cell corresponding to the court and start time
-        const sport = sports.find(s => s._id === court.sport);
-        const courtColumn = sport ? $(`th:contains(${sport.name}<br>${court.name})`).index() : -1;
-        if (courtColumn === -1) return;
+        const timeRowIndex = timeSlots.findIndex(slot => {
+          const slotHour = parseInt(slot.split(' ')[0]) + (slot.includes('pm') && slot !== '12 pm' ? 12 : 0);
+          return slotHour === startHour;
+        });
 
-        const timeRow = $(`td:contains(${startHour} am), td:contains(${startHour} pm)`).closest('tr');
+        if (timeRowIndex === -1) {
+          console.log('Time slot not found for booking:', startHour);
+          return;
+        }
 
-        // Add the booking block to the calendar
         for (let i = 0; i < duration; i++) {
-          const currentRow = timeRow.nextAll().eq(i);
-          const cell = currentRow.children().eq(courtColumn);
-          cell.addClass('booked').append(`<div class="booking-block">${booking.userName}</div>`);
+          const currentRow = calendarBody.find('tr').eq(timeRowIndex + i);
+          const cell = currentRow.find('td').eq(courtIndex + 1); // +1 to account for the Time column
+          cell.removeClass('open-slot')
+              .addClass('booked')
+              .css('background-color', 'red')
+              .html(`<div class="booking-block" data-booking-id="${booking._id}" style="cursor: pointer;">
+                      ${booking.userId.firstName} ${booking.userId.lastName}<br>${booking.paymentType}</div>`);
+        }
+      });
+
+      // Add click event to show booking details
+      $(document).on('click', '.booking-block', function () {
+        const bookingId = $(this).data('booking-id');
+        const bookingDetails = bookings.find(booking => booking._id === bookingId);
+        if (bookingDetails) {
+          // Show booking details in a modal or alert (you can customize this part)
+          alert(`Booking Details:\nUser: ${bookingDetails.userId.firstName} ${bookingDetails.userId.lastName}\nPayment: ${bookingDetails.paymentType}\nCourt: ${bookingDetails.courtId.name}\nStart: ${new Date(bookingDetails.startTime).toLocaleTimeString()}\nEnd: ${new Date(bookingDetails.endTime).toLocaleTimeString()}`);
         }
       });
     } else if (view === 'weekly') {
       $('#current-date-day').hide();
       $('#current-date-week').show();
       calendarHead.append('<th>Date</th>');
-      courts.forEach(court => {
-        const sport = sports.find(s => s._id === court.sport);
+      allCourts.forEach(court => {
+        const sport = sports.find(s => String(s._id) === String(court.sportId));
         if (sport) {
           calendarHead.append(`<th>${sport.name}<br>${court.name}</th>`);
         }
@@ -204,99 +205,32 @@ $(document).ready(function () {
       for (let i = 0; i < 7; i++) {
         const date = new Date();
         date.setDate(date.getDate() + i);
-        const formattedDate = date.toLocaleDateString(undefined, options);
+        const formattedDate = date.toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
         const row = $('<tr></tr>');
         row.append(`<td>${formattedDate}</td>`);
-        courts.forEach(() => {
-          row.append('<td><div class="time-slot"></div></td>');
+        allCourts.forEach(() => {
+          row.append('<td><div class="time-slot" style="background-color: red; height: 30px; cursor: pointer;"></div></td>');
         });
         calendarBody.append(row);
       }
-
-      bookings.forEach(function (booking) {
-        const court = courts.find(court => court._id === booking.court);
-        if (!court) return; // If court is not found, skip this booking
-
-        const startTime = new Date(booking.startTime);
-        const bookingDate = startTime.toLocaleDateString(undefined, options);
-
-        // Find the cell corresponding to the court and date
-        const sport = sports.find(s => s._id === court.sport);
-        const courtColumn = sport ? $(`th:contains(${sport.name}<br>${court.name})`).index() : -1;
-        if (courtColumn === -1) return;
-
-        const dateRow = $(`td:contains(${bookingDate})`).closest('tr');
-        const cell = dateRow.children().eq(courtColumn);
-        cell.addClass('booked').append(`<div class="booking-block">${booking.userName}</div>`);
-      });
     }
   }
 
-  // Add New Sport
-  $('#saveSport').on('click', function () {
-    const sportName = $('#sportName').val();
-
+  // Load sports and initialize sports dropdown
+  function loadSports(callback) {
     $.ajax({
-      url: '/api/add-sport',
-      method: 'POST',
-      headers: { 'organizationName': organizationName },
-      contentType: 'application/json',
-      data: JSON.stringify({ name: sportName }),
-      success: function (response) {
-        alert('Sport added successfully');
-        $('#new_sports').modal('hide');
-        loadSports(); // Reload sports without reloading the page
-      },
-      error: function (error) {
-        alert('Error adding sport: ' + (error.responseJSON ? error.responseJSON.message : 'Unknown error'));
-      }
-    });
-  });
-
-  // Add New Court
-  $('#saveCourt').on('click', function () {
-    const sportId = $('#courtSportSelect').val();
-    const courtName = $('#courtName').val();
-    const price = $('#courtPrice').val();
-    const startTime = $('#courtStartTime').val();
-    const endTime = $('#courtEndTime').val();
-
-    $.ajax({
-      url: '/api/add-court',
-      method: 'POST',
-      headers: { 'organizationName': organizationName },
-      contentType: 'application/json',
-      data: JSON.stringify({ sportId, name: courtName, price, isActive: true, startTime, endTime }),
-      success: function (response) {
-        alert('Court added successfully');
-        $('#new_court').modal('hide');
-        loadCourts(sportId); // Reload courts without reloading the page
-      },
-      error: function (error) {
-        alert('Error adding court: ' + (error.responseJSON ? error.responseJSON.message : 'Unknown error'));
-      }
-    });
-  });
-
-  // Fetch and populate the sports dropdown in add court modal and filter modal
-  function loadSports() {
-    $.ajax({
-      url: '/api/sports',
+      url: '/api/sport/sports',
       method: 'GET',
-      headers: { 'organizationName': organizationName },
+      headers: { 'organizationId': organizationId },
       success: function (response) {
         sports = response;
-        console.log(sports);
-        const test_sport = sports[0]._id;
-        console.log(test_sport);
-        localStorage.setItem('sportID', test_sport);
+        console.log('Sports:', sports);
         $('#courtSportSelect').empty();
-        $('#courtSportSelect').append('<option disabled selected>Select sports</option>'); // Add a default option
-        $('#filter-sports-options').empty(); // Clear previous options
-        
+        $('#courtSportSelect').append('<option disabled selected>Select sports</option>');
+        $('#filter-sports-options').empty();
+
         sports.forEach(function (sport) {
-          
           $('#courtSportSelect').append(new Option(sport.name, sport._id));
           const sportOption = `
             <div class="form-check">
@@ -333,13 +267,10 @@ $(document).ready(function () {
             </div>
           `);
           sportsContainer.append(sportDiv);
-          //localStorage.setItem('sportID', sport._id);
-          loadCourts(sport._id);
+          loadCourtsForSport(sport._id); // Load courts for each sport
         });
 
-        if (sports.length > 0) {
-          loadCourts(sports[0]._id); // Load courts for the first sport by default
-        }
+        if (typeof callback === 'function') callback();
       },
       error: function (error) {
         console.error('Error fetching sports:', error);
@@ -347,22 +278,22 @@ $(document).ready(function () {
     });
   }
 
-  // Function to fetch and load courts options based on selected sport
-  function loadCourts(sportId) {
+  // Load courts based on selected sport and store them separately
+  function loadCourtsForSport(sportId) {
     $.ajax({
-      url: `/api/courts/${sportId}`,
+      url: `/api/sport/courts/${sportId}`,
       method: 'GET',
-      headers: { 'organizationName': organizationName },
+      headers: { 'organizationId': organizationId },
       success: function (response) {
-        console.log(response);
-        courts = response; // Update the global courts array with the response
+        console.log('Courts for Sport:', sportId, response);
+        courtsBySport[sportId] = response; // Store courts per sport
 
         const courtsContainer = $(`#courtsContainer-${sportId}`);
         courtsContainer.empty();
-        $('#filter-court-select').empty(); // Clear previous options
-        $('#filter-court-select').append('<option selected>All</option>'); // Add default "All" option
+        $('#filter-court-select').empty();
+        $('#filter-court-select').append('<option selected>All</option>');
 
-        courts.forEach(function (court) {
+        response.forEach(function (court) {
           const courtRow = $(`
             <tr>
               <td>${court.name}</td>
@@ -379,8 +310,6 @@ $(document).ready(function () {
           const courtOption = `<option value="${court._id}">${court.name}</option>`;
           $('#filter-court-select').append(courtOption);
         });
-
-        initializeCalendar(view); // Initialize calendar with the loaded courts
       },
       error: function (error) {
         console.error('Error fetching courts:', error);
@@ -389,20 +318,21 @@ $(document).ready(function () {
   }
 
   // Load all courts for default calendar view
-  function loadAllCourts() {
-    console.log(organizationName);
+  function loadAllCourts(callback) {
+    console.log('Loading all courts for organization:', organizationId);
     $.ajax({
-      url: '/api/courts',
+      url: '/api/sport/courts',
       method: 'GET',
-      headers: { 'organizationName': organizationName },
+      headers: { 'organizationId': organizationId },
       success: function (response) {
-        console.log('Courts response:', response); // Debugging line
-        courts = response;
-        if (Array.isArray(courts)) {
-          initializeCalendar(view); // Initialize calendar with the loaded courts
+        console.log('All Courts Response:', response);
+        allCourts = response;
+        if (Array.isArray(allCourts) && allCourts.length > 0) {
+          console.log('All Courts Loaded:', allCourts);
         } else {
-          console.error('Error: Courts is not an array', courts);
+          console.error('Error: No courts found', allCourts);
         }
+        if (typeof callback === 'function') callback();
       },
       error: function (error) {
         console.error('Error fetching all courts:', error);
@@ -410,15 +340,12 @@ $(document).ready(function () {
     });
   }
 
-  // Initial load of sports and courts
-  loadSports();
-
-  // Fetch and populate the users dropdown in add booking modal
+  // Load users for the selected organization
   function loadUsers() {
     $.ajax({
-      url: '/api/users',
+      url: `/api/user/${organizationId}`,
       method: 'GET',
-      headers: { 'organizationName': organizationName },
+      headers: { 'organizationId': organizationId },
       success: function (response) {
         users = response;
         const userSelect = $('#userSelect');
@@ -440,7 +367,15 @@ $(document).ready(function () {
   $(document).on('change', 'input[name="filterSports"]', function () {
     const sportId = $(this).val();
     filteredSportId = sportId; // Capture the filtered sport ID
-    loadCourts(sportId);
+    // Use courtsBySport to get courts for the selected sport
+    const filteredCourts = courtsBySport[sportId] || [];
+    // Update filter court select dropdown
+    $('#filter-court-select').empty();
+    $('#filter-court-select').append('<option selected>All</option>');
+    filteredCourts.forEach(function (court) {
+      const courtOption = `<option value="${court._id}">${court.name}</option>`;
+      $('#filter-court-select').append(courtOption);
+    });
   });
 
   // Event listener for applying the filter
@@ -452,64 +387,29 @@ $(document).ready(function () {
     $('.bs-canvas-overlay').remove(); // Remove overlay
   });
 
-  // Function to update calendar view
+  // Function to update calendar view based on filters
   function updateCalendarView(sportId, courtId) {
-    $.ajax({
-      url: '/api/bookings',
-      headers: { 'organizationName': organizationName },
-      method: 'GET',
-      success: function (response) {
-        $('.calendar .booking-block').remove();
+    const filteredCourts = courtId === 'All' ? (courtsBySport[sportId] || []) : allCourts.filter(court => court._id === courtId);
+    if (filteredCourts.length === 0) {
+      alert('No courts found for the selected filter.');
+      return;
+    }
+    // Update the global allCourts variable temporarily for the calendar view
+    const originalAllCourts = [...allCourts];
+    allCourts = filteredCourts;
+    initializeCalendar(view); // Re-initialize calendar with filtered courts
 
-        const filteredBookings = response.filter(function (booking) {
-          return booking.sportId === sportId && (courtId === 'All' || booking.courtId === courtId);
-        });
-
-        filteredBookings.forEach(function (booking) {
-          const court = courts.find(court => court._id === booking.court);
-          if (!court) return; // If court is not found, skip this booking
-
-          const startTime = new Date(booking.startTime);
-          const endTime = new Date(booking.endTime);
-
-          const startHour = startTime.getHours();
-          const endHour = endTime.getHours();
-          const duration = endHour - startHour;
-
-          const sport = sports.find(s => s._id === court.sport);
-          const courtColumn = sport ? $(`th:contains(${sport.name}<br>${court.name})`).index() : -1;
-          if (courtColumn === -1) return;
-
-          const timeRow = $(`td:contains(${startHour} am), td:contains(${startHour} pm)`).closest('tr');
-
-          for (let i = 0; i < duration; i++) {
-            const currentRow = timeRow.nextAll().eq(i);
-            const cell = currentRow.children().eq(courtColumn);
-            cell.addClass('booked').append(`<div class="booking-block">${booking.userName}</div>`);
-          }
-        });
-
-        if (courtId === 'All') {
-          const courtHeaders = courts.filter(court => court.sport._id === sportId).map(court => `<th>${court.sport.name}<br>${court.name}</th>`).join('');
-          $('.calendar thead tr').html(`<th>Time</th>${courtHeaders}`);
-        } else {
-          const court = courts.find(court => court._id === courtId);
-          $('.calendar thead tr').html(`<th>Time</th><th>${court.sport.name}<br>${court.name}</th>`);
-        }
-      },
-      error: function (error) {
-        console.error('Error fetching bookings:', error);
-      }
-    });
+    // After re-initialization, revert allCourts to original
+    allCourts = originalAllCourts;
   }
 
   $(document).on('change', '.toggleCheckbox', function () {
     const courtId = $(this).data('court-id');
     const isActive = $(this).is(':checked');
     $.ajax({
-      url: `/api/update-court/${courtId}`,
+      url: `/api/sport/update-court/${courtId}`,
       method: 'PUT',
-      headers: { 'organizationName': organizationName },
+      headers: { 'organizationId': organizationId },
       contentType: 'application/json',
       data: JSON.stringify({ isActive }),
       success: function (response) {
@@ -538,134 +438,106 @@ $(document).ready(function () {
     return false;
   });
 
-  // Toggle between active and not active states
-  document.addEventListener('DOMContentLoaded', function () {
-    const toggleCheckboxes = document.querySelectorAll('.toggleCheckbox');
-    const activeGame = document.getElementById('active-game');
-    const notActiveGame = document.getElementById('not-active-game');
-
-    toggleCheckboxes.forEach(function (checkbox) {
-      checkbox.addEventListener('change', function () {
-        if (checkbox.checked) {
-          activeGame.style.display = 'block';
-          notActiveGame.style.display = 'none';
-        } else {
-          activeGame.style.display = 'none';
-          notActiveGame.style.display = 'block';
-        }
-      });
-
-      // Trigger the change event to set the initial state correctly
-      checkbox.dispatchEvent(new Event('change'));
-    });
-  });
-
-  // Calculate and update the total amount on the new booking modal
-  function updateTotalAmount() {
-    const price = parseFloat($('#court-select option:selected').data('price')) || 0;
-    const discount = parseFloat($('#discountAmount').val()) || 0;
-    const total = price - discount;
-    $('#totalAmount').text(`$${total.toFixed(2)}`);
-  }
-
-  // Fetch and populate courts and prices in the new booking modal
-  function loadCourtsForBooking() {
-    $.ajax({
-      url: '/api/courts',
-      method: 'GET',
-      headers: { 'organizationName': organizationName },
-      success: function (response) {
-        courts = response;
-        console.log('Courts:', courts);
-        $('#court-select').empty();
-        $('#court-select').append('<option disabled selected>Select court</option>');
-        courts.forEach(function (court) {
-          const sport = sports.find(s => s._id === court.sport);
-          const option = $(`<option></option>`).attr('value', court._id).text(`${sport ? sport.name : 'Unknown Sport'} - ${court.name} | $${court.price}/hr`).data('price', court.price).data('sport', court.sport);
-          $('#court-select').append(option);
-        });
-        updateTotalAmount(); // Update the total amount on initial load
-      },
-      error: function (error) {
-        console.error('Error fetching courts:', error);
-      }
-    });
-  }
-
-  // Event listener for court selection change in the new booking modal
-  $('#court-select').change(updateTotalAmount);
-
-  // Event listener for discount input change in the new booking modal
-  $('#discountAmount').change(updateTotalAmount);
-
-  // Load courts and prices when the new booking modal is opened
-  $('#new_booking').on('show.bs.modal', function () {
-    loadCourtsForBooking();
-    $('#sportSelect').val(filteredSportId); // Set the sport ID in the new booking modal
-  });
-
   // Event listener for clicking on calendar cells to open the new booking modal
   $(document).on('click', '.calendar td.open-slot', function () {
-    const courtName = $(this).closest('table').find('thead th').eq($(this).index()).text().split('<br>')[1];
-    const sportName = $(this).closest('table').find('thead th').eq($(this).index()).text().split('<br>')[0];
-    const timeSlot = $(this).closest('tr').find('td:first-child').text().trim();
-    $('#court-select option').filter(function () {
-      return $(this).text().includes(`${sportName} - ${courtName}`);
-    }).prop('selected', true);
-    $('#startTime').val(timeSlot.split(' ')[0] + ':00');
-    $('#endTime').val((parseInt(timeSlot.split(' ')[0]) + 1) + ':00');
+    const cellIndex = $(this).index();
+    const timeRow = $(this).closest('tr');
+    const timeSlot = timeRow.find('td:first-child').text().trim();
+    const courtHeader = $('.calendar thead tr').find('th').eq(cellIndex).html();
+    const [sportName, courtName] = courtHeader.split('<br>');
+    
+    // Pre-select court in booking modal
+    const selectedCourt = allCourts.find(court => {
+      const sport = sports.find(s => String(s._id) === String(court.sportId));
+      return sport && sport.name === sportName && court.name === courtName;
+    });
+    
+
+
+if (selectedCourt) {
+  $('#court-select').val(selectedCourt._id);
+  $('#sportId').val(selectedCourt.sportId); // Assuming you have an input or hidden field for sportId
+  console.log(selectedCourt.sportId);
+}
+    $('#startTime').val(timeSlot);
+    $('#endTime').val(timeSlot);
     $('#new_booking').modal('show');
   });
 
+
+
   $('#new_booking').on('show.bs.modal', function () {
-    loadUsers();
-    loadSports();
-    $('#sportSelect').val(filteredSportId); // Set the sport ID in the new booking modal
+    // Populate courts dropdown
+    const courtSelect = $('#court-select');
+    const sportId =  $('#sportId'); 
+    courtSelect.empty();
+    allCourts.forEach(court => {
+      const sport = sports.find(s => String(s._id) === String(court.sportId));
+      if (sport) {
+        const optionText = `${sport.name} - ${court.name}`;
+        courtSelect.append(new Option(optionText, court._id));
+      }
+    });
   });
 
+    // Event listener for when a new court is selected in the booking modal
+    $('#court-select').change(function () {
+      const selectedCourtId = $(this).val();
+      const selectedCourt = allCourts.find(court => String(court._id) === String(selectedCourtId));
+      
+      if (selectedCourt) {
+        $('#sportId').val(selectedCourt.sportId); // Update sportId based on the selected court
+        console.log('Updated Sport ID:', selectedCourt.sportId);
+      }
+    });
   // Event listener for saving the booking
   $('#saveBooking').click(function () {
     const courtId = $('#court-select').val();
+    const sportId = $('#sportId').val(); 
     const userId = $('#userSelect').val();
-    //const sportId = localStorage.getItem('sportId');
-    const sportId = '66b1d762bf1879e89acdd684';
-    const bookingDate = $('#startDate').val(); // New field for booking date
+    const bookingDate = $('#startDate').val(); 
     const startTime = $('#startTime').val();
     const endTime = $('#endTime').val();
     const paymentType = $('#paymentType').val();
     const bookingNote = $('#bookingNote').val();
     const discountAmount = $('#discountAmount').val() || 0;
     const totalAmount = parseFloat($('#totalAmount').text().substring(1)) || 0;
-    
-    if (!courtId || !userId || !sportId || !bookingDate || !startTime || !endTime) {
-      console.log(courtId, userId, sportId, bookingDate, startTime, endTime);
-
-      
+  
+    if (!courtId || !userId || !sportId || !bookingDate || !startTime || !endTime || !organizationId) {
       alert('Please fill all required fields.');
       return;
     }
-
+  
+    // Format dates correctly
+    const startDateTime = new Date(`${bookingDate}T${startTime}:00`).toISOString();
+    const endDateTime = new Date(`${bookingDate}T${endTime}:00`).toISOString();
+    
+  
     $.ajax({
-      url: '/api/add-booking',
+      url: '/api/book/add-booking',
       method: 'POST',
-      headers: { 'organizationName': organizationName },
+      headers: { 'organizationId': organizationId },
       contentType: 'application/json',
       data: JSON.stringify({
         courtId,
         userId,
-        sportId, // Include sportId in the request
-        bookingDate, // Include booking date
-        startTime,
-        endTime,
+        sportId,
+        organizationId,
+        startTime: startDateTime,
+        endTime: endDateTime,
         paymentType,
         bookingNote,
         discountAmount,
-        totalAmount
+        totalAmount,
+        status: 'pending' 
       }),
       success: function (response) {
         alert('Booking added successfully');
         $('#new_booking').modal('hide');
-        loadBookings();
+        addToCart(response._id, totalAmount); // Add booking to cart
+        loadBookings(() => {
+          initializeCalendar(view);
+        });
       },
       error: function (error) {
         alert('Error adding booking: ' + (error.responseJSON ? error.responseJSON.message : 'Unknown error'));
@@ -673,35 +545,64 @@ $(document).ready(function () {
     });
   });
 
+  function addToCart(bookingId, totalAmount) {
+    // Get the current cart from localStorage or initialize an empty one
+    let cart = JSON.parse(localStorage.getItem('cart')) || { items: [], totalAmount: 0 };
+  
+    // Add the new booking to the cart
+    cart.items.push({
+      type: 'booking',
+      itemId: bookingId,
+      price: totalAmount,
+      quantity: 1,
+      status: 'pending'
+    });
+  
+    // Update the total amount in the cart
+    cart.totalAmount += totalAmount;
+  
+    // Save the updated cart to localStorage
+    localStorage.setItem('cart', JSON.stringify(cart));
+  
+    // Update the cart icon on the top bar
+    updateCartIcon();
+  }
+  
+  function updateCartIcon() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || { items: [] };
+    const cartCount = cart.items.length;
+    $('#cart-icon').text(cartCount); // Assuming there's a cart icon with ID 'cart-icon'
+  }
+  
+  
   // Show add user modal if user is not found
   $('#userSelect').change(function () {
     const userId = $(this).val();
     if (userId === 'add-new-user') {
-      // Show add user modal
       $('#new_user').modal('show');
     }
   });
 
   // Add new user from modal
   $('#saveUser').click(function () {
-    const userName = $('#newUserName').val();
-    const userEmail = $('#newUserEmail').val();
-    const userPhone = $('#newUserPhone').val();
+    const firstName = $('#newUserFirstName').val();
+    const lastName = $('#newUserLastName').val();
+    const email = $('#newUserEmail').val();
 
-    if (!userName || !userEmail || !userPhone) {
+    if (!firstName || !lastName || !email) {
       alert('Please fill all required fields.');
       return;
     }
 
     $.ajax({
-      url: '/api/add-user',
+      url: '/api/user/add',
       method: 'POST',
-      headers: { 'organizationName': organizationName },
+      headers: { 'organizationId': organizationId },
       contentType: 'application/json',
       data: JSON.stringify({
-        name: userName,
-        email: userEmail,
-        phone: userPhone
+        firstName,
+        lastName,
+        email
       }),
       success: function (response) {
         alert('User added successfully');
