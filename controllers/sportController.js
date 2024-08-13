@@ -133,3 +133,24 @@ exports.updateCourtStatus = async (req, res) => {
     res.status(500).json({ message: 'Error updating court status', error });
   }
 };
+
+
+
+exports.getCourtPrice = async (req, res) => {
+  const { courtId } = req.params;
+
+  try {
+    // Find the court by its ID
+    const court = await Court.findById(courtId);
+
+    if (!court) {
+      return res.status(404).json({ error: 'Court not found' });
+    }
+
+    // Return the pricing details of the court
+    res.status(200).json({ prices: court.prices });
+  } catch (error) {
+    console.error('Error fetching court price:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};

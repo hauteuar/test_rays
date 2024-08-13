@@ -31682,8 +31682,9 @@ input[type="radio"] {
 }
 
 .site-btn-success {
-  background-color: #392487;
-  border: 1px solid #392487;
+  background-color: #392487 !important;
+  border: 1px solid #392487 !important;
+  
   display: flex;
   align-items: center;
   justify-content: space-between;

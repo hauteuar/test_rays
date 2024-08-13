@@ -11,7 +11,7 @@ router.post('/add-court', sportController.createCourt);
 router.get('/courts/:sportId', sportController.getCourtsBySport);
 router.get('/courts', sportController.getAllCourts);
 router.put('/update-court/:courtId', sportController.updateCourtStatus);
-
+router.get('/court-price/:courtId', sportController.getCourtPrice);
 
 
 module.exports = router;

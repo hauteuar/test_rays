@@ -114,7 +114,7 @@ class Sidebar extends HTMLElement {
               </div>
             </li>
           </a>
-          <a href="notifications.html">
+          <a href="notification.html">
             <li class="nav-item ${page == 'notifications' ? 'active' : ''}">
               <div class="nav-link">
                 <img src="images/notifications.png">
@@ -130,7 +130,7 @@ class Sidebar extends HTMLElement {
               </div>
             </li>
           </a>
-          <a href="registration_form.html">
+          <a href="registration-form.html">
             <li class="nav-item ${page == 'registration_form' ? 'active' : ''}">
               <div class="nav-link">
                 <img src="images/sheet.png">
@@ -138,7 +138,7 @@ class Sidebar extends HTMLElement {
               </div>
             </li>
           </a>
-          <a href="report.html">
+          <a href="reports.html">
             <li class="nav-item ${page == 'report' ? 'active' : ''}">
               <div class="nav-link">
                 <img src="images/reports.png">
@@ -154,7 +154,7 @@ class Sidebar extends HTMLElement {
               </div>
             </li>
           </a>
-          <a href="advs_management.html">
+          <a href="sponsors.html">
             <li class="nav-item ${page == 'advs_management' ? 'active' : ''}">
               <div class="nav-link">
                 <img src="images/adv.png">
