@@ -396,11 +396,12 @@
               const coaches = await response.json();
               const categoryCoachList = document.getElementById('category-coach-list');
               categoryCoachList.innerHTML = ''; // Clear previous coaches
+              console.log(coaches);
               coaches.forEach(coach => {
                 const coachItem = document.createElement('div');
                 coachItem.classList.add('col-lg-4', 'col-md-6', 'p-1');
                 const coachPhoto = coach.profilePhoto ? coach.profilePhoto : '/images/default-coach.png';
-                coachItem.innerHTML = `<a href="coach-details.html" class="p-2 bg-white rounded d-block border">
+                coachItem.innerHTML = ` <a href="coach-details.html?coachId=${coach._id}" class="p-2 bg-white rounded d-block border">
                   <div class="dp-name">
                     <img src="${coachPhoto}" class="dp-1">
                     <div>
@@ -439,11 +440,12 @@
           throw new Error('Coaches response is not an array');
         }
         const coachList = document.getElementById('coach-list');
+        console.log(coachList);
         coaches.forEach(coach => {
           const coachItem = document.createElement('div');
           coachItem.classList.add('col-lg-4', 'col-xl-3', 'p-1');
           const coachPhoto = coach.profilePhoto ? coach.profilePhoto : '/images/default-coach.png';
-          coachItem.innerHTML = `<a href="coach-details.html" class="p-2 bg-white rounded d-block border">
+          coachItem.innerHTML = `<a href="coach-details.html?coachId=${coach._id}" class="p-2 bg-white rounded d-block border">
             <div class="dp-name">
               <img src="${coachPhoto}" class="dp-1">
               <div>

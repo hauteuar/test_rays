@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>TJS</title>
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/mobile.css">
+  <link rel="stylesheet" href="css/tab.css">
   <link rel="stylesheet" href="css/calendar.css"> 
   <link rel="shortcut icon" href="images/favicon.png" />
   <style>
@@ -71,10 +74,13 @@ input:checked + .slider:before {
   </style>
   <script src="components/sidebar.js" type="text/javascript" defer></script>
   <script src="components/topnav.js" type="text/javascript" defer></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
   <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
 
 
   <script src="js/off-canvas.js"></script>
@@ -309,6 +315,7 @@ input:checked + .slider:before {
                     <div class="mb-4">
                       <h6 class="mb-2">Payment Type</h6>
                       <select id="paymentType" class="classic">
+                        <option>Card</option>
                         <option>Cash</option>
                         <option>UPI</option>
                       </select>

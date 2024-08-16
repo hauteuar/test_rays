@@ -27,9 +27,9 @@ class topnav extends HTMLElement {
             </a>
           </li>
           <li class="nav-item">
-            <a class="position-relative p-0">
+            <a class="position-relative p-0" id="mail-icon">
               <img src="images/message.png" class="icon5">
-              <span style="background-color: #FF862F;width:8px;height:8px;position: absolute;top: 5px;right: -5px;border-radius: 50%;"></span>
+              <span id="mail-notification" style="background-color: transparent;width:8px;height:8px;position: absolute;top: 5px;right: -5px;border-radius: 50%;"></span>
             </a>
           </li>
           <li class="nav-item nav-logout dropdown">
@@ -50,6 +50,7 @@ class topnav extends HTMLElement {
 
     // Initialize cart count
     this.updateCartCount();
+    this.updateMailIcon();
 
     // Add event listener for cart icon click
     document.getElementById('cart-icon').addEventListener('click', () => {
@@ -63,6 +64,25 @@ class topnav extends HTMLElement {
     const cartCountElement = document.getElementById('cart-count');
     cartCountElement.textContent = cartCount > 0 ? cartCount : '';
   }
+
+  updateMailIcon() {
+    // Fetch unread notifications count
+    const userId = localStorage.getItem('userId');
+    fetch(`/api/user/notifications/unread-count/${userId}`, {
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            'organizationId': localStorage.getItem('organizationId') // Include the organizationId in the headers
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        const unreadCount = data.unreadCount || 0;
+        const mailNotificationElement = document.getElementById('mail-notification');
+        mailNotificationElement.style.backgroundColor = unreadCount > 0 ? '#FF862F' : 'transparent';
+    })
+    .catch(error => console.error('Error fetching unread notifications:', error));
+}
+
 }
 
 customElements.define('topnav-component', topnav);

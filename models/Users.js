@@ -1,5 +1,16 @@
 const mongoose = require('mongoose');
 
+const availabilitySchema = new mongoose.Schema({
+  dayOfWeek: { type: String, required: true }, // Example: "Monday"
+  isAvailable: { type: Boolean, default: false },
+  timeSlots: [
+    {
+      start: { type: String, required: true }, // Example: "09:00"
+      end: { type: String, required: true }    // Example: "11:00"
+    }
+  ]
+});
+
 const userSchema = new mongoose.Schema({
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
@@ -33,7 +44,7 @@ const userSchema = new mongoose.Schema({
       courses: [
         {
           course_id: mongoose.Schema.Types.ObjectId,
-          coach_id: mongoose.Schema.Types.ObjectId, // Added coach_id
+          coach_id: mongoose.Schema.Types.ObjectId,
           batches: [
             {
               batch_id: mongoose.Schema.Types.ObjectId,
@@ -61,7 +72,11 @@ const userSchema = new mongoose.Schema({
       read: { type: Boolean, default: false },
       created_at: { type: Date, default: Date.now }
     }
-  ]
+  ],
+  profilePhoto: { type: String }, // URL to the profile photo
+  coachingCertifications: String, // Certifications for coaches
+  about: String, // About me section for coaches
+  availability: [availabilitySchema], // Availability for coaches
 }, { timestamps: true });
 
 module.exports = mongoose.models.User || mongoose.model('User', userSchema);

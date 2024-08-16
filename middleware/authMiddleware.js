@@ -8,13 +8,13 @@ const auth = async (req, res, next) => {
     // Check the Authorization header
     if (req.header('Authorization')) {
       token = req.header('Authorization').replace('Bearer ', '');
-      console.log('Token from Authorization header:', token);
+   //   console.log('Token from Authorization header:', token);
     }
 
     // Check the Cookie header if Authorization header is not present
     if (!token && req.cookies && req.cookies.auth_token) {
       token = req.cookies.auth_token;
-      console.log('Token from Cookie:', token);
+      //console.log('Token from Cookie:', token);
     }
 
     if (!token) {
@@ -23,10 +23,10 @@ const auth = async (req, res, next) => {
     }
 
     const decoded = jwt.verify(token, 'your_jwt_secret');
-    console.log('Decoded token:', decoded);
+    //console.log('Decoded token:', decoded);
 
     const user = await User.findOne({ _id: decoded._id, 'tokens.token': token });
-    console.log('User found:', user);
+   // console.log('User found:', user);
 
     if (!user) {
       console.log('User not found with given token');

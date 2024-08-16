@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Admin</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style2.css">
+  <link rel="stylesheet" href="css/sidebar.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script src="components/topnav.js" type="text/javascript" defer></script>
+  <script src="components/sidebar.js" type="text/javascript" defer></script>
+
+</head>
+
+<body>
+    <div class="container-scroller">
+        <topnav-component></topnav-component>
+        <div class="container-fluid page-body-wrapper">
+          
+          <sidebar-component data-page="e-com"></sidebar-component>
+
+      <div class="main-section">
+        <ul class="nav nav-tabs" >
+          <li class="nav-item" >
+            <button class="nav-link active" id="e_com_item-tab" data-bs-toggle="tab" data-bs-target="#e_com_item" type="button" role="tab" aria-controls="e_com_item" aria-selected="true">Items</button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" id="purchase_list-tab" data-bs-toggle="tab" data-bs-target="#purchase_list" type="button" role="tab" aria-controls="player-role" aria-selected="false">Purchase list </button>
+          </li>
+          
+        </ul>
+        <div class="tab-content" id="myTabContent">
+          <div class="tab-pane fade show active" id="e_com_item" role="tabpanel" aria-labelledby="e_com_item-tab">
+            <div class="row mt-3">
+              <div class="col-12 py-1 flex-align g2 mb-2">
+                <h6 class="font-weight-400">Total items <span class="font-weight-500"> 24</span></h6>
+                <a data-bs-toggle="modal" data-bs-target="#addNew"  class="btn btn-ramblers px-4">
+                  + Add New
+                </a>
+              </div>
+              <div class="col-xl-2 col-lg-3  col-6 col-item">                
+                <div class="border e-com-card rounded overflow-hidden">
+                  <div class="dropdown drop-down-official">
+                    <img src="images/dots.png" class="dropdown-toggle" type="button" data-bs-toggle="dropdown" style="width:15px;height: 15px;object-fit: contain; filter: invert(0) brightness(1);">
+                    <ul class="dropdown-menu">
+                       <li ><a class="dropdown-item" >Edit</a></li>
+                      <li><a class="dropdown-item" href="#">Delete</a></li>
+                    </ul>
+                  </div>
+                  <img src="images/cap.png">
+                  <div class="p-3">
+                    <h6 class="font-weight-300 text-gray">Cap</h6>
+                    <h6 class="ellipsis font-weight-600 pt-2">CAD25</h6>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-2 col-lg-3  col-6 col-item">                
+                <div class="border e-com-card rounded overflow-hidden">
+                  <div class="dropdown drop-down-official">
+                    <img src="images/dots.png" class="dropdown-toggle" type="button" data-bs-toggle="dropdown" style="width:15px;height: 15px;object-fit: contain; filter: invert(0) brightness(1);">
+                    <ul class="dropdown-menu">
+                       <li ><a class="dropdown-item" >Edit</a></li>
+                      <li><a class="dropdown-item" href="#">Delete</a></li>
+                    </ul>
+                  </div>
+                  <img src="images/cricket-bat.png">
+                  <div class="p-3">
+                    <h6 class="font-weight-300 text-gray">Cricket Bat</h6>
+                    <h6 class="ellipsis font-weight-600 pt-2">CAD130</h6>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-2 col-lg-3  col-6 col-item">                
+                <div class="border e-com-card rounded overflow-hidden">
+                  <div class="dropdown drop-down-official">
+                    <img src="images/dots.png" class="dropdown-toggle" type="button" data-bs-toggle="dropdown" style="width:15px;height: 15px;object-fit: contain; filter: invert(0) brightness(1);">
+                    <ul class="dropdown-menu">
+                       <li ><a class="dropdown-item" >Edit</a></li>
+                      <li><a class="dropdown-item" href="#">Delete</a></li>
+                    </ul>
+                  </div>
+                  <img src="images/t-shirt.png">
+                  <div class="p-3">
+                    <h6 class="font-weight-300 text-gray">T Shirt | Small</h6>
+                    <h6 class="ellipsis font-weight-600 pt-2">CAD25</h6>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-2 col-lg-3  col-6 col-item">                
+                <div class="border e-com-card rounded overflow-hidden">
+                  <div class="dropdown drop-down-official">
+                    <img src="images/dots.png" class="dropdown-toggle" type="button" data-bs-toggle="dropdown" style="width:15px;height: 15px;object-fit: contain; filter: invert(0) brightness(1);">
+                    <ul class="dropdown-menu">
+                       <li ><a class="dropdown-item" >Edit</a></li>
+                      <li><a class="dropdown-item" href="#">Delete</a></li>
+                    </ul>
+                  </div>
+                  <img src="images/t-shirt.png">
+                  <div class="p-3">
+                    <h6 class="font-weight-300 text-gray">T Shirt | Medium</h6>
+                    <h6 class="ellipsis font-weight-600 pt-2">CAD25</h6>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-2 col-lg-3  col-6 col-item">                
+                <div class="border e-com-card rounded overflow-hidden">
+                  <div class="dropdown drop-down-official">
+                    <img src="images/dots.png" class="dropdown-toggle" type="button" data-bs-toggle="dropdown" style="width:15px;height: 15px;object-fit: contain; filter: invert(0) brightness(1);">
+                    <ul class="dropdown-menu">
+                       <li ><a class="dropdown-item" >Edit</a></li>
+                      <li><a class="dropdown-item" href="#">Delete</a></li>
+                    </ul>
+                  </div>
+                  <img src="images/t-shirt.png">
+                  <div class="p-3">
+                    <h6 class="font-weight-300 text-gray">T Shirt | Large</h6>
+                    <h6 class="ellipsis font-weight-600 pt-2">CAD25</h6>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-2 col-lg-3  col-6 col-item">                
+                <div class="border e-com-card rounded overflow-hidden">
+                  <div class="dropdown drop-down-official">
+                    <img src="images/dots.png" class="dropdown-toggle" type="button" data-bs-toggle="dropdown" style="width:15px;height: 15px;object-fit: contain; filter: invert(0) brightness(1);">
+                    <ul class="dropdown-menu">
+                       <li ><a class="dropdown-item" >Edit</a></li>
+                      <li><a class="dropdown-item" href="#">Delete</a></li>
+                    </ul>
+                  </div>
+                  <img src="images/bag.png">
+                  <div class="p-3">
+                    <h6 class="font-weight-300 text-gray">Bag</h6>
+                    <h6 class="ellipsis font-weight-600 pt-2">CAD25</h6>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-2 col-lg-3  col-6 col-item">                
+                <div class="border e-com-card rounded overflow-hidden">
+                  <div class="dropdown drop-down-official">
+                    <img src="images/dots.png" class="dropdown-toggle" type="button" data-bs-toggle="dropdown" style="width:15px;height: 15px;object-fit: contain; filter: invert(0) brightness(1);">
+                    <ul class="dropdown-menu">
+                       <li ><a class="dropdown-item" >Edit</a></li>
+                      <li><a class="dropdown-item" href="#">Delete</a></li>
+                    </ul>
+                  </div>
+                  <img src="images/bag2.png">
+                  <div class="p-3">
+                    <h6 class="font-weight-300 text-gray">Bag</h6>
+                    <h6 class="ellipsis font-weight-600 pt-2">CAD25</h6>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-2 col-lg-3  col-6 col-item">                
+                <div class="border e-com-card rounded overflow-hidden">
+                  <div class="dropdown drop-down-official">
+                    <img src="images/dots.png" class="dropdown-toggle" type="button" data-bs-toggle="dropdown" style="width:15px;height: 15px;object-fit: contain; filter: invert(0) brightness(1);">
+                    <ul class="dropdown-menu">
+                       <li ><a class="dropdown-item" >Edit</a></li>
+                      <li><a class="dropdown-item" href="#">Delete</a></li>
+                    </ul>
+                  </div>
+                  <img src="images/cup.png">
+                  <div class="p-3">
+                    <h6 class="font-weight-300 text-gray">QuikMop Pro</h6>
+                    <h6 class="ellipsis font-weight-600 pt-2">CAD25</h6>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-2 col-lg-3  col-6 col-item">                
+                <div class="border e-com-card rounded overflow-hidden">
+                  <div class="dropdown drop-down-official">
+                    <img src="images/dots.png" class="dropdown-toggle" type="button" data-bs-toggle="dropdown" style="width:15px;height: 15px;object-fit: contain; filter: invert(0) brightness(1);">
+                    <ul class="dropdown-menu">
+                       <li ><a class="dropdown-item" >Edit</a></li>
+                      <li><a class="dropdown-item" href="#">Delete</a></li>
+                    </ul>
+                  </div>
+                  <img src="images/cap.png">
+                  <div class="p-3">
+                    <h6 class="font-weight-300 text-gray">Cap</h6>
+                    <h6 class="ellipsis font-weight-600 pt-2">CAD25</h6>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-2 col-lg-3  col-6 col-item">                
+                <div class="border e-com-card rounded overflow-hidden">
+                  <div class="dropdown drop-down-official">
+                    <img src="images/dots.png" class="dropdown-toggle" type="button" data-bs-toggle="dropdown" style="width:15px;height: 15px;object-fit: contain; filter: invert(0) brightness(1);">
+                    <ul class="dropdown-menu">
+                       <li ><a class="dropdown-item" >Edit</a></li>
+                      <li><a class="dropdown-item" href="#">Delete</a></li>
+                    </ul>
+                  </div>
+                  <img src="images/cricket-bat.png">
+                  <div class="p-3">
+                    <h6 class="font-weight-300 text-gray">Cricket Bat</h6>
+                    <h6 class="ellipsis font-weight-600 pt-2">CAD130</h6>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-2 col-lg-3  col-6 col-item">                
+                <div class="border e-com-card rounded overflow-hidden">
+                  <div class="dropdown drop-down-official">
+                    <img src="images/dots.png" class="dropdown-toggle" type="button" data-bs-toggle="dropdown" style="width:15px;height: 15px;object-fit: contain; filter: invert(0) brightness(1);">
+                    <ul class="dropdown-menu">
+                       <li ><a class="dropdown-item" >Edit</a></li>
+                      <li><a class="dropdown-item" href="#">Delete</a></li>
+                    </ul>
+                  </div>
+                  <img src="images/t-shirt.png">
+                  <div class="p-3">
+                    <h6 class="font-weight-300 text-gray">T Shirt | Small</h6>
+                    <h6 class="ellipsis font-weight-600 pt-2">CAD25</h6>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-2 col-lg-3  col-6 col-item">                
+                <div class="border e-com-card rounded overflow-hidden">
+                  <div class="dropdown drop-down-official">
+                    <img src="images/dots.png" class="dropdown-toggle" type="button" data-bs-toggle="dropdown" style="width:15px;height: 15px;object-fit: contain; filter: invert(0) brightness(1);">
+                    <ul class="dropdown-menu">
+                       <li ><a class="dropdown-item" >Edit</a></li>
+                      <li><a class="dropdown-item" href="#">Delete</a></li>
+                    </ul>
+                  </div>
+                  <img src="images/t-shirt.png">
+                  <div class="p-3">
+                    <h6 class="font-weight-300 text-gray">T Shirt | Medium</h6>
+                    <h6 class="ellipsis font-weight-600 pt-2">CAD25</h6>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-2 col-lg-3  col-6 col-item">                
+                <div class="border e-com-card rounded overflow-hidden">
+                  <div class="dropdown drop-down-official">
+                    <img src="images/dots.png" class="dropdown-toggle" type="button" data-bs-toggle="dropdown" style="width:15px;height: 15px;object-fit: contain; filter: invert(0) brightness(1);">
+                    <ul class="dropdown-menu">
+                       <li ><a class="dropdown-item" >Edit</a></li>
+                      <li><a class="dropdown-item" href="#">Delete</a></li>
+                    </ul>
+                  </div>
+                  <img src="images/t-shirt.png">
+                  <div class="p-3">
+                    <h6 class="font-weight-300 text-gray">T Shirt | Large</h6>
+                    <h6 class="ellipsis font-weight-600 pt-2">CAD25</h6>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-2 col-lg-3  col-6 col-item">                
+                <div class="border e-com-card rounded overflow-hidden">
+                  <div class="dropdown drop-down-official">
+                    <img src="images/dots.png" class="dropdown-toggle" type="button" data-bs-toggle="dropdown" style="width:15px;height: 15px;object-fit: contain; filter: invert(0) brightness(1);">
+                    <ul class="dropdown-menu">
+                       <li ><a class="dropdown-item" >Edit</a></li>
+                      <li><a class="dropdown-item" href="#">Delete</a></li>
+                    </ul>
+                  </div>
+                  <img src="images/bag.png">
+                  <div class="p-3">
+                    <h6 class="font-weight-300 text-gray">Bag</h6>
+                    <h6 class="ellipsis font-weight-600 pt-2">CAD25</h6>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-2 col-lg-3  col-6 col-item">                
+                <div class="border e-com-card rounded overflow-hidden">
+                  <div class="dropdown drop-down-official">
+                    <img src="images/dots.png" class="dropdown-toggle" type="button" data-bs-toggle="dropdown" style="width:15px;height: 15px;object-fit: contain; filter: invert(0) brightness(1);">
+                    <ul class="dropdown-menu">
+                       <li ><a class="dropdown-item" >Edit</a></li>
+                      <li><a class="dropdown-item" href="#">Delete</a></li>
+                    </ul>
+                  </div>
+                  <img src="images/bag2.png">
+                  <div class="p-3">
+                    <h6 class="font-weight-300 text-gray">Bag</h6>
+                    <h6 class="ellipsis font-weight-600 pt-2">CAD25</h6>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-2 col-lg-3  col-6 col-item">                
+                <div class="border e-com-card rounded overflow-hidden">
+                  <div class="dropdown drop-down-official">
+                    <img src="images/dots.png" class="dropdown-toggle" type="button" data-bs-toggle="dropdown" style="width:15px;height: 15px;object-fit: contain; filter: invert(0) brightness(1);">
+                    <ul class="dropdown-menu">
+                       <li ><a class="dropdown-item" >Edit</a></li>
+                      <li><a class="dropdown-item" href="#">Delete</a></li>
+                    </ul>
+                  </div>
+                  <img src="images/cup.png">
+                  <div class="p-3">
+                    <h6 class="font-weight-300 text-gray">QuikMop Pro</h6>
+                    <h6 class="ellipsis font-weight-600 pt-2">CAD25</h6>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-2 col-lg-3  col-6 col-item">                
+                <div class="border e-com-card rounded overflow-hidden">
+                  <div class="dropdown drop-down-official">
+                    <img src="images/dots.png" class="dropdown-toggle" type="button" data-bs-toggle="dropdown" style="width:15px;height: 15px;object-fit: contain; filter: invert(0) brightness(1);">
+                    <ul class="dropdown-menu">
+                       <li ><a class="dropdown-item" >Edit</a></li>
+                      <li><a class="dropdown-item" href="#">Delete</a></li>
+                    </ul>
+                  </div>
+                  <img src="images/cap.png">
+                  <div class="p-3">
+                    <h6 class="font-weight-300 text-gray">Cap</h6>
+                    <h6 class="ellipsis font-weight-600 pt-2">CAD25</h6>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-2 col-lg-3  col-6 col-item">                
+                <div class="border e-com-card rounded overflow-hidden">
+                  <div class="dropdown drop-down-official">
+                    <img src="images/dots.png" class="dropdown-toggle" type="button" data-bs-toggle="dropdown" style="width:15px;height: 15px;object-fit: contain; filter: invert(0) brightness(1);">
+                    <ul class="dropdown-menu">
+                       <li ><a class="dropdown-item" >Edit</a></li>
+                      <li><a class="dropdown-item" href="#">Delete</a></li>
+                    </ul>
+                  </div>
+                  <img src="images/cricket-bat.png">
+                  <div class="p-3">
+                    <h6 class="font-weight-300 text-gray">Cricket Bat</h6>
+                    <h6 class="ellipsis font-weight-600 pt-2">CAD130</h6>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-2 col-lg-3  col-6 col-item">                
+                <div class="border e-com-card rounded overflow-hidden">
+                  <div class="dropdown drop-down-official">
+                    <img src="images/dots.png" class="dropdown-toggle" type="button" data-bs-toggle="dropdown" style="width:15px;height: 15px;object-fit: contain; filter: invert(0) brightness(1);">
+                    <ul class="dropdown-menu">
+                       <li ><a class="dropdown-item" >Edit</a></li>
+                      <li><a class="dropdown-item" href="#">Delete</a></li>
+                    </ul>
+                  </div>
+                  <img src="images/t-shirt.png">
+                  <div class="p-3">
+                    <h6 class="font-weight-300 text-gray">T Shirt | Small</h6>
+                    <h6 class="ellipsis font-weight-600 pt-2">CAD25</h6>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-2 col-lg-3  col-6 col-item">                
+                <div class="border e-com-card rounded overflow-hidden">
+                  <div class="dropdown drop-down-official">
+                    <img src="images/dots.png" class="dropdown-toggle" type="button" data-bs-toggle="dropdown" style="width:15px;height: 15px;object-fit: contain; filter: invert(0) brightness(1);">
+                    <ul class="dropdown-menu">
+                       <li ><a class="dropdown-item" >Edit</a></li>
+                      <li><a class="dropdown-item" href="#">Delete</a></li>
+                    </ul>
+                  </div>
+                  <img src="images/t-shirt.png">
+                  <div class="p-3">
+                    <h6 class="font-weight-300 text-gray">T Shirt | Medium</h6>
+                    <h6 class="ellipsis font-weight-600 pt-2">CAD25</h6>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-2 col-lg-3  col-6 col-item">                
+                <div class="border e-com-card rounded overflow-hidden">
+                  <div class="dropdown drop-down-official">
+                    <img src="images/dots.png" class="dropdown-toggle" type="button" data-bs-toggle="dropdown" style="width:15px;height: 15px;object-fit: contain; filter: invert(0) brightness(1);">
+                    <ul class="dropdown-menu">
+                       <li ><a class="dropdown-item" >Edit</a></li>
+                      <li><a class="dropdown-item" href="#">Delete</a></li>
+                    </ul>
+                  </div>
+                  <img src="images/t-shirt.png">
+                  <div class="p-3">
+                    <h6 class="font-weight-300 text-gray">T Shirt | Large</h6>
+                    <h6 class="ellipsis font-weight-600 pt-2">CAD25</h6>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-2 col-lg-3  col-6 col-item">                
+                <div class="border e-com-card rounded overflow-hidden">
+                  <div class="dropdown drop-down-official">
+                    <img src="images/dots.png" class="dropdown-toggle" type="button" data-bs-toggle="dropdown" style="width:15px;height: 15px;object-fit: contain; filter: invert(0) brightness(1);">
+                    <ul class="dropdown-menu">
+                       <li ><a class="dropdown-item" >Edit</a></li>
+                      <li><a class="dropdown-item" href="#">Delete</a></li>
+                    </ul>
+                  </div>
+                  <img src="images/bag.png">
+                  <div class="p-3">
+                    <h6 class="font-weight-300 text-gray">Bag</h6>
+                    <h6 class="ellipsis font-weight-600 pt-2">CAD25</h6>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-2 col-lg-3  col-6 col-item">                
+                <div class="border e-com-card rounded overflow-hidden">
+                  <div class="dropdown drop-down-official">
+                    <img src="images/dots.png" class="dropdown-toggle" type="button" data-bs-toggle="dropdown" style="width:15px;height: 15px;object-fit: contain; filter: invert(0) brightness(1);">
+                    <ul class="dropdown-menu">
+                       <li ><a class="dropdown-item" >Edit</a></li>
+                      <li><a class="dropdown-item" href="#">Delete</a></li>
+                    </ul>
+                  </div>
+                  <img src="images/bag2.png">
+                  <div class="p-3">
+                    <h6 class="font-weight-300 text-gray">Bag</h6>
+                    <h6 class="ellipsis font-weight-600 pt-2">CAD25</h6>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-2 col-lg-3  col-6 col-item">                
+                <div class="border e-com-card rounded overflow-hidden">
+                  <div class="dropdown drop-down-official">
+                    <img src="images/dots.png" class="dropdown-toggle" type="button" data-bs-toggle="dropdown" style="width:15px;height: 15px;object-fit: contain; filter: invert(0) brightness(1);">
+                    <ul class="dropdown-menu">
+                       <li ><a class="dropdown-item" >Edit</a></li>
+                      <li><a class="dropdown-item" href="#">Delete</a></li>
+                    </ul>
+                  </div>
+                  <img src="images/cup.png">
+                  <div class="p-3">
+                    <h6 class="font-weight-300 text-gray">QuikMop Pro</h6>
+                    <h6 class="ellipsis font-weight-600 pt-2">CAD25</h6>
+                  </div>
+                </div>
+              </div>
+
+              
+            </div>
+          </div>
+          <div class="tab-pane fade" id="purchase_list" role="tabpanel" aria-labelledby="purchase_list-tab">
+            <div class="py-1 flex-align g2 my-3" >
+              <div class="flex-align g2">
+                <h5>Filter</h5>
+                <select class="" style="min-width: 150px;">
+                  <option>All</option>
+                </select>
+              </div>
+              
+              <div class="flex-align g2">
+                <button type="button" class="btn btn-ramblers2 px-4 flex-align3 g2">
+                  <img src="images/download.png" > Download
+                </button>
+                <button type="button" class="btn btn-ramblers px-5" data-bs-toggle="modal" data-bs-target="#add_purchase" >+ Add</button>
+              </div>
+            </div>
+            <div class="table-sec my-3" style="overflow: auto; min-height: auto;">
+              <table class="table1">
+                <thead>
+                  <tr style="background-color: #8EA0FF33;">
+                    <th class="text-gray">
+                      Name
+                    </th>
+                  
+                    <th class="text-gray">
+                      Division
+                    </th>
+                    <th class="text-gray">
+                      Ordered date
+                    </th>
+                    <th class="text-gray">
+                      Order item
+                    </th>
+                    <th class="text-gray">
+                      Quantity
+                    </th>
+                    <th class="text-gray">
+                      Size
+                    </th>
+                    <th class="text-gray">
+                      Price
+                    </th>
+                    <th class="text-gray">
+                      Item Collected
+                    </th>
+                    
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      Anil Gupta
+                    </td>
+                    <td>
+                      Elite-Maroon
+                    </td>
+                    <td>
+                      15/02/2024
+                    </td>
+                    <td>
+                      Cap
+                    </td>
+                    <td>2</td>
+                    <td>7</td>
+                    <td>$100</td>
+
+                    <td>
+                      <button type="button" class="btn btn-ramblers2 px-4 " style="border-radius: 20px;" data-bs-toggle="modal" data-bs-target="#collected">
+                        Collected
+                      </button>
+                    </td>
+                    
+                  </tr>
+                  <tr>
+                    <td>
+                      Arjun Sharma
+                    </td>
+                    <td>
+                      3rd Division
+                    </td>
+                    <td>
+                      15/02/2024
+                    </td>
+                    <td>
+                      Shirt
+                    </td>
+                    <td>2</td>
+                    <td>7</td>
+                    <td>$100</td>
+
+                    <td>
+                      <button type="button" class="btn btn-ramblers2 px-4 " style="border-radius: 20px;" data-bs-toggle="modal" data-bs-target="#collected">
+                        Collected
+                      </button>
+                    </td>
+                    
+                  </tr>
+                  <tr>
+                    <td>
+                      Anil Gupta
+                    </td>
+                    <td>
+                      Elite-Maroon
+                    </td>
+                    <td>
+                      15/02/2024
+                    </td>
+                    <td>
+                      Cap
+                    </td>
+                    <td>2</td>
+                    <td>7</td>
+                    <td>$100</td>
+
+                    <td>
+                      Delivered
+                    </td>
+                    
+                  </tr>
+                  <tr>
+                    <td>
+                      Anil Gupta
+                    </td>
+                    <td>
+                      Elite-Maroon
+                    </td>
+                    <td>
+                      15/02/2024
+                    </td>
+                    <td>
+                      Shirt
+                    </td>
+                    <td>2</td>
+                    <td>7</td>
+                    <td>$100</td>
+
+                    <td>
+                      Delivered
+                    </td>
+                    
+                  </tr>
+                  <tr>
+                    <td>
+                      Anil Gupta
+                    </td>
+                    <td>
+                      Elite-Maroon
+                    </td>
+                    <td>
+                      15/02/2024
+                    </td>
+                    <td>
+                      Cap
+                    </td>
+                    <td>2</td>
+                    <td>7</td>
+                    <td>$100</td>
+
+                    <td>
+                      Delivered
+                    </td>
+                    
+                  </tr>
+                  <tr>
+                    <td>
+                      Anil Gupta
+                    </td>
+                    <td>
+                      Elite-Maroon
+                    </td>
+                    <td>
+                      15/02/2024
+                    </td>
+                    <td>
+                      Shoes
+                    </td>
+                    <td>2</td>
+                    <td>7</td>
+                    <td>$100</td>
+
+                    <td>
+                      Delivered
+                    </td>
+                    
+                  </tr>
+                 
+                </tbody>
+              </table>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="addNew" tabindex="-1" aria-labelledby="addNewLabel" aria-hidden="true">
+    <div class="modal-dialog  modal-dialog-centered modal-md">
+      <div class="modal-content">
+       
+        <div class="modal-body p-4">
+            
+            <div class="flex-align moadl-head2 pb-4 border-bottom">
+              <h3>Add new</h3>
+              <img src="images/close.png" data-bs-dismiss="modal" style="cursor: pointer;width: 20px;height: 20px;">
+            </div>
+            <div class="modal-body2 p-md-3 p-0">
+              
+              <div class="mt-3">
+                    
+                    
+                      <div class="mb-4">
+                        <h5 class="font-weight-500 mb-2">Item Name</h5>
+                        <input type="type" placeholder="Enter item name" name="" class="input w-100">
+                      </div>
+                      <div class="mb-4">
+                        <h5 class="font-weight-500 mb-2">Upload Item image</h5>
+                        <div class="input-with-btn flex-align3 mt-3">
+                          <input type="text" placeholder="Choose file to upload" class="input w-100" readonly>
+                          
+                            <div class="image-picker" style="position: absolute;right: 0; display: flex; width: min-content;">
+                              <input type="file" accept="image/*" class="input w-100">
+                              <div class="image-picker-tab btn btn-outline-danger active-btn-danger px-3" style="  height: 38px;">
+                                Browse file
+                              </div>
+                            </div>
+                            
+                          
+                        </div>
+                      </div>
+                      <div class="mb-4">
+                        <h5 class="font-weight-500 mb-2">Price</h5>
+
+                        <div class="input-with-btn flex-align3 mt-3">
+                          <input type="text" placeholder="Enter item price" class="input w-100">
+                          
+                           
+                            <select class="select-input"   style="position: absolute;right: 0;">
+                              <option>CAD</option>
+                            </select>
+                            
+                          
+                        </div>
+                      </div>
+                      
+                    
+              </div>
+              <div class="modal-footer2 d-flex justify-content-end g2 pt-5 mt-4">
+                <button type="button" class="btn btn-outline-secondary px-5 w-100" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-ramblers px-5 w-100">Save</button>
+              </div>
+            </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="add_purchase" tabindex="-1" aria-labelledby="add_purchaseLabel" aria-hidden="true">
+    <div class="modal-dialog  modal-dialog-centered modal-md">
+      <div class="modal-content">
+       
+        <div class="modal-body p-4">
+            
+            <div class="flex-align moadl-head2 pb-4 border-bottom">
+              <h3>Add</h3>
+              <img src="images/close.png" data-bs-dismiss="modal" style="cursor: pointer;width: 20px;height: 20px;">
+            </div>
+            <div class="modal-body2 p-md-3 p-0">
+              
+              <div class="mt-3">
+                      <div class="mb-4">
+                        <h5 class="font-weight-500 mb-2">Player / Member</h5>
+                        <select class="select-input w-100" >
+                          <option disabled selected>Purchased item  </option>
+                        </select>
+                      </div>
+                      <div class="mb-4">
+                        <h5 class="font-weight-500 mb-2">Item</h5>
+                        <select class="select-input w-100" >
+                          <option disabled selected>Select player or member from the list</option>
+                        </select>
+                      </div>
+                      
+                      <div class="mb-4 flex-align3 g2">
+                        <div class="">
+                          <h5 class="font-weight-500 mb-2">Quantity</h5>
+                          <input type="text" placeholder="Number" class="input">
+                        </div>
+                        <div class="">
+                          <h5 class="font-weight-500 mb-2">Price</h5>
+                          <div class="input-with-btn flex-align3 mt-3">
+                            <input type="text" placeholder="Enter item price" class="input w-100">
+                              <select class="select-input"   style="position: absolute;right: 0;">
+                                <option>CAD</option>
+                              </select>
+                          </div>
+                        </div>
+                      </div>
+              </div>
+              <div class="modal-footer2 d-flex justify-content-end g2 pt-5 mt-4">
+                <button type="button" class="btn btn-outline-secondary px-5 w-100" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-ramblers px-5 w-100">Save</button>
+              </div>
+            </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="collected" tabindex="-1" aria-labelledby="collectedLabel" aria-hidden="true">
+    <div class="modal-dialog  modal-dialog-centered modal-md">
+      <div class="modal-content">
+       
+        <div class="modal-body p-5">
+            
+            <h3 class=" mb-2 text-center font-weight-400" style="line-height: 40px; font-size: 24px;">Are you sure Anil Gupta<br>
+            collected the following item?</h3>
+            <div class="modal-footer2 d-flex justify-content-end g2 pt-4">
+              <button type="button" class="btn btn-outline-secondary px-5 w-100" data-bs-dismiss="modal">No</button>
+              <button type="button" class="btn btn-ramblers px-5 w-100">Yes</button>
+            </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+
+  <script src="js/script.js"></script>
+
+</body>
+
+</html>

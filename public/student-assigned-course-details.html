@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Course Details</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/mobile.css">
+    <link rel="stylesheet" href="css/tab.css">
+    <link rel="shortcut icon" href="images/1.png" />
+    <script src="components/sidebar.js" type="text/javascript" defer></script>
+    <script src="components/topnav.js" type="text/javascript" defer></script>
+    <style>
+        .feedback-container {
+            margin-top: 20px;
+        }
+
+        .feedback-heading {
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .emoji-container {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+
+        .emoji {
+            font-size: 2em;
+            cursor: pointer;
+            opacity: 0.3; /* Dull all emojis by default */
+        }
+
+        .emoji.selected {
+            opacity: 1; /* Highlight the selected emoji */
+            background-color: yellow;
+            border-radius: 50%;
+            padding: 5px;
+        }
+
+        .emoji-label {
+            text-align: center;
+            font-size: 14px;
+            margin-top: 5px;
+            font-weight: 500;
+        }
+
+        .media-container {
+            margin-bottom: 20px;
+        }
+
+        .media-container video,
+        .media-container audio {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .media-container p {
+            font-weight: 600;
+        }
+
+        .text-feedback-container {
+            margin-bottom: 20px;
+        }
+
+        .text-feedback-container p {
+            font-weight: 600;
+        }
+
+        .text-feedback {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+        }
+
+        .course-detail-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .course-detail-container .course-info {
+            flex: 0 0 65%;
+        }
+
+        .course-detail-container .batch-info {
+            flex: 0 0 30%;
+            border-left: 1px solid #ccc;
+            padding-left: 20px;
+        }
+
+        .course-info h3, .batch-info h3 {
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-scroller">
+        <topnav-component></topnav-component>
+        <div class="container-fluid page-body-wrapper">
+            <sidebar-component data-page="courses"></sidebar-component>
+            <div class="course-main add-course course_details">
+                <div class="row justify-content-between">
+                    <div class="mb-3 mt-2 heading">
+                        <h4 class="m-0" style="font-weight: 400; color: rgb(104, 104, 104);">
+                            <a href="student_course_list.html" style="color:#5c5c5c;">Course</a>
+                        </h4>
+                        <img src="images/arrow-right-3.png" alt="">
+                        <h4 class="m-0" id="courseTitle" style="font-weight: 650;">Course Title</h4>
+                    </div>
+                </div>
+                <div class="course-detail-container">
+                    <div class="course-info">
+                        <div class="package" style="height: unset;">
+                            <div class="package-image" style="height: 190px;">
+                                <img id="courseBanner" src="images/summer-camp.jpg" alt="">
+                                <div class="status-ribbon" style="background-image: url('images/active.png');" id="courseStatus">
+                                    <h4>Active</h4>
+                                </div>
+                            </div>
+                            <div class="bottom">
+                                <div class="text">
+                                    <h4 id="courseTitleBottom">Course title</h4>
+                                </div>
+                                <div class="course-details mt-1">
+                                    <h4><span>Duration: </span><span id="courseDuration"></span></h4>
+                                    <span>|</span>
+                                    <h4><span>Batches: </span><span id="batchCount">0</span></h4>
+                                </div>
+                                <div class="ribbon">
+                                    <h4 id="coursePrice">$200</h4>
+                                </div>
+                                <div class="course-details mt-3">
+                                    <h4><span>Start date: </span><span id="courseStartDate">12 Jan 2024</span></h4>
+                                    <h4><span>End date: </span><span id="courseEndDate">12 Jan 2025</span></h4>
+                                </div>
+                            </div>
+                            <div class="after-bottom">
+                                <h3 class="batch-subheading" style="font-size: 14px;font-weight: 600;">Description</h3>
+                                <div class="description">
+                                    <ol id="courseDescription">
+                                        <!-- Description will be dynamically loaded here -->
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="feedback-container">
+                            <h3 class="feedback-heading">Feedback</h3>
+                            
+                            <div class="feedback-list-container">
+                                <label for="feedbackList">Select Feedback:</label>
+                                <select id="feedbackList" onchange="displaySelectedFeedback()">
+                                    <!-- Feedback options will be populated here -->
+                                </select>
+                            </div>
+                            <div class="emoji-container" id="emojiContainer">
+                                <div>
+                                    <span class="emoji" data-value="1">😞</span>
+                                    <div class="emoji-label">Needs Improvement</div>
+                                </div>
+                                <div>
+                                    <span class="emoji" data-value="2">😐</span>
+                                    <div class="emoji-label">Meets Needs</div>
+                                </div>
+                                <div>
+                                    <span class="emoji" data-value="3">😊</span>
+                                    <div class="emoji-label">Good Performance</div>
+                                </div>
+                                <div>
+                                    <span class="emoji" data-value="4">😃</span>
+                                    <div class="emoji-label">Excellent Performance</div>
+                                </div>
+                            </div>
+                            <div class="media-container">
+                                <p>Audio/Video Feedback:</p>
+                                <video controls id="videoFeedback"></video>
+                                <audio controls id="audioFeedback"></audio>
+                            </div>
+                            <div class="text-feedback-container">
+                                <p>Text Feedback:</p>
+                                <div class="text-feedback" id="textFeedback"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="batch-info">
+                        <h3>Batch Information</h3>
+                        <div id="batchDetails">
+                            <!-- Batch details will be dynamically loaded here -->
+                        </div>
+                        <h3>Course Details</h3>
+                        <p><strong>Course ID:</strong> <span id="courseIdDetail"></span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const organizationId = localStorage.getItem('organizationId');
+        const userId = localStorage.getItem('userId');
+        let course = null;
+
+        document.addEventListener('DOMContentLoaded', fetchCourseDetails);
+
+        async function fetchCourseDetails() {
+            try {
+                const courseId = new URLSearchParams(window.location.search).get('courseId');
+                const response = await fetch(`/api/courses/assigned/${userId}`, {
+                    headers: { 'organizationId': organizationId }
+                });
+                const data = await response.json();
+                course = data.find(c => c._id === courseId);
+
+                if (course) {
+                    populateCourseDetails(course);
+                    displayBatchDetails(course.batches);
+                    loadFeedback(course._id, userId);
+                } else {
+                    console.error('Course not found');
+                }
+            } catch (error) {
+                console.error('Error fetching course details:', error);
+            }
+        }
+
+        function populateCourseDetails(course) {
+            document.getElementById('courseBanner').src = `/images/${course.bannerImage}`;
+            document.getElementById('courseTitle').innerText = course.title;
+            document.getElementById('courseTitleBottom').innerText = course.title;
+            document.getElementById('courseDuration').innerText = course.duration;
+            document.getElementById('coursePrice').innerText = `$${course.price}`;
+            document.getElementById('courseStartDate').innerText = new Date(course.startDate).toLocaleDateString();
+            document.getElementById('courseEndDate').innerText = new Date(course.endDate).toLocaleDateString();
+            document.getElementById('courseDescription').innerHTML = `<li>${course.description}</li>`;
+            document.getElementById('batchCount').innerText = course.batches.length;
+            document.getElementById('courseIdDetail').innerText = course._id;
+        }
+
+        function displayBatchDetails(batches) {
+            const batch = batches[0]; // Assuming the first batch is the assigned one
+            const batchDetails = `
+                <p><strong>Batch Start Date:</strong> ${new Date(batch.startDate).toLocaleDateString()}</p>
+                <p><strong>Days:</strong> ${batch.days.join(', ')}</p>
+                <p><strong>Time Slot:</strong> ${batch.timeSlot}</p>
+            `;
+            document.getElementById('batchDetails').innerHTML = batchDetails;
+        }
+//load feedback
+async function loadFeedback(courseId, studentId) {
+    try {
+        const response = await fetch(`/api/feedback/${courseId}/${studentId}`, {
+            headers: { 'organizationId': organizationId }
+        });
+        const feedbackArray = await response.json();
+
+        console.log('Feedback Response:', feedbackArray);
+
+        if (feedbackArray && feedbackArray.length > 0) {
+            populateFeedbackList(feedbackArray);
+            displayFeedback(feedbackArray[0]); // Display the first feedback by default
+        } else {
+            console.warn('No feedback found for the provided courseId and studentId.');
+            document.getElementById('textFeedback').innerText = 'No feedback available for this course.';
+        }
+    } catch (error) {
+        console.error('Error fetching feedback:', error);
+    }
+}
+
+function populateFeedbackList(feedbackArray) {
+    const feedbackList = document.getElementById('feedbackList');
+    feedbackList.innerHTML = ''; // Clear existing options
+
+    feedbackArray.forEach((feedback, index) => {
+        const option = document.createElement('option');
+        option.value = index;
+        option.text = `Feedback ${index + 1} - ${new Date(feedback.createdAt).toLocaleDateString()}`;
+        feedbackList.appendChild(option);
+    });
+
+    // Save feedbackArray to a global variable for access in displaySelectedFeedback
+    window.feedbackArray = feedbackArray;
+}
+
+function displaySelectedFeedback() {
+    const feedbackList = document.getElementById('feedbackList');
+    const selectedIndex = feedbackList.value;
+    const selectedFeedback = window.feedbackArray[selectedIndex];
+
+    displayFeedback(selectedFeedback);
+}
+
+function displayFeedback(feedback) {
+    highlightEmoji(feedback.rating);
+
+    if (feedback.videoUrl) {
+        document.getElementById('videoFeedback').src = feedback.videoUrl;
+    } else {
+        document.getElementById('videoFeedback').src = '';
+    }
+
+    if (feedback.audioUrl) {
+        document.getElementById('audioFeedback').src = feedback.audioUrl;
+    } else {
+        document.getElementById('audioFeedback').src = '';
+    }
+
+    document.getElementById('textFeedback').innerText = feedback.text || 'No text feedback available';
+}
+
+function highlightEmoji(rating) {
+    const emojis = document.querySelectorAll('.emoji');
+    emojis.forEach(emoji => {
+        emoji.classList.remove('selected');
+        if (parseInt(emoji.getAttribute('data-value')) === rating) {
+            emoji.classList.add('selected');
+        }
+    });
+}
+    </script>
+</body>
+
+</html>

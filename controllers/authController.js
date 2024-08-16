@@ -12,10 +12,10 @@ exports.login = async (req, res) => {
       return res.status(401).json({ error: 'Invalid email or password.' });
     }
 
-    console.log('User found:', user.email); // Debug log
+    //console.log('User found:', user.email); // Debug log
 
     const passwordMatch = await bcrypt.compare(password, user.password);
-    console.log('Password match:', passwordMatch); // Debug log
+    //console.log('Password match:', passwordMatch); // Debug log
     if (!passwordMatch) {
       console.log('Password mismatch');
       return res.status(401).json({ error: 'Invalid email or password.' });

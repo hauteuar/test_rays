@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const authMiddleware = require('../middleware/authMiddleware');
 const userController = require('../controllers/userController');
+const notificationController = require('../controllers/notificationController');
 
 // Route to get user profile
 router.get('/profile', authMiddleware, userController.getUserProfile);
@@ -51,5 +52,25 @@ router.get('/student/:organizationId/:studentId', authMiddleware, userController
 // Get all students for a given organization
 
 router.get('/organization/:organizationId/students', authMiddleware, userController.getOrgStudents);
+
+// Route to fetch coach details
+router.get('/coach/:coachId', userController.getCoachDetails);
+
+// Route to fetch the calendar of schedules for the coach
+router.get('/:coachId/calendar', userController.getCoachCalendar);
+
+// Route to fetch the schedule for a specific day
+router.get('/:coachId/schedule/:date', userController.getCoachScheduleByDate);
+
+// Route to fetch the coach's availability schedule
+router.get('/:coachId/availability', userController.getCoachAvailability);
+
+router.post('/:coachId/availability', userController.updateCoachAvailability);
+
+router.post('/send-notification', notificationController.sendNotification);
+
+router.get('/notifications/unread-count/:userId', authMiddleware, notificationController.getUnreadNotificationsCount);
+
+router.get('/notifications/history', authMiddleware, notificationController.getNotificationHistory);
 
 module.exports = router;

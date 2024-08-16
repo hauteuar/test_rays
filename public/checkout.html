@@ -41,289 +41,304 @@
     </div>
   </div>
 
-  <!-- Payment Modal -->
-  <div class="modal fade" id="paymentModal" tabindex="-1" role="dialog" aria-labelledby="paymentModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+  
+  <!-- Payment Iframe Modal -->
+  <div class="modal fade" id="paymentIframeModal" tabindex="-1" role="dialog" aria-labelledby="paymentIframeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="paymentModalLabel">Enter Payment Details</h5>
+          <h5 class="modal-title" id="paymentIframeModalLabel">Complete Payment</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
-          <form id="payment-form">
-            <div class="form-group">
-              <label for="payment-method">Payment Method</label>
-              <div id="payment-method">
-                <div class="form-check">
-                  <input class="form-check-input" type="radio" name="paymentOption" id="credit-debit" value="card" checked>
-                  <label class="form-check-label" for="credit-debit">Credit/Debit Card</label>
-                </div>
-                <div class="form-check">
-                  <input class="form-check-input" type="radio" name="paymentOption" id="google-pay" value="google-pay">
-                  <label class="form-check-label" for="google-pay">Google Pay</label>
-                </div>
-                <div class="form-check">
-                  <input class="form-check-input" type="radio" name="paymentOption" id="apple-pay" value="apple-pay">
-                  <label class="form-check-label" for="apple-pay">Apple Pay</label>
-                </div>
-              </div>
-            </div>
-
-            <!-- Card Payment Fields -->
-            <div id="card-payment-fields">
-              <div class="form-group">
-                <label for="cardholder-name">Cardholder Name</label>
-                <input type="text" id="cardholder-name" class="form-control" required>
-              </div>
-              <div class="form-group">
-                <label for="card-number">Card Number</label>
-                <input type="text" id="card-number" class="form-control" required>
-                <img id="card-brand" src="" alt="" style="display: none; height: 20px; margin-top: 5px;">
-              </div>
-              <div class="form-group">
-                <label for="expiry-date">Expiry Date</label>
-                <input type="text" id="expiry-date" class="form-control" placeholder="MM/YY" required>
-              </div>
-              <div class="form-group">
-                <label for="cvv">CVV</label>
-                <input type="text" id="cvv" class="form-control" required>
-              </div>
-              <div class="form-group">
-                <label for="email">Email Address</label>
-                <input type="email" id="email" class="form-control" required>
-              </div>
-            </div>
-
-            <!-- Google Pay & Apple Pay Placeholders -->
-            <div id="google-pay-placeholder" style="display: none;">
-              <p>You will be redirected to Google Pay to complete your payment.</p>
-            </div>
-            <div id="apple-pay-placeholder" style="display: none;">
-              <p>You will be redirected to Apple Pay to complete your payment.</p>
-            </div>
-
-            <div id="card-errors" role="alert"></div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-          <button type="button" id="submit-payment" class="btn btn-primary">Submit Payment</button>
+          <iframe id="payment-iframe" src="" width="100%" height="600px" frameborder="0"></iframe>
         </div>
       </div>
     </div>
   </div>
-  <script src="https://js.stripe.com/v3/"></script>
-  <script>
-    let uniqueCode = localStorage.getItem('uniqueCode');
-    if(!uniqueCode) {
-       uniqueCode = "5e2c5922-4311-40cd-875a-9a4d73b47f71"; // Replace with the unique code for the connected account
-    }
-    // Example of fetching sports and courts data, assuming you have appropriate APIs for them
-    let sports = [];
-    let allCourts = [];
-
-    async function fetchSportsAndCourts() {
-      const organizationId = localStorage.getItem('organizationId'); // Get organizationId from localStorage
-
-      try {
-        const sportsResponse = await fetch('/api/sport/sports', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'organizationId': organizationId // Add organizationId to headers
-          }
-        });
-
-        const courtsResponse = await fetch('/api/sport/courts', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'organizationId': organizationId // Add organizationId to headers
-          }
-        });
-
-        sports = await sportsResponse.json();
-        allCourts = await courtsResponse.json();
-
-        // After fetching the data, load the cart items
-        loadCartItems();
-      } catch (error) {
-        console.error('Error fetching sports or courts:', error);
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+      let uniqueCode = localStorage.getItem('uniqueCode');
+      //console.log(uniqueCode);
+      if (!uniqueCode) {
+        uniqueCode = "5e2c5922-4311-40cd-875a-9a4d73b47f71"; // Replace with the unique code for the connected account
       }
-    }
-
-    // Load cart items
-    function loadCartItems() {
-      const cart = JSON.parse(localStorage.getItem('cart')) || { items: [], totalAmount: 0 };
-      const cartItemsContainer = document.getElementById('cart-items');
-      cartItemsContainer.innerHTML = '';
-
-      let totalAmount = 0;
-
-      cart.items.forEach((item, index) => {
-        totalAmount += item.price * item.quantity;
-
-        const sport = sports.find(s => String(s._id) === String(item.sportId));
-        const court = allCourts.find(c => String(c._id) === String(item.courtId));
-
-        const cartItem = document.createElement('div');
-        cartItem.classList.add('cart-item');
-        cartItem.innerHTML = `
-          <div class="item-details">
-            <p>Type: ${item.type}</p>
-            <p>Sport: ${sport ? sport.name : 'Unknown'}</p>
-            <p>Court: ${court ? court.name : 'Unknown'}</p>
-            <p>User ID: ${item.userId}</p>
-            <p>Price: $${item.price.toFixed(2)}</p>
-            <p>Quantity: 
-              <button class="quantity-btn" onclick="updateQuantity(${index}, -1)">-</button>
-              ${item.quantity}
-              <button class="quantity-btn" onclick="updateQuantity(${index}, 1)">+</button>
-            </p>
-            <button class="remove-btn" onclick="removeCartItem(${index})">Remove</button>
-          </div>
-        `;
-        cartItemsContainer.appendChild(cartItem);
-      });
-
-      document.getElementById('total-amount').textContent = totalAmount.toFixed(2);
-    }
-
-    // Update item quantity
-    function updateQuantity(index, change) {
-      const cart = JSON.parse(localStorage.getItem('cart')) || { items: [], totalAmount: 0 };
-      if (cart.items[index].quantity + change > 0) {
-        cart.items[index].quantity += change;
-        cart.totalAmount += change * cart.items[index].price; // Update the total amount
-        localStorage.setItem('cart', JSON.stringify(cart));
-        loadCartItems();
-      }
-    }
-
-    function updateCartIcon() {
-      const cart = JSON.parse(localStorage.getItem('cart')) || { items: [] };
-      const cartCount = cart.items.length;
-      $('#cart-icon').text(cartCount); // Assuming there's a cart icon with ID 'cart-icon'
-    }
-
-    // Remove item from cart
-    function removeCartItem(index) {
-      const cart = JSON.parse(localStorage.getItem('cart')) || { items: [], totalAmount: 0 };
-      const item = cart.items[index];
-      cart.totalAmount -= item.price * item.quantity; // Deduct the amount of the removed item
-      cart.items.splice(index, 1);
-      localStorage.setItem('cart', JSON.stringify(cart));
-      loadCartItems();
-      updateCartIcon(); // Update the cart count in the topnav
-    }
-
-    // Proceed to payment
-    document.getElementById('checkout-button').addEventListener('click', function () {
-      $('#paymentModal').modal('show'); // Show the payment modal
-    });
-
-    // Show/Hide payment fields based on the selected payment option
-    $('input[name="paymentOption"]').change(function () {
-      const selectedOption = $(this).val();
-      if (selectedOption === 'card') {
-        $('#card-payment-fields').show();
-        $('#google-pay-placeholder, #apple-pay-placeholder').hide();
-      } else if (selectedOption === 'google-pay') {
-        $('#card-payment-fields').hide();
-        $('#google-pay-placeholder').show();
-        $('#apple-pay-placeholder').hide();
-      } else if (selectedOption === 'apple-pay') {
-        $('#card-payment-fields').hide();
-        $('#google-pay-placeholder').hide();
-        $('#apple-pay-placeholder').show();
-      }
-    });
-
-    // Detect and display card brand based on the card number
-    $('#card-number').on('input', function () {
-      const cardNumber = $(this).val();
-      let cardBrand = '';
-      if (/^4/.test(cardNumber)) {
-        cardBrand = 'visa';
-      } else if (/^5[1-5]/.test(cardNumber)) {
-        cardBrand = 'mastercard';
-      }
-      if (cardBrand) {
-        $('#card-brand').attr('src', `images/${cardBrand}.png`).show();
-      } else {
-        $('#card-brand').hide();
-      }
-    });
-
-    // Handle form submission and payment processing
-    document.getElementById('submit-payment').addEventListener('click', async function () {
-      const selectedPaymentMethod = $('input[name="paymentOption"]:checked').val();
-      const cart = JSON.parse(localStorage.getItem('cart')) || { items: [], totalAmount: 0 };
-      const clientId = "Elite"; // Replace with your clientId
-      const callbackUrl =  window.location.origin + "/payment-callback"; // Replace with your callback URL
-      const successUrl = window.location.origin +"/success"; // Replace with your success URL
-      const cancelUrl = window.location.origin +"/cancel"; // Replace with your cancel URL
-
-      const transactionId = generateTransactionId(); // Function to generate a unique transaction ID
-      const productName = "booking"; // Replace with the actual product name
-      const amount = parseFloat(document.getElementById('total-amount').textContent);
-      const applicationFeePercent = 5; // Optional, set your platform fee percentage
-      const currency = "usd"; // Optional, defaults to "usd"
-
-      let paymentDetails = {
-        clientId,
-        callbackUrl,
-        transactionId,
-        uniqueCode,
-        productName,
-        amount,
-        successUrl,
-        cancelUrl,
-        applicationFeePercent,
-        currency
-      };
-
-      if (selectedPaymentMethod === 'card') {
-        paymentDetails = {
-          ...paymentDetails,
-          cardholderName: $('#cardholder-name').val(),
-          cardNumber: $('#card-number').val(),
-          expiryDate: $('#expiry-date').val(),
-          cvv: $('#cvv').val(),
-          email: $('#email').val(),
-        };
-      }
-
-      try {
-        const response = await fetch('https://api-payments.rayssportsnetwork.com/checkout', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(paymentDetails),
-        });
-
-        const result = await response.json();
-        if (result.url) {
-          window.location.href = result.url; // Redirect to the payment gateway
-        } else {
-          alert('Payment initiation failed.');
+      //console.log(uniqueCode);
+    
+      let sports = [];
+      let allCourts = [];
+    
+      async function fetchSportsAndCourts() {
+        const organizationId = localStorage.getItem('organizationId'); // Get organizationId from localStorage
+    
+        try {
+          const sportsResponse = await fetch('/api/sport/sports', {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'organizationId': organizationId // Add organizationId to headers
+            }
+          });
+    
+          const courtsResponse = await fetch('/api/sport/courts', {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'organizationId': organizationId // Add organizationId to headers
+            }
+          });
+    
+          sports = await sportsResponse.json();
+          allCourts = await courtsResponse.json();
+    
+          // After fetching the data, load the cart items
+          await loadCartItems();
+        } catch (error) {
+          console.error('Error fetching sports or courts:', error);
         }
-      } catch (error) {
+      }
+    
+      async function loadCartItems() {
+    const userId = localStorage.getItem('userId');
+    const organizationId = localStorage.getItem('organizationId'); // Get organizationId from localStorage
+    const cartItemsContainer = document.getElementById('cart-items');
+    const role = localStorage.getItem('role');
+    cartItemsContainer.innerHTML = '';
+
+    let totalAmount = 0;
+    let response;
+
+    try {
+        console.log(role);
+        if (role === 'org_admin') {
+            response = await fetch(`/api/cart/org/${organizationId}`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'organizationId': organizationId
+                }
+            });
+        } else {
+            response = await fetch(`/api/cart/${userId}`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'organizationId': organizationId
+                }
+            });
+        }
+
+        if (!response.ok) {
+            console.error('Failed to load cart items');
+            return;
+        }
+        
+        const cart = await response.json();
+        console.log(cart);
+
+        // Assuming cart is an array of cartItems
+        const cartItems = Array.isArray(cart) ? cart : cart.items;
+
+        cartItems.forEach(cartItem => {
+            console.log('cartItem:', cartItem);  // Log the entire cartItem to inspect its structure
+
+            // Update the total amount
+            totalAmount += cartItem.price * cartItem.quantity;
+
+            const sport = sports.find(s => String(s._id) === String(cartItem.sportId));
+            const court = allCourts.find(c => String(c._id) === String(cartItem.courtId));
+
+            const itemElement = document.createElement('div');
+            itemElement.classList.add('cart-item');
+
+            // Check if transactionId starts with "bki"
+            const showSportAndCourt = cartItem.paymentId.transactionId.startsWith('bki');
+
+            itemElement.innerHTML = `
+                <div class="item-details">
+                    <p>Type: ${cartItem.itemType}</p>
+                    ${showSportAndCourt ? `<p>Sport: ${sport ? sport.name : 'Unknown'}</p>` : ''}
+                    ${showSportAndCourt ? `<p>Court: ${court ? court.name : 'Unknown'}</p>` : ''}
+                    <p>User ID: ${cartItem.userId}</p>
+                    <p>Price: $${cartItem.price.toFixed(2)}</p>
+                    <p>Quantity: 
+                        <button class="quantity-btn" onclick="updateQuantity('${cartItem._id}', -1)">-</button>
+                        ${cartItem.quantity}
+                        <button class="quantity-btn" onclick="updateQuantity('${cartItem._id}', 1)">+</button>
+                    </p>
+                    <button class="remove-btn" onclick="removeCartItem('${cartItem.paymentId._id}')">Remove</button>
+                </div>
+            `;
+            cartItemsContainer.appendChild(itemElement);
+        });
+
+        document.getElementById('total-amount').textContent = totalAmount.toFixed(2);
+
+    } catch (error) {
+        console.error('Error loading cart items:', error);
+    }
+}
+
+
+    
+      async function updateQuantity(index, change) {
+        const userId = localStorage.getItem('userId');
+        const organizationId = localStorage.getItem('organizationId'); // Get organizationId from localStorage
+    
+        try {
+          const response = await fetch(`/api/cart/${userId}`, {
+            headers: {
+              'Content-Type': 'application/json',
+              'organizationId': organizationId
+            }
+          });
+    
+          if (!response.ok) {
+            console.error('Failed to update quantity');
+            return;
+          }
+    
+          const cart = await response.json();
+          const item = cart.items[index];
+    
+          if (item.quantity + change > 0) {
+            item.quantity += change;
+            cart.totalAmount += change * item.price; // Update the total amount
+    
+            // Update the cart in the database
+            await fetch(`/api/cart/${userId}/update-quantity`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'organizationId': organizationId
+              },
+              body: JSON.stringify({ itemId: item.itemId, quantity: item.quantity })
+            });
+    
+            loadCartItems(); // Reload the cart items
+            updateCartIcon(); // Update the cart icon
+          }
+        } catch (error) {
+          console.error('Error updating quantity:', error);
+        }
+      }
+    
+      async function removeCartItem(paymentId) {
+        const userId = localStorage.getItem('userId');
+        const organizationId = localStorage.getItem('organizationId'); // Get organizationId from localStorage
+    
+        try {
+          // Remove the item from the cart in the database
+          await fetch('/api/cart/remove-item', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'organizationId': organizationId
+            },
+            body: JSON.stringify({ userId, paymentId })
+          });
+    
+          loadCartItems(); // Reload the cart items
+          updateCartIcon(); // Update the cart icon
+        } catch (error) {
+          console.error('Error removing item from cart:', error);
+        }
+      }
+    
+      document.getElementById('checkout-button').addEventListener('click', async function () {
+    const userId = localStorage.getItem('userId');
+    const organizationId = localStorage.getItem('organizationId'); // Get organizationId from localStorage
+    const role = localStorage.getItem('role');
+
+    try {
+        let response;
+        if (role === 'org_admin') {
+            response = await fetch(`/api/cart/org/${organizationId}`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'organizationId': organizationId
+                }
+            });
+        } else {
+            response = await fetch(`/api/cart/${userId}`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'organizationId': organizationId
+                }
+            });
+        }
+
+        if (!response.ok) {
+            console.error('Failed to retrieve cart');
+            return;
+        }
+
+        const cart = await response.json();
+        console.log('cart:', cart);
+
+        // Initialize an array to store all transaction IDs
+        let transactionIds = [];
+
+        // Loop through each item in the cart's items array and collect transaction IDs
+        if (cart && Array.isArray(cart.items)) {
+            cart.items.forEach(item => {
+                if (item.paymentId && item.paymentId.transactionId) {
+                    transactionIds.push(String(item.paymentId.transactionId));
+                }
+            });
+        }
+
+        // Convert the transactionIds array into a comma-separated string
+        const transactionIdsString = transactionIds.join(',');
+
+        console.log('transactionIds', transactionIdsString);
+        const successUrl = `http://localhost:5000/success?transactionIds=${transactionIdsString}`;
+        const cancelUrl = `http://localhost:5000/cancel?transactionIds=${transactionIdsString}`;
+        const totalAmount = parseFloat(document.getElementById('total-amount').textContent);
+
+        const paymentDetails = {
+            clientId: "HWZTHAT202401",
+            transactionId: transactionIdsString,  // Pass all transaction IDs
+            uniqueCode: uniqueCode,
+            callbackUrl: "http://localhost:5000/checkout.html",
+            successUrl,
+            cancelUrl,
+            productName: "Combined Purchase",
+            amount: totalAmount,
+            currency: "usd",
+            applicationFeePercent: 5,
+            isSubscription: false,
+            customerId: "cus_Qeh75XVzBvXcPG",
+            recurringIntervalType: "day",
+            recurringIntervalCount: 1,
+        };
+
+        const paymentResponse = await fetch('https://api-payments.rayssportsnetwork.com/checkout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(paymentDetails),
+        });
+
+        const result = await paymentResponse.json();
+        if (result.url) {
+            // Redirect to the Stripe payment page
+            window.location.href = result.url;
+        } else {
+            alert('Payment initiation failed.');
+        }
+    } catch (error) {
         console.error('Error processing payment:', error);
         alert('Failed to initiate payment.');
-      }
-    });
-
-    function generateTransactionId() {
-      return 'txn_' + Math.random().toString(36).substr(2, 9);
     }
+});
 
-    // Fetch the data and then load the cart items
-    fetchSportsAndCourts();
-  </script>
+
+      
+      fetchSportsAndCourts(); // Fetch the data and then load the cart items
+    </script>
+    
 </body>
 
 </html>

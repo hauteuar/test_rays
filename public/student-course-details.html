@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Course details</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/mobile.css">
+    <link rel="stylesheet" href="css/tab.css">
+    <link rel="shortcut icon" href="images/1.png" />
+    <script src="components/sidebar.js" type="text/javascript" defer></script>
+    <script src="components/topnav.js" type="text/javascript" defer></script>
+    <style>
+        .list {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+        }
+
+        .list .person {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .list .person img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        .list .person h4 {
+            margin: 0;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .list .status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5px 10px;
+            border-radius: 20px;
+            background-color: #4DD192;
+            color: white;
+            font-size: 12px;
+        }
+
+        .list img.delete {
+            cursor: pointer;
+            width: 20px;
+            height: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-scroller">
+        <topnav-component></topnav-component>
+        <div class="container-fluid page-body-wrapper">
+            <sidebar-component data-page="courses"></sidebar-component>
+            <div class="course-main add-course course_details">
+                <div class="row justify-content-between">
+                    <div class="mb-3 mt-2 heading">
+                        <h4 class="m-0" style="font-weight: 400; color: rgb(104, 104, 104);"><a href="student_course_list.html" style="color:#5c5c5c;">Course</a></h4>
+                        <img src="images/arrow-right-3.png" alt="">
+                        <h4 class="m-0" id="courseTitle" style="font-weight: 650;">Course Title</h4>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4">
+                        <div class="package" style="height: unset;">
+                            <div class="package-image" style="height: 190px;">
+                                <img id="courseBanner" src="images/summer-camp.jpg" alt="">
+                                <div class="status-ribbon" style="background-image: url('images/active.png');" id="courseStatus">
+                                    <h4>Active</h4>
+                                </div>
+                            </div>
+                            <div class="bottom">
+                                <div class="text">
+                                    <h4 id="courseTitleBottom">Course title</h4>
+                                </div>
+                                <div class="course-details mt-1">
+                                    <h4><span>Duration: </span><span id="courseDuration"></span></h4>
+                                    <span>|</span>
+                                    <h4><span>Batches: </span><span id="batchCount">0</span></h4>
+                                </div>
+                                <div class="ribbon">
+                                    <h4 id="coursePrice">$200</h4>
+                                </div>
+                                <div class="course-details mt-3">
+                                    <h4><span>Start date: </span><span id="courseStartDate">12 Jan 2024</span></h4>
+                                    <h4><span>End date: </span><span id="courseEndDate">12 Jan 2025</span></h4>
+                                </div>
+                            </div>
+                            <div class="after-bottom">
+                                <h3 class="batch-subheading" style="font-size: 14px;font-weight: 600;">Description</h3>
+                                <div class="description">
+                                    <ol id="courseDescription">
+                                        <!-- Description will be dynamically loaded here -->
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="course-detail col-8">
+                        <div class="batch-selection">
+                            <h3>Select your preferred batch</h3>
+                            <div id="batches">
+                                <!-- Dynamically add batch options here -->
+                            </div>
+                        </div>
+
+                        <div class="payment-options">
+                            <h3>Select Payment Option</h3>
+                            <div id="payment-plans">
+                                <!-- Dynamically add payment options here -->
+                            </div>
+                        </div>
+
+                        <button onclick="addToCart()">Add to Cart</button>
+                        <button onclick="buyNow()">Buy Now</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const organizationId = localStorage.getItem('organizationId');
+        const userId = localStorage.getItem('userId'); // Fetch the student ID from localStorage
+        let selectedBatchId = null;
+        let course = null;
+
+        // Fetch course details on page load
+        document.addEventListener('DOMContentLoaded', fetchCourseDetails);
+
+        async function fetchCourseDetails() {
+            try {
+                const courseId = new URLSearchParams(window.location.search).get('courseId');
+                const response = await fetch(`/api/courses/${courseId}`, {
+                    headers: { 'organizationId': organizationId }
+                });
+                course = await response.json();
+
+                populateCourseDetails(course);
+                loadBatches(course.batches);
+            } catch (error) {
+                console.error('Error fetching course details:', error);
+            }
+        }
+
+        function populateCourseDetails(course) {
+            document.getElementById('courseBanner').src = `/images/${course.bannerImage}`;
+            document.getElementById('courseTitle').innerText = course.title;
+            document.getElementById('courseTitleBottom').innerText = course.title;
+            document.getElementById('courseDuration').innerText = course.duration;
+            document.getElementById('coursePrice').innerText = `$${course.price}`;
+            document.getElementById('courseStartDate').innerText = new Date(course.startDate).toLocaleDateString();
+            document.getElementById('courseEndDate').innerText = new Date(course.endDate).toLocaleDateString();
+            document.getElementById('courseDescription').innerHTML = `<li>${course.description}</li>`;
+            document.getElementById('batchCount').innerText = course.batches.length;
+        }
+
+        async function loadBatches(batchIds) {
+            const batchContainer = document.getElementById('batches');
+            for (let index = 0; index < batchIds.length; index++) {
+                const batchId = batchIds[index];
+                const response = await fetch(`/api/batches/${batchId}`, {
+                    headers: { 'organizationId': organizationId }
+                });
+                const batch = await response.json();
+                console.log(batch);
+                if (batch) {
+                    const batchOption = `
+                        <div>  
+                            <label>
+                                <input type="radio" name="batch" value="${batch._id}" onchange="selectBatch('${batch._id}')">
+                                ${batch.startDate} ${batch.days.join(', ')} ${batch.timeSlot}
+                            </label>
+                        </div>`;
+                    batchContainer.innerHTML += batchOption;
+                }
+            }
+        }
+
+        function selectBatch(batchId) {
+            selectedBatchId = batchId;
+        }
+
+        async function addToCart() {
+            const studentId = userId;
+            const coachId = course.coaches[0]; // Select the first coach by default
+            const coursePrice = parseFloat(document.getElementById('coursePrice').innerText.replace('$', ''));
+            const transactionId = generateTransactionId('course');
+            const courseId = new URLSearchParams(window.location.search).get('courseId');
+
+            console.log('studentId:', studentId);
+            console.log('coachId:', coachId);
+            console.log('selectedBatchId:', selectedBatchId);
+
+            if (!selectedBatchId) {
+                alert('Please select a batch');
+                return;
+            }
+
+            const assignData = {
+                studentIds: [studentId], // Send as an array
+                coachIds: [coachId], // Send as an array
+                batchId: selectedBatchId,
+                courseId,
+                paymentAmounts: [coursePrice], // Send as an array
+                paymentMethod: 'Card',
+                transactionId
+            };
+
+            try {
+                const response = await fetch('/api/user/assign', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'organizationId': organizationId
+                    },
+                    body: JSON.stringify(assignData)
+                });
+
+                if (response.ok) {
+                    console.log('Student successfully added to course.');
+                    alert('Course successfully added to cart');
+                } else {
+                    const errorData = await response.json();
+                    console.error('Error assigning student/coach:', errorData.error);
+                }
+            } catch (error) {
+                console.error('Error assigning student/coach:', error);
+            }
+        }
+
+        function buyNow() {
+            // Capture selected batch and payment plan, then proceed to checkout
+        }
+
+        function generateTransactionId(itemType) {
+            let prefix = '';
+
+            switch (itemType) {
+                case 'booking':
+                    prefix = 'bki_';
+                    break;
+                case 'course':
+                    prefix = 'crs_';
+                    break;
+                case 'ecom':
+                    prefix = 'com_';
+                    break;
+                case 'combined':
+                    prefix = 'cmd_';
+                    break;
+                default:
+                    prefix = 'txn_';
+                    break;
+            }
+
+            return prefix + Math.random().toString(36).substr(2, 9);
+        }
+
+        fetchCourseDetails();
+    </script>
+</body>
+
+</html>

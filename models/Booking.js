@@ -60,6 +60,10 @@ const BookingSchema = new Schema({
     enum: ['pending', 'completed', 'failed'],
     default: 'pending',
   },
+  paymentId: {
+    type: Schema.Types.ObjectId,
+    ref: 'Payment', // Reference to the Payment schema
+  },
 });
 
 module.exports = mongoose.models.Booking || mongoose.model('Booking', BookingSchema);

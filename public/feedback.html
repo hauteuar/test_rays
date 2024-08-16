@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Feedback</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/mobile.css">
+    <link rel="stylesheet" href="css/tab.css">
+    <link rel="shortcut icon" href="images/1.png" />
+    <script src="components/sidebar.js" type="text/javascript" defer></script>
+    <script src="components/topnav.js" type="text/javascript" defer></script>
+    <style>
+        .feedback-container {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .dropdown-container {
+            margin-bottom: 20px;
+        }
+
+        .feedback-textarea {
+            width: 100%;
+            height: 150px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            background-color: #ffffff;
+        }
+
+        .media-upload-container {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+
+        .media-upload-container div {
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .media-upload-container img {
+            width: 50px;
+            height: 50px;
+        }
+
+        .submit-container {
+            text-align: center;
+        }
+
+        .submit-container button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0, 0, 0);
+            background-color: rgba(0, 0, 0, 0.4);
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-scroller">
+        <topnav-component></topnav-component>
+        <div class="container-fluid page-body-wrapper">
+            <sidebar-component data-page="feedback"></sidebar-component>
+            <div class="course-main feedback-container">
+                <div class="dropdown-container">
+                    <label for="courseDropdown">Select Course:</label>
+                    <select id="courseDropdown">
+                        <!-- Dynamically populated with courses assigned to the coach -->
+                    </select>
+                </div>
+                <div class="dropdown-container">
+                    <label for="studentDropdown">Select Student:</label>
+                    <select id="studentDropdown">
+                        <option value="all">All</option>
+                        <!-- Dynamically populated with students under the selected course -->
+                    </select>
+                </div>
+                <div class="dropdown-container">
+                    <label for="taskDropdown">Select Task:</label>
+                    <select id="taskDropdown">
+                        <!-- Dynamically populated with tasks under the selected course and student -->
+                    </select>
+                </div>
+                <div class="dropdown-container">
+                    <label for="feedbackCycleDropdown">Select Feedback Cycle:</label>
+                    <select id="feedbackCycleDropdown">
+                        <option value="Weekly">Weekly</option>
+                        <option value="Monthly">Monthly</option>
+                        <option value="End of Course">End of Course</option>
+                    </select>
+                </div>
+                <div class="dropdown-container">
+                    <label for="ratingDropdown">Select Rating:</label>
+                    <select id="ratingDropdown">
+                        <option value="1">😞 Needs Improvement</option>
+                        <option value="2">😐 Meets Needs</option>
+                        <option value="3">😊 Good Performance</option>
+                        <option value="4">😃 Excellent Performance</option>
+                    </select>
+                </div>
+                <textarea class="feedback-textarea" id="textFeedback" placeholder="Enter your feedback here..."></textarea>
+                <div class="drop-file" style="border: 1px dashed #bdbdbd; padding: 20px;">
+                    <h6 style="font-size: 14px;">Drop files here or browse</h6>
+                    
+                    <input type="file" id="audioInput" name="audio" style="display: none;">
+                    <input type="file" id="videoInput" name="video" style="display: none;">
+                    <input type="file" id="imageInput" name="image" multiple style="display: none;">
+                    <div class="flex-align" style="max-width: 320px; gap: 30px;">
+                        <div class="drop-file-card" id="recordBtn" style="border: 1px solid #19AF79; background: #fff;">
+                            <img src="images/record.png">
+                            <h6>Record</h6>
+                        </div>
+                        <div class="drop-file-card" id="uploadFileBtn" style="border: 1px solid #19AF79; background: #fff;">
+                            <img src="images/device.png">
+                            <h6>My Device</h6>
+                        </div>
+                        <div class="drop-file-card" id="cameraBtn" style="border: 1px solid #19AF79; background: #fff;">
+                            <img src="images/camera2.png">
+                            <h6>Camera</h6>
+                        </div>
+                    </div>
+                </div>
+                <div id="mediaContainer"></div> <!-- Media will be displayed here -->
+
+                <div class="submit-container">
+                    <button id="submitFeedback">Submit Feedback</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for recording -->
+    <div id="recordModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Record</h2>
+            <video id="videoPreview" controls style="width: 100%; display: none;"></video>
+            <audio id="audioPreview" controls style="width: 100%; display: none;"></audio>
+            <div class="modal-footer">
+                <button id="startRecording">Start Recording</button>
+                <button id="stopRecording" style="display: none;">Stop Recording</button>
+                <button id="saveRecording" style="display: none;">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let recordedChunks = [];
+        let videoBlob = null;
+        let audioBlob = null;
+        let mediaRecorder;
+        let isRecordingVideo = false;
+        const urlParams = new URLSearchParams(window.location.search);
+    const taskIdParam = urlParams.get('taskId');
+    const studentIdParam = urlParams.get('studentId');
+    document.addEventListener('DOMContentLoaded', async () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const taskIdParam = urlParams.get('taskId');
+    const studentIdParam = urlParams.get('studentId');
+
+    await loadCourses(taskIdParam);
+
+    const courseDropdown = document.getElementById('courseDropdown');
+    const studentDropdown = document.getElementById('studentDropdown');
+    const taskDropdown = document.getElementById('taskDropdown');
+
+    courseDropdown.addEventListener('change', async () => {
+    console.log("Course dropdown changed, new value:", courseDropdown.value);
+    await loadStudents(courseDropdown.value);
+});
+
+studentDropdown.addEventListener('change', async () => {
+    console.log("Student dropdown changed, new value:", studentDropdown.value);
+    await loadTasks(courseDropdown.value, studentDropdown.value);
+});
+
+    document.getElementById('submitFeedback').addEventListener('click', submitFeedback);
+    
+    document.getElementById('uploadFileBtn').addEventListener('click', () => document.getElementById('imageInput').click());
+    document.getElementById('imageInput').addEventListener('change', handleFileUpload);
+    
+    document.getElementById('cameraBtn').addEventListener('click', () => openRecordModal(true));
+    document.getElementById('recordBtn').addEventListener('click', () => openRecordModal(false));
+
+    if (taskIdParam) {
+        await loadCourseAndStudentFromTask(taskIdParam, studentIdParam);
+    }
+
+    // Modal functionality
+    const modal = document.getElementById('recordModal');
+    const span = document.getElementsByClassName('close')[0];
+    const startBtn = document.getElementById('startRecording');
+    const stopBtn = document.getElementById('stopRecording');
+    const saveBtn = document.getElementById('saveRecording');
+    const videoPreview = document.getElementById('videoPreview');
+    const audioPreview = document.getElementById('audioPreview');
+
+    span.onclick = () => closeModal();
+    window.onclick = (event) => {
+        if (event.target === modal) {
+            closeModal();
+        }
+    };
+
+    startBtn.onclick = startRecording;
+    stopBtn.onclick = stopRecording;
+    saveBtn.onclick = saveRecording;
+});
+
+async function loadCourses(selectedTaskId) {
+    console.log("Loading courses...");
+    const coachId = localStorage.getItem('userId');
+    const organizationId = localStorage.getItem('organizationId');
+    const response = await fetch(`/api/courses/coach/${coachId}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'organizationId': organizationId // Include organizationId in the headers
+        }
+    });
+    const courses = await response.json();
+    const courseDropdown = document.getElementById('courseDropdown');
+    courseDropdown.innerHTML = courses.map(course => `<option value="${course._id}">${course.title}</option>`).join('');
+
+    console.log("Courses loaded:", courses);
+
+    if (selectedTaskId) {
+        const task = await fetch(`/api/tasks/${selectedTaskId}`).then(res => res.json());
+        const courseId = task.courseId;
+        courseDropdown.value = courseId;
+        console.log("Selected course:", courseId);
+        await loadStudents(courseId, task.assignedTo._id);
+    } else {
+        loadStudents(courseDropdown.value);
+    }
+}
+
+async function loadStudents(courseId, selectedStudentId = null) {
+    const coachId = localStorage.getItem('userId');
+    const organizationId = localStorage.getItem('organizationId');
+    const response = await fetch(`/api/user/assigned-student/${courseId}/${coachId}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'organizationId': organizationId // Include organizationId in the headers
+        }
+    });
+    const students = await response.json();
+    const studentDropdown = document.getElementById('studentDropdown');
+    studentDropdown.innerHTML = `<option value="all">All</option>` + students.map(student => `<option value="${student._id}">${student.name}</option>`).join('');
+
+    await new Promise(resolve => setTimeout(resolve, 100));  // Small delay to rule out race condition
+
+    if (selectedStudentId) {
+        studentDropdown.value = selectedStudentId;
+        await loadTasks(courseId, selectedStudentId);
+    } else if (students.length > 0) {
+        await loadTasks(courseId, studentDropdown.value);
+    }
+}
+
+async function loadTasks(courseId, studentId) {
+    const orgId = localStorage.getItem('organizationId');
+    let response;
+    if (studentId === 'all') {
+        response = await fetch(`/api/tasks/${courseId}/${orgId}`);
+    } else {
+        response = await fetch(`/api/tasks/student/${studentId}/${orgId}`);
+    }
+    const tasks = await response.json();
+    const taskDropdown = document.getElementById('taskDropdown');
+    taskDropdown.innerHTML = tasks.map(task => `<option value="${task._id}">${task.title}</option>`).join('');
+}
+
+async function submitFeedback() {
+    const courseId = document.getElementById('courseDropdown').value;
+    const studentId = document.getElementById('studentDropdown').value;
+    const taskId = document.getElementById('taskDropdown').value;
+    const feedbackCycle = document.getElementById('feedbackCycleDropdown').value;
+    const rating = document.getElementById('ratingDropdown').value;
+    const text = document.getElementById('textFeedback').value;
+    const orgId = localStorage.getItem('organizationId');
+    
+    // Ensure that the studentId and courseId are valid
+    if (!courseId || !studentId) {
+        alert("Please select both a course and a student.");
+        return;
+    }
+
+    const formData = new FormData();
+    const coachId = localStorage.getItem('userId');
+    formData.append('courseId', courseId);
+    formData.append('organizationId', orgId);
+    formData.append('studentId', studentId);
+    formData.append('taskId', taskId);
+    formData.append('coachId', coachId);
+    formData.append('feedbackCycle', feedbackCycle);
+    formData.append('rating', rating);
+    formData.append('text', text);
+
+    if (audioBlob) {
+        formData.append('audio', audioBlob, 'feedback-audio.webm');
+    }
+    if (videoBlob) {
+        formData.append('video', videoBlob, 'feedback-video.webm');
+    }
+    recordedChunks.forEach((file, index) => {
+        formData.append(`image${index}`, file, `feedback-image${index}.${file.type.split('/')[1]}`);
+    });
+
+    try {
+        const response = await fetch('/api/feedback/create', {
+            method: 'POST',
+            body: formData
+        });
+
+        if (response.ok) {
+            alert('Feedback submitted successfully');
+            window.location.href = 'assignmentview.html';
+        } else {
+            alert('Failed to submit feedback');
+        }
+    } catch (error) {
+        console.error('Error submitting feedback:', error);
+    }
+}
+
+async function loadCourseAndStudentFromTask(taskId, studentId) {
+    const taskResponse = await fetch(`/api/tasks/${taskId}`);
+    const task = await taskResponse.json();
+    const courseId = task.courseId;
+
+    document.getElementById('courseDropdown').value = courseId;
+    await loadStudents(courseId, studentId);
+
+    document.getElementById('taskDropdown').value = taskId;
+}
+
+async function handleFileUpload(event) {
+    const files = event.target.files;
+    for (const file of files) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            const mediaType = file.type.split('/')[0];
+            let mediaElement;
+
+            if (mediaType === 'video') {
+                videoBlob = file;
+                mediaElement = `<video controls width="100%">
+                                  <source src="${e.target.result}" type="${file.type}">
+                                  Your browser does not support the video tag.
+                                </video>`;
+            } else if (mediaType === 'audio') {
+                audioBlob = file;
+                mediaElement = `<audio controls>
+                                  <source src="${e.target.result}" type="${file.type}">
+                                  Your browser does not support the audio element.
+                                </audio>`;
+            } else if (mediaType === 'image') {
+                recordedChunks.push(file);
+                mediaElement = `<img src="${e.target.result}" alt="Media" style="width: 100%;">`;
+            }
+
+            document.getElementById('mediaContainer').insertAdjacentHTML('beforeend', mediaElement);
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+function openRecordModal(isVideo) {
+    const modal = document.getElementById('recordModal');
+    modal.style.display = 'block';
+
+    isRecordingVideo = isVideo;
+    document.getElementById('videoPreview').style.display = isVideo ? 'block' : 'none';
+    document.getElementById('audioPreview').style.display = !isVideo ? 'block' : 'none';
+}
+
+function closeModal() {
+    const modal = document.getElementById('recordModal');
+    modal.style.display = 'none';
+    stopRecording();
+}
+
+async function startRecording() {
+    let stream;
+    if (isRecordingVideo) {
+        stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+    } else {
+        stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    }
+
+    mediaRecorder = new MediaRecorder(stream);
+    recordedChunks = [];
+
+    mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+            recordedChunks.push(event.data);
+        }
+    };
+
+    mediaRecorder.onstop = () => {
+        const blob = new Blob(recordedChunks, {
+            type: isRecordingVideo ? 'video/webm' : 'audio/webm'
+        });
+
+        if (isRecordingVideo) {
+            videoBlob = blob;
+            document.getElementById('videoPreview').src = URL.createObjectURL(blob);
+        } else {
+            audioBlob = blob;
+            document.getElementById('audioPreview').src = URL.createObjectURL(blob);
+        }
+    };
+
+    mediaRecorder.start();
+    document.getElementById('startRecording').style.display = 'none';
+    document.getElementById('stopRecording').style.display = 'inline';
+}
+
+function stopRecording() {
+    if (mediaRecorder) {
+        mediaRecorder.stop();
+    }
+
+    document.getElementById('startRecording').style.display = 'inline';
+    document.getElementById('stopRecording').style.display = 'none';
+    document.getElementById('saveRecording').style.display = 'inline';
+}
+
+function saveRecording() {
+    closeModal();
+}
+
+
+</script>
+</body>
+
+</html>

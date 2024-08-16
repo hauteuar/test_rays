@@ -8,5 +8,7 @@ router.patch('/:courseId', courseController.updateCourse);
 router.get('/', courseController.getCourses);
 router.get('/:courseId', courseController.getCourseById);
 router.get('/coach/:coachId', authMiddleware, courseController.getCoursesForCoach);
+router.get('/assigned/:userId', authMiddleware, courseController.getAssignedCourses);
+router.get('/unassigned/:userId', authMiddleware, courseController.getUnassignedCourses);
 
 module.exports = router;

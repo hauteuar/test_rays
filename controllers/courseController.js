@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const Course = require('../models/Course');
 const Organization = require('../models/Organizations'); 
+const User = require('../models/Users');
+const Batch = require('../models/Batch');
 
 exports.createCourse = async (req, res) => {
   const { title, description, duration, price, location, mode, startDate, endDate, bannerImage, coaches, groundBookings, discounts } = req.body;
@@ -84,7 +86,7 @@ exports.getCourseById = async (req, res) => {
 exports.getCoursesForCoach = async (req, res) => {
   const { coachId } = req.params;  // This is coming from the query parameters
   const organizationId = req.headers.organizationid;  // The organization ID from headers
-  console.log('coachId', coachId);
+  //console.log('coachId', coachId);
   try {
     // Ensure coachId is a valid ObjectId
     if (!coachId) {
@@ -101,5 +103,87 @@ exports.getCoursesForCoach = async (req, res) => {
   } catch (error) {
     console.error('Error fetching courses for coach:', error);
     res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+exports.getUnassignedCourses = async (req, res) => {
+  const userId = req.params.userId;
+  const organizationId = req.headers.organizationid;
+  console.log(userId, organizationId);
+
+  try {
+      // Fetch user to get assigned courses
+      const user = await User.findById(userId);
+      if (!user) {
+          return res.status(404).json({ message: 'User not found' });
+      }
+
+      const orgData = user.organizations.find(org =>
+          org.org_id && org.org_id.toString() === organizationId.toString()
+      );
+
+      if (!orgData) {
+          return res.status(404).json({ message: 'Organization not found for this user' });
+      }
+
+      // Ensure courses exist and have course_id defined
+      const assignedCourseIds = orgData.courses
+          ? orgData.courses
+              .filter(course => course && course.course_id) // Filter out undefined or null courses
+              .map(course => course.course_id.toString())
+          : [];
+       
+      // Fetch courses not assigned to the user
+      const courses = await Course.find({
+          organization: organizationId,
+          _id: { $nin: assignedCourseIds } // Exclude assigned courses
+      }).populate('batches');
+     console.log(courses);
+      res.json(courses);
+  } catch (error) {
+      console.error('Error fetching unassigned courses:', error);
+      res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+
+exports.getAssignedCourses = async (req, res) => {
+  const userId = req.params.userId;
+  const organizationId = req.headers.organizationid;
+  console.log(userId, organizationId);
+
+  try {
+      // Fetch user to get assigned courses
+      const user = await User.findById(userId);
+      if (!user) {
+          return res.status(404).json({ message: 'User not found' });
+      }
+
+      const orgData = user.organizations.find(org =>
+          org.org_id && org.org_id.toString() === organizationId.toString()
+      );
+
+      if (!orgData) {
+          return res.status(404).json({ message: 'Organization not found for this user' });
+      }
+
+      // Ensure courses exist and have course_id defined
+      const assignedCourseIds = orgData.courses
+          ? orgData.courses
+              .filter(course => course && course.course_id) // Filter out undefined or null courses
+              .map(course => course.course_id.toString())
+          : [];
+
+      // Fetch only assigned courses
+      const courses = await Course.find({
+          organization: organizationId,
+          _id: { $in: assignedCourseIds } // Only include assigned courses
+      }).populate('batches');
+
+      console.log(courses); // Log the fetched courses
+      res.json(courses);
+  } catch (error) {
+      console.error('Error fetching assigned courses:', error);
+      res.status(500).json({ error: 'Internal server error' });
   }
 };

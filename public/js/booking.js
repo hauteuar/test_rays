@@ -142,7 +142,7 @@ $(document).ready(function () {
             .addClass('booked')
             .css('background-color', 'red')
             .html(`<div class="booking-block" data-booking-id="${booking._id}" style="cursor: pointer;">
-                                ${booking.userId.firstName} ${booking.userId.lastName}<br>${booking.status}</div>`);
+                                ${booking.userId.firstName} ${booking.userId.lastName}<br>${booking.paymentStatus}</div>`);
         }
       });
 
@@ -293,7 +293,7 @@ $(document).ready(function () {
               .addClass('booked')
               .css('background-color', 'red')
               .html(`<div class="booking-block" data-booking-id="${booking._id}" style="cursor: pointer;">
-                      ${booking.userId.firstName} ${booking.userId.lastName}<br>${booking.status}</div>`);
+                      ${booking.userId.firstName} ${booking.userId.lastName}<br>${booking.paymentStatus}</div>`);
         }
       });
       
@@ -799,91 +799,181 @@ if (selectedCourt) {
     });
   });
 
-// Event listener for saving the booking
-$('#saveBooking').click(function () {
-  const courtId = $('#court-select').val();
-  const sportId = $('#sportId').val();
-  const userId = $('#userSelect').val();
-  const bookingDate = $('#startDate').val();
-  const startTime = $('#startTime').val();
-  const endTime = $('#endTime').val();
-  const paymentType = $('#paymentType').val();
-  const bookingNote = $('#bookingNote').val();
-  const discountAmount = parseFloat($('#discountAmount').val()) || 0;
-  const totalAmount = parseFloat($('#totalAmount').text().substring(1)) || 0;
-
-  if (!courtId || !userId || !sportId || !bookingDate || !startTime || !endTime || !organizationId) {
-    alert('Please fill all required fields.');
-    return;
-  }
-
-  // Format dates correctly
-  const startDateTime = new Date(`${bookingDate}T${startTime}:00`).toISOString();
-  const endDateTime = new Date(`${bookingDate}T${endTime}:00`).toISOString();
-
-  $.ajax({
-    url: '/api/book/add-booking',
-    method: 'POST',
-    headers: { 'organizationId': organizationId },
-    contentType: 'application/json',
-    data: JSON.stringify({
-      courtId,
-      userId,
-      sportId,
-      organizationId,
-      startTime: startDateTime,
-      endTime: endDateTime,
-      paymentType,
-      bookingNote,
-      discountAmount,
-      totalAmount,
-      status: 'pending'
-    }),
-    success: function (response) {
-      alert('Booking added successfully');
-      $('#new_booking').modal('hide');
-      addToCart(response._id, totalAmount, courtId, sportId, userId); // Add booking to cart with additional info
-      loadBookings(() => {
-        initializeCalendar(view);
-      });
-    },
-    error: function (error) {
-      alert('Error adding booking: ' + (error.responseJSON ? error.responseJSON.message : 'Unknown error'));
+  $('#saveBooking').click(function () {
+    const courtId = $('#court-select').val();
+    const sportId = $('#sportId').val();
+    const userId = $('#userSelect').val();
+    const bookingDate = $('#startDate').val();
+    const startTime = $('#startTime').val();
+    const endTime = $('#endTime').val();
+    const paymentType = $('#paymentType').val();
+    const bookingNote = $('#bookingNote').val();
+    const discountAmount = parseFloat($('#discountAmount').val()) || 0;
+    const totalAmount = parseFloat($('#totalAmount').text().substring(1)) || 0;
+  
+    if (!courtId || !userId || !sportId || !bookingDate || !startTime || !endTime || !organizationId) {
+      alert('Please fill all required fields.');
+      return;
     }
+  
+    // Format dates correctly
+    const startDateTime = new Date(`${bookingDate}T${startTime}:00`).toISOString();
+    const endDateTime = new Date(`${bookingDate}T${endTime}:00`).toISOString();
+  
+    $.ajax({
+      url: '/api/book/add-booking',
+      method: 'POST',
+      headers: { 'organizationId': organizationId },
+      contentType: 'application/json',
+      data: JSON.stringify({
+        courtId,
+        userId,
+        sportId,
+        organizationId,
+        startTime: startDateTime,
+        endTime: endDateTime,
+        paymentType,
+        bookingNote,
+        discountAmount,
+        totalAmount,
+        status: 'pending'
+      }),
+      success: function (response) {
+        const transactionId = generateTransactionId('booking');
+        saveTransactionId(response._id, transactionId, 'booking', totalAmount, paymentType);
+        alert('Booking added successfully');
+        $('#new_booking').modal('hide');
+        //addToCart(response._id, totalAmount, courtId, sportId, userId, transactionId); // Add booking to cart with additional info
+        loadBookings(() => {
+          initializeCalendar(view);
+        });
+      },
+      error: function (error) {
+        alert('Error adding booking: ' + (error.responseJSON ? error.responseJSON.message : 'Unknown error'));
+      }
+    });
   });
-});
+  
+  function generateTransactionId(itemType) {
+    let prefix = '';
+  
+    switch (itemType) {
+      case 'booking':
+        prefix = 'bki_';
+        break;
+      case 'course':
+        prefix = 'crs_';
+        break;
+      case 'ecom':
+        prefix = 'com_';
+        break;
+      case 'combined':
+        prefix = 'cmd_';
+        break;
+      default:
+        prefix = 'txn_';
+        break;
+    }
+  
+    return prefix + Math.random().toString(36).substr(2, 9);
+  }
+  
+  async function saveTransactionId(itemId, transactionId, itemType, amount, paymentMethod) {
+    const saveData = {
+      transactionId,
+      userId: $('#userSelect').val(),
+      organizationId: localStorage.getItem('organizationId'),
+      itemType,
+      itemId,
+      amount,
+      paymentMethod,  // Ensure paymentMethod is included
+      paymentStatus: 'pending'
+    };
+  
+    try {
+      const response = await fetch('/api/payments/save-transaction', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(saveData),
+      });
+  
+      const result = await response.json();
+      if (!result.success) {
+        console.error('Failed to save transaction ID');
+      }
 
-function addToCart(bookingId, totalAmount, courtId, sportId, userId) {
-  // Get the current cart from localStorage or initialize an empty one
-  let cart = JSON.parse(localStorage.getItem('cart')) || { items: [], totalAmount: 0 };
+      await addToCart(result.payment._id, itemId, amount, itemType, organizationId);
 
-  // Add the new booking to the cart
-  cart.items.push({
-    type: 'booking',
-    itemId: bookingId,
-    price: totalAmount,
-    quantity: 1,
+    } catch (error) {
+      console.error('Error saving transaction ID:', error);
+    }
+  }
+  
+  async function addToCart(paymentId, itemId, price, itemType, organizationId) {
+    //fetchUserProfile();
+   // const organizationId = localStorage.getItem('organizationId'); 
+    console.log('payment-org-id',paymentId, itemId, price, itemType, organizationId);
+
+    const cartData = {
+    paymentId,
+    itemId,
+    price,
+    itemType,
     status: 'pending',
-    courtId,
-    sportId,
-    userId
-  });
+  };
 
-  // Update the total amount in the cart
-  cart.totalAmount += totalAmount;
+  try {
+    const userId = localStorage.getItem('userId');
+    const organizationId = localStorage.getItem('organizationId'); 
+    console.log(organizationId);
+    
+    const response = await fetch(`/api/cart/${userId}/add-item/${organizationId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'organizationId': organizationId,
+      },
+      body: JSON.stringify(cartData),
+    });
 
-  // Save the updated cart to localStorage
-  localStorage.setItem('cart', JSON.stringify(cart));
+    const result = await response.json();
+    if (!result.success) {
+      console.error('Failed to add item to cart');
+    }
+  } catch (error) {
+    console.error('Error adding item to cart:', error);
+  }
+}
+async function updateCartIcon() {
+  try {
+    const userId = localStorage.getItem('userId'); // Assume you have stored the user's ID in localStorage
+    const organizationId = localStorage.getItem('organizationId'); // Get organizationId from localStorage
 
-  // Update the cart icon on the top bar
-  updateCartIcon();
+    const response = await fetch(`/api/cart/${userId}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'organizationId': organizationId,
+      }
+    });
+
+    if (response.ok) {
+      const cart = await response.json();
+      const cartCount = cart.items.length;
+      $('#cart-icon').text(cartCount); // Assuming there's a cart icon with ID 'cart-icon'
+    } else {
+      console.error('Failed to load cart data');
+      $('#cart-icon').text(0); // Set to 0 if cart data cannot be loaded
+    }
+  } catch (error) {
+    console.error('Error updating cart icon:', error);
+    $('#cart-icon').text(0); // Set to 0 in case of error
+  }
 }
 
-function updateCartIcon() {
-  const cart = JSON.parse(localStorage.getItem('cart')) || { items: [] };
-  const cartCount = cart.items.length;
-  $('#cart-icon').text(cartCount); // Assuming there's a cart icon with ID 'cart-icon'
-}
+// Call this function on page load or after any cart update
+document.addEventListener('DOMContentLoaded', updateCartIcon);
 
   
   // Show add user modal if user is not found

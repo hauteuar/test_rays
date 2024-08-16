@@ -20,5 +20,8 @@ router.put('/progress', authMiddleware,  taskController.updateTaskProgress);
 router.put('/tasks/:taskId', authMiddleware, taskController.updateTask);
 
 router.post('/student/submit-task', authMiddleware, taskController.submitTaskByStudent);
+router.get('/return', taskController.returnTask);
+router.get('/complete', taskController.completeTask);
+router.get('/:taskId/submission/:studentId', taskController.getSubmissionByStudent);
 
 module.exports = router;

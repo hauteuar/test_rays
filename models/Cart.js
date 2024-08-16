@@ -1,54 +1,62 @@
 const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
-const CartSchema = new mongoose.Schema({
+const cartItemSchema = new Schema({
   userId: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: 'User',
     required: true,
   },
-  items: [{
-    type: {
-      type: String,
-      enum: ['booking', 'course'],
-      required: true,
-    },
-    itemId: {
-      type: mongoose.Schema.Types.ObjectId,
-      required: true,
-      refPath: 'items.type',
-    },
-    price: {
-      type: Number,
-      required: true,
-    },
-    quantity: {
-      type: Number,
-      default: 1,
-    },
-    status: {
-      type: String,
-      enum: ['pending', 'completed'],
-      default: 'pending',
-    },
-    studentId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: function() { return this.type === 'course'; } // Only required for course items
-    },
-    batchId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Batch',
-      required: function() { return this.type === 'course'; } // Only required for course items
-    }
-  }],
-  totalAmount: {
+  paymentId: {
+    type: Schema.Types.ObjectId,
+    ref: 'Payment',
+    required: true,
+  },
+  organizationId: {
+    type: Schema.Types.ObjectId,
+    ref: 'Organization',
+    required: true,
+  },
+  itemType: {
+    type: String,
+    enum: ['booking', 'course', 'ecom'],
+    required: true,
+  },
+  itemId: {
+    type: Schema.Types.ObjectId,
+    required: true,
+    // References the booking, course, or e-commerce item
+  },
+  price: {
     type: Number,
     required: true,
+  },
+  quantity: {
+    type: Number,
+    default: 1,
+  },
+  status: {
+    type: String,
+    enum: ['pending', 'completed', 'failed'],
+    default: 'pending',
   },
   createdAt: {
     type: Date,
     default: Date.now,
   },
+  updatedAt: {
+    type: Date,
+    default: Date.now,
+  },
+});
+
+const CartSchema = new Schema({
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
+  items: [cartItemSchema],
 });
 
 module.exports = mongoose.model('Cart', CartSchema);

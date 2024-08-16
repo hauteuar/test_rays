@@ -34,6 +34,7 @@ class Sidebar extends HTMLElement {
                 const organization = data.organizations[0];
                 localStorage.setItem('organizationId', organization.org_id);
                 localStorage.setItem('organizationName', organization.org_id);
+                localStorage.setItem('role', data.role);
             }
 
             this.renderSidebar(data);
@@ -74,14 +75,6 @@ class Sidebar extends HTMLElement {
       case 'admin':
       case 'org_admin':
         return `
-          <a href="dashboard.html">
-            <li class="nav-item ${page == 'dashboard' ? 'active' : ''}">
-              <div class="nav-link">
-                <img src="images/dashboard.png">
-                <span class="menu-title">Dashboard</span>
-              </div>
-            </li>
-          </a>
           <a href="booking_management.html">
             <li class="nav-item ${page == 'calendar' ? 'active' : ''}">
               <div class="nav-link">
@@ -182,18 +175,10 @@ class Sidebar extends HTMLElement {
       case 'coach':
       case 'freelance_coach':
         return `
-          <a href="dashboard.html">
-            <li class="nav-item ${page == 'dashboard' ? 'active' : ''}">
-              <div class="nav-link">
-                <img src="images/dashboard.png">
-                <span class="menu-title">Dashboard</span>
-              </div>
-            </li>
-          </a>
           <a href="assignmentview.html">
             <li class="nav-item ${page == 'assignments' ? 'active' : ''}">
               <div class="nav-link">
-                <img src="images/assignments.png">
+                <img src="images/assesments.png">
                 <span class="menu-title">Assignments</span>
               </div>
             </li>
@@ -201,7 +186,7 @@ class Sidebar extends HTMLElement {
           <a href="live_practice.html">
             <li class="nav-item ${page == 'live_practice' ? 'active' : ''}">
               <div class="nav-link">
-                <img src="images/live_practice.png">
+                <img src="images/live-practice.png">
                 <span class="menu-title">Live Practice</span>
               </div>
             </li>
@@ -209,7 +194,7 @@ class Sidebar extends HTMLElement {
           <a href="live_chat.html">
             <li class="nav-item ${page == 'live_chat' ? 'active' : ''}">
               <div class="nav-link">
-                <img src="images/live_chat.png">
+                <img src="images/live-chat.png">
                 <span class="menu-title">Live Chat</span>
               </div>
             </li>
@@ -217,7 +202,7 @@ class Sidebar extends HTMLElement {
           <a href="my_team.html">
             <li class="nav-item ${page == 'my_team' ? 'active' : ''}">
               <div class="nav-link">
-                <img src="images/my_team.png">
+                <img src="images/team.png">
                 <span class="menu-title">My Team</span>
               </div>
             </li>
@@ -233,7 +218,7 @@ class Sidebar extends HTMLElement {
           <a href="player_stats.html">
             <li class="nav-item ${page == 'player_stats' ? 'active' : ''}">
               <div class="nav-link">
-                <img src="images/player_stats.png">
+                <img src="images/stats-match.png">
                 <span class="menu-title">Player Stats</span>
               </div>
             </li>
@@ -241,15 +226,15 @@ class Sidebar extends HTMLElement {
           <a href="fitness_testing.html">
             <li class="nav-item ${page == 'fitness_testing' ? 'active' : ''}">
               <div class="nav-link">
-                <img src="images/fitness_testing.png">
+                <img src="images/fitness.png">
                 <span class="menu-title">Fitness Testing</span>
               </div>
             </li>
           </a>
-          <a href="my_schedule.html">
+          <a href="coach-details.html">
             <li class="nav-item ${page == 'my_schedule' ? 'active' : ''}">
               <div class="nav-link">
-                <img src="images/my_schedule.png">
+                <img src="images/schedule.png">
                 <span class="menu-title">My Schedule</span>
               </div>
             </li>
@@ -265,26 +250,18 @@ class Sidebar extends HTMLElement {
         `;
       case 'student':
         return `
-          <a href="dashboard.html">
-            <li class="nav-item ${page == 'dashboard' ? 'active' : ''}">
-              <div class="nav-link">
-                <img src="images/dashboard.png">
-                <span class="menu-title">Dashboard</span>
-              </div>
-            </li>
-          </a>
           <a href="live_practice.html">
             <li class="nav-item ${page == 'live_practice' ? 'active' : ''}">
               <div class="nav-link">
-                <img src="images/live_practice.png">
+                <img src="images/live-practice.png">
                 <span class="menu-title">Live Practice</span>
               </div>  
             </li>
           </a>
-          <a href="student_task.html">
+          <a href="student_tasks.html">
             <li class="nav-item ${page == 'my_task' ? 'active' : ''}">
               <div class="nav-link">
-                <img src="images/tasks.png">
+                <img src="images/assesments.png">
                 <span class="menu-title">My Task</span>
               </div>
             </li>
@@ -294,6 +271,14 @@ class Sidebar extends HTMLElement {
               <div class="nav-link">
                 <img src="images/uploads.png">
                 <span class="menu-title">Uploads</span>
+              </div>
+            </li>
+          </a>
+          <a href="student_course_list.html">
+            <li class="nav-item ${page == 'coaches' ? 'active' : ''}">
+              <div class="nav-link">
+                <img src="images/course.png">
+                <span class="menu-title">Courses</span>
               </div>
             </li>
           </a>
@@ -308,7 +293,7 @@ class Sidebar extends HTMLElement {
           <a href="live_chat.html">
             <li class="nav-item ${page == 'live_chat' ? 'active' : ''}">
               <div class="nav-link">
-                <img src="images/live_chat.png">
+                <img src="images/live-chat.png">
                 <span class="menu-title">Live Chat</span>
               </div>
             </li>
@@ -316,16 +301,8 @@ class Sidebar extends HTMLElement {
           <a href="my_stats.html">
             <li class="nav-item ${page == 'my_stats' ? 'active' : ''}">
               <div class="nav-link">
-                <img src="images/stats.png">
+                <img src="images/stats-match.png">
                 <span class="menu-title">My Stats</span>
-              </div>
-            </li>
-          </a>
-          <a href="courses.html">
-            <li class="nav-item ${page == 'courses' ? 'active' : ''}">
-              <div class="nav-link">
-                <img src="images/courses.png">
-                <span class="menu-title">Courses</span>
               </div>
             </li>
           </a>
@@ -340,7 +317,7 @@ class Sidebar extends HTMLElement {
           <a href="my_fitness_training.html">
             <li class="nav-item ${page == 'my_fitness_training' ? 'active' : ''}">
               <div class="nav-link">
-                <img src="images/fitness_training.png">
+                <img src="images/fitness.png">
                 <span class="menu-title">My Fitness Training</span>
               </div>
             </li>

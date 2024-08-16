@@ -5,7 +5,9 @@ const multer = require('multer');
 
 // Configure multer storage
 const storage = multer.memoryStorage(); // Store files in memory for simplicity
-const upload = multer({ storage: storage });
+const upload = multer({ storage: storage,
+    limits: { fileSize: 50 * 1024 * 1024 } 
+ });
 
 // Middleware to handle file uploads
 const uploadMiddleware = upload.any(); // Use .any() to accept all file types
@@ -13,7 +15,16 @@ const uploadMiddleware = upload.any(); // Use .any() to accept all file types
 // Create a new task
 exports.createTask = async (req, res) => {
     try {
-        const { title, description, assignedBy, courseId, batchId, assignedTo, media, organizationId } = req.body;
+        const { title, description, assignedBy, courseId, batchId, assignedTo, organizationId, media } = req.body;
+        
+        // Log the received files
+        //console.log("Files received:", req.files);
+
+        // Process uploaded files and convert them to base64
+     
+        
+        // Log the processed media
+        //console.log("Media processed:", media);
 
         const task = new Task({
             title,
@@ -51,18 +62,19 @@ exports.getTasksForCoach = async (req, res) => {
     }
 };
 
+
 exports.getTasksForCoachByOrg = async (req, res) => {
     try {
         const { coachId, organizationId } = req.params;
 
         // Validate that coachId and organizationId are valid ObjectId strings
-        if (!coachId || !organizationId) {
+        if (!mongoose.Types.ObjectId.isValid(coachId) || !mongoose.Types.ObjectId.isValid(organizationId)) {
             return res.status(400).json({ error: 'Invalid coachId or organizationId' });
         }
 
         const tasks = await Task.find({
-            assignedBy: coachId,
-            organizationId: organizationId
+            assignedBy: new mongoose.Types.ObjectId(coachId),
+            organizationId: new mongoose.Types.ObjectId(organizationId)
         }).populate('assignedTo');
         
         res.json(tasks);
@@ -91,19 +103,30 @@ exports.getTaskDetails = async (req, res) => {
 // Submit a task by a student
 exports.submitTask = async (req, res) => {
     try {
-        const { taskId, studentId, submissionType, submissionContent } = req.body;
+        const { taskId, studentId, submissionType = 'text', submissionContent = '' } = req.body;
 
         const task = await Task.findById(taskId);
         if (!task) {
             return res.status(404).json({ error: 'Task not found' });
         }
 
+        // Initialize a new submission object
         const submission = {
             studentId,
             submissionType,
             submissionContent,
+            media: {}, // Initialize an empty media map
             status: 'submitted',
         };
+
+        // Handle media files in the submission
+        if (req.files && req.files.length > 0) {
+            req.files.forEach((file, index) => {
+                const base64String = file.buffer.toString('base64');
+                const mediaKey = `media${index}`;
+                submission.media[mediaKey] = `data:${file.mimetype};base64,${base64String}`;
+            });
+        }
 
         task.submissions.push(submission);
         task.updatedAt = Date.now();
@@ -177,15 +200,19 @@ exports.getTasksForCoachByOrg = async (req, res) => {
         const { coachId, organizationId } = req.params;
 
         // Validate ObjectIds
-        if (!mongoose.Types.ObjectId.isValid(coachId) || !mongoose.Types.ObjectId.isValid(organizationId)) {
+        if (!mongoose.isValidObjectId(coachId) || !mongoose.isValidObjectId(organizationId)) {
             return res.status(400).json({ error: 'Invalid coachId or organizationId' });
         }
 
+        // Convert strings to ObjectId
+        const coachObjectId = new mongoose.Types.ObjectId(coachId);
+        const organizationObjectId = new mongoose.Types.ObjectId(organizationId);
+
         const tasks = await Task.find({
-            assignedBy: mongoose.Types.ObjectId(coachId),
-            organizationId: mongoose.Types.ObjectId(organizationId)
+            assignedBy: coachObjectId,
+            organizationId: organizationObjectId
         }).populate('assignedTo');
-        
+
         res.json(tasks);
     } catch (error) {
         console.error('Error fetching tasks:', error);
@@ -193,7 +220,6 @@ exports.getTasksForCoachByOrg = async (req, res) => {
     }
 };
 
-// Backend - taskController.js
 
 exports.submitTaskByStudent = async (req, res) => {
     uploadMiddleware(req, res, async function (err) {
@@ -280,6 +306,87 @@ exports.getTasksForStudent = async (req, res) => {
         res.status(200).json(tasks);
     } catch (error) {
         console.error('Error fetching tasks for student:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+exports.returnTask = async (req, res) => {
+    try {
+        const { taskId, studentId, comment } = req.body;
+
+        const task = await Task.findById(taskId);
+        if (!task) {
+            return res.status(404).json({ error: 'Task not found' });
+        }
+
+        const submission = task.submissions.find(sub => sub.studentId.toString() === studentId);
+        if (!submission) {
+            return res.status(404).json({ error: 'Submission not found' });
+        }
+
+        submission.status = 'assigned'; // Reset the status to assigned
+        submission.progressNotes = comment; // Add the comment as progress notes
+        submission.updatedAt = Date.now();
+
+        await task.save();
+
+        res.status(200).json({ message: 'Task returned successfully', task });
+    } catch (error) {
+        console.error('Error returning task:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+exports.completeTask = async (req, res) => {
+    try {
+        const { taskId, studentId, comment } = req.body;
+
+        const task = await Task.findById(taskId);
+        if (!task) {
+            return res.status(404).json({ error: 'Task not found' });
+        }
+
+        const submission = task.submissions.find(sub => sub.studentId.toString() === studentId);
+        if (!submission) {
+            return res.status(404).json({ error: 'Submission not found' });
+        }
+
+        submission.status = 'completed'; // Reset the status to assigned
+        submission.progressNotes = comment; // Add the comment as progress notes
+        submission.updatedAt = Date.now();
+
+        await task.save();
+
+        res.status(200).json({ message: 'Task returned successfully', task });
+    } catch (error) {
+        console.error('Error returning task:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+exports.getSubmissionByStudent = async (req, res) => {
+    try {
+        const { taskId, studentId } = req.params;
+
+        // Validate the taskId and studentId as ObjectIds
+        if (!mongoose.Types.ObjectId.isValid(taskId) || !mongoose.Types.ObjectId.isValid(studentId)) {
+            return res.status(400).json({ error: 'Invalid taskId or studentId' });
+        }
+
+        // Find the task by taskId
+        const task = await Task.findById(taskId).populate('submissions.studentId');
+
+        if (!task) {
+            return res.status(404).json({ error: 'Task not found' });
+        }
+
+        // Find the specific submission by the student
+        const submission = task.submissions.find(sub => sub.studentId._id.toString() === studentId);
+
+        if (!submission) {
+            return res.status(404).json({ error: 'Submission not found for this student' });
+        }
+
+        res.status(200).json(submission);
+    } catch (error) {
+        console.error('Error fetching submission:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 };

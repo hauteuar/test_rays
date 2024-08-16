@@ -40,6 +40,9 @@
                   <li class="nav-item" role="presentation">
                     <a class="nav-link" id="pills-history-tab" data-toggle="pill" href="#pills-history" role="tab" aria-controls="pills-history" aria-selected="false">Assignment History</a>
                   </li>
+                  <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="pills-status-tab" data-toggle="pill" href="#pills-status" role="tab" aria-controls="pills-status" aria-selected="false">Assignment Status</a>
+                </li>              
                 </ul>
               </div>
               <div class="tab-content" id="pills-tabContent">
@@ -84,7 +87,13 @@
                     <!-- List of created assignments will be dynamically loaded here -->
                   </div>
                 </div>
-
+                <!---- Assignment Status -->
+                <div class="tab-pane fade" id="pills-status" role="tabpanel" aria-labelledby="pills-status-tab">
+                  <div class="row" id="assignmentStatusList">
+                      <!-- Assignment status list will be dynamically loaded here -->
+                  </div>
+              </div>
+              
                 <!-- Assignment History Tab -->
                 <div class="tab-pane fade" id="pills-history" role="tabpanel" aria-labelledby="pills-history-tab">
                   <div class="row m-0">
@@ -159,6 +168,35 @@
                     </div>
                   </div>
                 </div>
+              <!-- Modal for viewing submitted task -->
+<div class="modal fade" id="viewSubmissionModal" tabindex="-1" role="dialog" aria-labelledby="viewSubmissionModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="viewSubmissionModalLabel">View Submission</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h4 id="modalTaskTitle">Task Title</h4>
+        <p id="modalTaskDescription">Task Description</p>
+        <div id="modalMediaContainer">
+          <!-- Media content will be dynamically inserted here -->
+        </div>
+        <div id="modalSubmissionContent">
+          <!-- Text submission will be dynamically inserted here -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <textarea id="returnComment" class="form-control" placeholder="Add comment for return" style="display:none;"></textarea>
+        <button type="button" class="btn btn-secondary" id="returnTaskBtn" style="display:none;">Return Task</button>
+        <button type="button" class="btn btn-primary" id="enterProgressReportBtn">Enter Progress Report</button>
+      </div>
+    </div>
+  </div>
+</div>
+
                 <script type="text/javascript">
                   $(document).ready(function() {
                     const organizationId = localStorage.getItem('organizationId'); // Assuming org ID is stored in local storage
@@ -170,6 +208,7 @@
                       .then(tasks => {
                         displayAssignments(tasks);
                         displayEditAssignments(tasks);
+                        displayAssignmentStatus(tasks);
                       })
                       .catch(error => console.error('Error fetching tasks:', error));
 
@@ -184,6 +223,7 @@
 
                     // Display assignments in the Assignments tab
                     function displayAssignments(tasks) {
+                      console.log(tasks);
                       const assignmentsList = $('#assignmentsList');
                       assignmentsList.empty();
                       tasks.forEach(task => {
@@ -286,6 +326,153 @@
 
                     $('#allHistory, #practiceHistory').on('click', fetchAssignmentHistory);
                   });
+                  function displayAssignmentStatus(tasks) {
+        const assignmentStatusList = $('#assignmentStatusList');
+        assignmentStatusList.empty();
+        console.log(tasks);
+        tasks.forEach(task => {
+    const submissionsHtml = task.submissions.map(submission => {
+        // Find the student in the assignedTo array
+        const student = task.assignedTo.find(student => student._id.toString() === submission.studentId.toString());
+
+        // Check if the student exists in the assignedTo array
+        if (!student) {
+            return `<p><strong>Student not found</strong>: ${submission.status}</p>`;
+        }
+
+        return `
+            <div class="submission">
+                <p><strong>${student.firstName} ${student.lastName}</strong>: ${submission.status}</p>
+                <button class="btn btn-info" onclick="viewSubmission('${task._id}', '${student._id}')">View Submission</button>
+                <button class="btn btn-primary" onclick="location.href='feedback.html?taskId=${task._id}&studentId=${student._id}'">Enter Progress Report</button>
+            </div>
+        `;
+    }).join('');
+
+    const statusCard = `
+        <div class="col-md-4 hwzthat-cards-col">
+            <div class="card hwzthat-cards">
+                <div class="d-flex align-items-start justify-content-between">
+                    <div class="flex-align2 g2 mb-2">
+                        <h4 class="mb-0" style="font-size: 14px;">${task.title}</h4>
+                        <button class="btn btn-warning btn-sm" style="border-color:#C93232;background: #ffe5e5;color: #C93232;">${task.status}</button>
+                    </div>
+                </div>
+                <div>
+                    ${submissionsHtml || '<p>No submissions yet.</p>'}
+                </div>
+            </div>
+        </div>
+    `;
+    assignmentStatusList.append(statusCard);
+});
+
+    }
+
+// Function to view a specific submission (implementation needed)
+function viewSubmission(taskId, studentId) {
+    const organizationId = localStorage.getItem('organizationId');
+
+    // Fetch the task details
+    fetch(`/api/tasks/${taskId}/submission/${studentId}`, {
+        headers: { 'organizationId': organizationId }
+    })
+    .then(response => response.json())
+    .then(submission => {
+        // Display the submission details in the modal
+        console.log(submission);
+        $('#modalTaskTitle').text(submission.title || 'No Title');
+        $('#modalTaskDescription').text(submission.description || 'No Description');
+        const mediaContainer = $('#modalMediaContainer');
+        const submissionContent = $('#modalSubmissionContent');
+        mediaContainer.empty();
+        submissionContent.empty();
+
+        if (submission.media && Object.keys(submission.media).length > 0) {
+            Object.keys(submission.media).forEach(mediaKey => {
+                const mediaUrl = submission.media[mediaKey];
+                
+                // Extract media type from base64 string
+                const mediaType = mediaUrl.split(';')[0].split(':')[1];
+                
+                let mediaElement;
+
+                if (mediaType.startsWith('video/')) {
+                    mediaElement = `<video controls width="100%">
+                                      <source src="${mediaUrl}" type="${mediaType}">
+                                      Your browser does not support the video tag.
+                                    </video>`;
+                } else if (mediaType.startsWith('audio/')) {
+                    mediaElement = `<audio controls>
+                                      <source src="${mediaUrl}" type="${mediaType}">
+                                      Your browser does not support the audio element.
+                                    </audio>`;
+                } else if (mediaType.startsWith('image/')) {
+                    mediaElement = `<img src="${mediaUrl}" alt="Media" style="width: 100%;">`;
+                } else {
+                    mediaElement = `<p>Unsupported media type.</p>`;
+                }
+
+                mediaContainer.append(mediaElement);
+            });
+        } else {
+            mediaContainer.html('<p>No media available</p>');
+        }
+
+        if (submission.submissionContent) {
+            submissionContent.html(`<p>${submission.submissionContent}</p>`);
+        }
+
+        // Show return comment textarea and button based on the current task status
+        $('#returnComment').toggle(submission.status === 'submitted');
+        $('#returnTaskBtn').toggle(submission.status === 'submitted');
+
+        // Handle the Enter Progress Report button click
+        $('#enterProgressReportBtn').off('click').on('click', function() {
+            window.location.href = `feedback.html?taskId=${taskId}&studentId=${studentId}`;
+        });
+
+        // Handle the Return Task button click
+        $('#returnTaskBtn').off('click').on('click', function() {
+            const comment = $('#returnComment').val();
+            if (comment.trim()) {
+                returnTask(taskId, studentId, comment);
+            } else {
+                alert('Please enter a comment for returning the task.');
+            }
+        });
+
+        // Open the modal
+        $('#viewSubmissionModal').modal('show');
+    })
+    .catch(error => console.error('Error fetching task:', error));
+}
+
+function returnTask(taskId, studentId, comment) {
+    const organizationId = localStorage.getItem('organizationId');
+
+    fetch(`/api/tasks/return`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'organizationId': organizationId
+        },
+        body: JSON.stringify({
+            taskId,
+            studentId,
+            comment
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert('Task returned successfully');
+        $('#viewSubmissionModal').modal('hide');
+        // Optionally, refresh the assignment list or status
+    })
+    .catch(error => console.error('Error returning task:', error));
+}
+
+
                 </script>
               </div>
             </div>
@@ -294,6 +481,7 @@
       </div>
     </div>
   </div>
+  
   <script src="vendors/js/vendor.bundle.base.js"></script>
   <script src="js/off-canvas.js"></script>
   <script src="js/template.js"></script>

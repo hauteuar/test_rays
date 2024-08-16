@@ -76,7 +76,8 @@
                       <div class="drop-file-card" id="cameraBtn" style="border: 1px solid #19AF79;background: #fff;">
                         <img src="images/camera2.png">
                         <h6>Camera</h6>
-                      </div></div>
+                      </div>
+                    </div>
                     </div>
                   </div>
                   <button id="submitBtn" class="btn btn-success mt-3">Submit Task</button>
@@ -95,7 +96,7 @@
   <script src="js/off-canvas.js"></script>
   <script src="js/template.js"></script>
   <script>
-    $(document).ready(function () {
+ $(document).ready(function () {
     const taskId = new URLSearchParams(window.location.search).get('taskId');
     const studentId = localStorage.getItem('studentId');
     const organizationId = localStorage.getItem('organizationId');
@@ -127,7 +128,6 @@
         $('#taskDescription').text(task.description || 'No Description');
         const mediaContainer = $('#mediaContainer');
         mediaContainer.empty();
-        console.log(task);
         if (task.media && Object.keys(task.media).length > 0) {
             Object.keys(task.media).forEach(mediaKey => {
                 const mediaUrl = task.media[mediaKey];
@@ -190,68 +190,40 @@
         }).click();
     });
 
-    // Handle recording video
-    $('#cameraBtn').on('click', async function () {
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-            const mediaRecorder = new MediaRecorder(stream);
-
-            mediaRecorder.ondataavailable = function (event) {
-                if (event.data.size > 0) {
-                    recordedChunks.push(event.data);
-                }
-            };
-
-            mediaRecorder.onstop = function () {
-                const blob = new Blob(recordedChunks, { type: 'video/mp4' });
-                const url = URL.createObjectURL(blob);
-                $('#mediaContainer').append(`<video controls width="100%"><source src="${url}" type="video/mp4">Your browser does not support the video tag.</video>`);
-            };
-
-            mediaRecorder.start();
-            setTimeout(() => mediaRecorder.stop(), 5000); // Stop recording after 5 seconds for demo purposes
-        } catch (error) {
-            console.error('Error recording video:', error);
-        }
-    });
-
-    // Handle recording audio
-    $('#recordBtn').on('click', async function () {
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            const mediaRecorder = new MediaRecorder(stream);
-
-            mediaRecorder.ondataavailable = function (event) {
-                if (event.data.size > 0) {
-                    recordedChunks.push(event.data);
-                }
-            };
-
-            mediaRecorder.onstop = function () {
-                const blob = new Blob(recordedChunks, { type: 'audio/mp3' });
-                const url = URL.createObjectURL(blob);
-                $('#mediaContainer').append(`<audio controls><source src="${url}" type="audio/mp3">Your browser does not support the audio element.</audio>`);
-            };
-
-            mediaRecorder.start();
-            setTimeout(() => mediaRecorder.stop(), 5000); // Stop recording after 5 seconds for demo purposes
-        } catch (error) {
-            console.error('Error recording audio:', error);
-        }
-    });
-
     // Handle task submission
     $('#submitBtn').on('click', function () {
         const submissionContent = editorInstance.getData();
         const formData = new FormData();
+        const studentId = localStorage.getItem('userId');
         formData.append('submissionContent', submissionContent);
         formData.append('taskId', taskId);
         formData.append('studentId', studentId);
 
+        let submissionType = 'text';  // Default submission type
+        const mediaMap = new Map();
+
         recordedChunks.forEach((chunk, index) => {
             if (chunk instanceof Blob) {
-                formData.append(`media${index}`, chunk, `media${index}.${chunk.type.split('/')[1]}`);
+                let mediaType;
+                if (chunk.type.startsWith('video/')) {
+                    mediaType = 'video';
+                } else if (chunk.type.startsWith('audio/')) {
+                    mediaType = 'audio';
+                } else if (chunk.type.startsWith('image/')) {
+                    mediaType = 'image';
+                }
+
+                const mediaKey = `media${index}`;
+                mediaMap.set(mediaKey, chunk);
+                submissionType = mediaType;
             }
+        });
+
+        formData.append('submissionType', submissionType);
+
+        // Add media files to FormData
+        mediaMap.forEach((value, key) => {
+            formData.append(`media[${key}]`, value, `${key}.${value.type.split('/')[1]}`);
         });
 
         fetch('/api/tasks/submit', {
@@ -271,7 +243,6 @@
             });
     });
 });
-
   </script>
 </body>
 

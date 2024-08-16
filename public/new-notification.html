@@ -18,529 +18,161 @@
     <script src="components/topnav.js" type="text/javascript" defer></script>
     <script src="components/sidebar.js" type="text/javascript" defer></script>
       
-    <style>
-      tr{
-        cursor: pointer;
-      }
-    </style>
-  
-  </head>
-  <body>
-    <div class="container-scroller">
-      <topnav-component></topnav-component>
-      <div class="container-fluid page-body-wrapper">
-        <sidebar-component data-page="new-notification"></sidebar-component>
-      
-        <div class="main-section main-section2" >
-          <div class="filter-bar mt-3 mb-4">
-            <div class="input-group1">
-              <div class="search">
-                <input type="text" placeholder="Search by title" name="search" class="input" style="min-width: 280px;">
-                <img src="images/search.png">
-              </div>
-            <div class="header-right">
-          <!-- <div class="notification">
-            <img src="images/header-notification2.png">
-            <span>1</span>
-          </div> -->
-              </div>
-      </div>
-      <div class="main-section main-section2" >
-        <div  class="flex-align3 g2">
-          <a href="notification.html">
-            <img src="images/left-arrow.png" style="width:18px;object-fit: contain;">
-          </a>
-          <h4>Send new notification</h4>
-        </div>
-        <div class="row mt-3">
-          <div class="col-xl-4 col-md-6 col-item">
-            <h5 class="font-weight-600  mb-1">Notification title</h5>
-            <input type="text" placeholder="Enter notification title" name="search" class="input w-100">
-          </div>
-          <div class="col-xl-8 col-md-6 col-item">
-            <h5 class="font-weight-600  mb-1">Notification title</h5>
-            <input type="text" placeholder="Enter notification title" name="search" class="input w-100">
-          </div>
-          
-          
-        </div>
-        <div class="row mx-0 mt-3">
-          <div class="col-12 p-0 flex-align g3" style="flex-wrap: wrap;">
-            <div class="flex-align3 g2">
-              <select class="select-input w-100" onchange="selectFilter(this)">
-                <option value="all">All Players (52)</option>
-                <option value="elite">Elite - Gold (12)</option>
-              </select>
-              <h5 class="text-primary cursor-pointer select-all" style="white-space: nowrap;">Select all</h5>
+      <style>
+            tr {
+                cursor: pointer;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container-scroller">
+            <topnav-component></topnav-component>
+            <div class="container-fluid page-body-wrapper">
+                <sidebar-component data-page="new-notification"></sidebar-component>
+    
+                <div class="main-section main-section2">
+                    <div class="filter-bar mt-3 mb-4">
+                        <div class="input-group1">
+                            <div class="search">
+                                <input type="text" placeholder="Search by title" name="search" class="input" style="min-width: 280px;">
+                                <img src="images/search.png">
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="main-section main-section2">
+                        <div class="flex-align3 g2">
+                            <a href="notification.html">
+                                <img src="images/left-arrow.png" style="width:18px;object-fit: contain;">
+                            </a>
+                            <h4>Send new notification</h4>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-xl-4 col-md-6 col-item">
+                                <h5 class="font-weight-600 mb-1">Notification Title</h5>
+                                <input type="text" id="notification-title" placeholder="Enter notification title" class="input w-100">
+                            </div>
+                            <div class="col-xl-8 col-md-6 col-item">
+                                <h5 class="font-weight-600 mb-1">Notification Message</h5>
+                                <input type="text" id="notification-message" placeholder="Enter notification message" class="input w-100">
+                            </div>
+                        </div>
+    
+                        <div class="row mx-0 mt-3">
+                            <div class="col-12 p-0 flex-align g3" style="flex-wrap: wrap;">
+                                <div class="flex-align3 g2">
+                                    <select class="select-input w-100" onchange="selectFilter(this)">
+                                        <option value="all">All Players (52)</option>
+                                        <option value="elite">Elite - Gold (12)</option>
+                                    </select>
+                                    <h5 class="text-primary cursor-pointer select-all" style="white-space: nowrap;">Select all</h5>
+                                </div>
+                                <h5 class="text-dark">Select players (12)</h5>
+                            </div>
+                            <div class="col-12 p-0">
+                                <div class="row payment-row" id="user-list">
+                                    <!-- Users will be dynamically loaded here -->
+                                </div>
+                                <div class="mt-3 d-flex justify-content-end g2">
+                                    <div class="btn btn-outline-ramblers px-4">Cancel</div>
+                                    <div class="btn btn-ramblers px-4" id="send-notification-button">Send</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <h5 class="text-dark">Select players (12)</h5>
-            
-          </div>
-          <div class="col-12  p-0">
-            <div class="row payment-row">
-              <div class="col-item filterDiv elite" style="display: block;">
-                <label class="card-1 w-100">
-                  <div class="checkbox">
-                    <input type="checkbox" name="">
-                  </div>
-                  <img src="images/user6.png">
-                  <h5 class="ellipsis">Anna Lee</h5>
-                  <h6>Member</h6>
-                </label>
-              </div>
-              <div class="col-item filterDiv elite" style="display: block;">
-                <label class="card-1 w-100">
-                  <div class="checkbox">
-                    <input type="checkbox" name="">
-                  </div>
-                  <img src="images/user7.png">
-                  <h5 class="ellipsis">Anna Lee</h5>
-                  <h6>President</h6>
-                </label>
-              </div>
-              <div class="col-item filterDiv" style="display: block;">
-                <label class="card-1 w-100">
-                  <div class="checkbox">
-                    <input type="checkbox" name="">
-                  </div>
-                  <img src="images/user8.png">
-                  <h5 class="ellipsis">Anna Lee</h5>
-                  <h6>Member</h6>
-                </label>
-              </div>
-              <div class="col-item filterDiv" style="display: block;">
-                <label class="card-1 w-100">
-                  <div class="checkbox">
-                    <input type="checkbox" name="">
-                  </div>
-                  <img src="images/user1.png">
-                  <h5 class="ellipsis">Anna Lee</h5>
-                  <h6>Member</h6>
-                </label>
-              </div>
-              <div class="col-item filterDiv elite" style="display: block;">
-                <label class="card-1 w-100">
-                  <div class="checkbox">
-                    <input type="checkbox" name="">
-                  </div>
-                  <img src="images/user5.png">
-                  <h5 class="ellipsis">Anna Lee</h5>
-                  <h6>Club Captain</h6>
-                </label>
-              </div>
-              <div class="col-item filterDiv" style="display: block;">
-                <label class="card-1 w-100">
-                  <div class="checkbox">
-                    <input type="checkbox" name="">
-                  </div>
-                  <img src="images/user2.png">
-                  <h5 class="ellipsis">Anna Lee</h5>
-                  <h6>Secretary</h6>
-                </label>
-              </div>
-              <div class="col-item filterDiv elite" style="display: block;">
-                <label class="card-1 w-100">
-                  <div class="checkbox">
-                    <input type="checkbox" name="">
-                  </div>
-                  <img src="images/user1.png">
-                  <h5 class="ellipsis">Anna Lee</h5>
-                  <h6>Member</h6>
-                </label>
-              </div>
-              <div class="col-item filterDiv" style="display: block;">
-                <label class="card-1 w-100">
-                  <div class="checkbox">
-                    <input type="checkbox" name="">
-                  </div>
-                  <img src="images/user3.png">
-                  <h5 class="ellipsis">Anna Lee</h5>
-                  <h6>Social Director</h6>
-                </label>
-              </div>
-
-              <div class="col-item filterDiv elite" style="display: block;">
-                <label class="card-1 w-100">
-                  <div class="checkbox">
-                    <input type="checkbox" name="">
-                  </div>
-                  <img src="images/user4.png">
-                  <h5 class="ellipsis">Anna Lee</h5>
-                  <h6>Member</h6>
-                </label>
-              </div>
-              <div class="col-item filterDiv" style="display: block;">
-                <label class="card-1 w-100">
-                  <div class="checkbox">
-                    <input type="checkbox" name="">
-                  </div>
-                  <img src="images/user5.png">
-                  <h5 class="ellipsis">Anna Lee</h5>
-                  <h6>Member</h6>
-                </label>
-              </div>
-              <div class="col-item filterDiv elite" style="display: block;">
-                <label class="card-1 w-100">
-                  <div class="checkbox">
-                    <input type="checkbox" name="">
-                  </div>
-                  <img src="images/user1.png">
-                  <h5 class="ellipsis">Anna Lee</h5>
-                  <h6>Member</h6>
-                </label>
-              </div>
-              <div class="col-item filterDiv" style="display: block;">
-                <label class="card-1 w-100">
-                  <div class="checkbox">
-                    <input type="checkbox" name="">
-                  </div>
-                  <img src="images/user7.png">
-                  <h5 class="ellipsis">Anna Lee</h5>
-                  <h6>Member</h6>
-                </label>
-              </div>
-              <div class="col-item filterDiv" style="display: block;">
-                <label class="card-1 w-100">
-                  <div class="checkbox">
-                    <input type="checkbox" name="">
-                  </div>
-                  <img src="images/user1.png">
-                  <h5 class="ellipsis">Anna Lee</h5>
-                  <h6>Member</h6>
-                </label>
-              </div>
-              <div class="col-item filterDiv" style="display: block;">
-                <label class="card-1 w-100">
-                  <div class="checkbox">
-                    <input type="checkbox" name="">
-                  </div>
-                  <img src="images/user8.png">
-                  <h5 class="ellipsis">Anna Lee</h5>
-                  <h6>Member</h6>
-                </label>
-              </div>
-              <div class="col-item filterDiv elite" style="display: block;">
-                <label class="card-1 w-100">
-                  <div class="checkbox">
-                    <input type="checkbox" name="">
-                  </div>
-                  <img src="images/user2.png">
-                  <h5 class="ellipsis">Anna Lee</h5>
-                  <h6>Member</h6>
-                </label>
-              </div>
-              <div class="col-item filterDiv" style="display: block;">
-                <label class="card-1 w-100">
-                  <div class="checkbox">
-                    <input type="checkbox" name="">
-                  </div>
-                  <img src="images/user3.png">
-                  <h5 class="ellipsis">Anna Lee</h5>
-                  <h6>Member</h6>
-                </label>
-              </div>
-              <div class="col-item filterDiv elite" style="display: block;">
-                <label class="card-1 w-100">
-                  <div class="checkbox">
-                    <input type="checkbox" name="">
-                  </div>
-                  <img src="images/user5.png">
-                  <h5 class="ellipsis">Anna Lee</h5>
-                  <h6>Member</h6>
-                </label>
-              </div>
-              <div class="col-item filterDiv" style="display: block;">
-                <label class="card-1 w-100">
-                  <div class="checkbox">
-                    <input type="checkbox" name="">
-                  </div>
-                  <img src="images/user2.png">
-                  <h5 class="ellipsis">Anna Lee</h5>
-                  <h6>Member</h6>
-                </label>
-              </div>
-              <div class="col-item filterDiv elite" style="display: block;">
-                <label class="card-1 w-100">
-                  <div class="checkbox">
-                    <input type="checkbox" name="">
-                  </div>
-                  <img src="images/user6.png">
-                  <h5 class="ellipsis">Anna Lee</h5>
-                  <h6>Member</h6>
-                </label>
-              </div>
-              <div class="col-item filterDiv elite" style="display: block;">
-                <label class="card-1 w-100">
-                  <div class="checkbox">
-                    <input type="checkbox" name="">
-                  </div>
-                  <img src="images/user7.png">
-                  <h5 class="ellipsis">Anna Lee</h5>
-                  <h6>President</h6>
-                </label>
-              </div>
-              <div class="col-item filterDiv" style="display: block;">
-                <label class="card-1 w-100">
-                  <div class="checkbox">
-                    <input type="checkbox" name="">
-                  </div>
-                  <img src="images/user8.png">
-                  <h5 class="ellipsis">Anna Lee</h5>
-                  <h6>Member</h6>
-                </label>
-              </div>
-              <div class="col-item filterDiv" style="display: block;">
-                <label class="card-1 w-100">
-                  <div class="checkbox">
-                    <input type="checkbox" name="">
-                  </div>
-                  <img src="images/user1.png">
-                  <h5 class="ellipsis">Anna Lee</h5>
-                  <h6>Member</h6>
-                </label>
-              </div>
-              <div class="col-item filterDiv elite" style="display: block;">
-                <label class="card-1 w-100">
-                  <div class="checkbox">
-                    <input type="checkbox" name="">
-                  </div>
-                  <img src="images/user5.png">
-                  <h5 class="ellipsis">Anna Lee</h5>
-                  <h6>Club Captain</h6>
-                </label>
-              </div>
-              <div class="col-item filterDiv" style="display: block;">
-                <label class="card-1 w-100">
-                  <div class="checkbox">
-                    <input type="checkbox" name="">
-                  </div>
-                  <img src="images/user2.png">
-                  <h5 class="ellipsis">Anna Lee</h5>
-                  <h6>Secretary</h6>
-                </label>
-              </div>
-              <div class="col-item filterDiv elite" style="display: block;">
-                <label class="card-1 w-100">
-                  <div class="checkbox">
-                    <input type="checkbox" name="">
-                  </div>
-                  <img src="images/user1.png">
-                  <h5 class="ellipsis">Anna Lee</h5>
-                  <h6>Member</h6>
-                </label>
-              </div>
-              <div class="col-item filterDiv" style="display: block;">
-                <label class="card-1 w-100">
-                  <div class="checkbox">
-                    <input type="checkbox" name="">
-                  </div>
-                  <img src="images/user3.png">
-                  <h5 class="ellipsis">Anna Lee</h5>
-                  <h6>Social Director</h6>
-                </label>
-              </div>
-
-              <div class="col-item filterDiv elite" style="display: block;">
-                <label class="card-1 w-100">
-                  <div class="checkbox">
-                    <input type="checkbox" name="">
-                  </div>
-                  <img src="images/user4.png">
-                  <h5 class="ellipsis">Anna Lee</h5>
-                  <h6>Member</h6>
-                </label>
-              </div>
-              <div class="col-item filterDiv" style="display: block;">
-                <label class="card-1 w-100">
-                  <div class="checkbox">
-                    <input type="checkbox" name="">
-                  </div>
-                  <img src="images/user5.png">
-                  <h5 class="ellipsis">Anna Lee</h5>
-                  <h6>Member</h6>
-                </label>
-              </div>
-              <div class="col-item filterDiv elite" style="display: block;">
-                <label class="card-1 w-100">
-                  <div class="checkbox">
-                    <input type="checkbox" name="">
-                  </div>
-                  <img src="images/user1.png">
-                  <h5 class="ellipsis">Anna Lee</h5>
-                  <h6>Member</h6>
-                </label>
-              </div>
-              <div class="col-item filterDiv" style="display: block;">
-                <label class="card-1 w-100">
-                  <div class="checkbox">
-                    <input type="checkbox" name="">
-                  </div>
-                  <img src="images/user7.png">
-                  <h5 class="ellipsis">Anna Lee</h5>
-                  <h6>Member</h6>
-                </label>
-              </div>
-              <div class="col-item filterDiv" style="display: block;">
-                <label class="card-1 w-100">
-                  <div class="checkbox">
-                    <input type="checkbox" name="">
-                  </div>
-                  <img src="images/user1.png">
-                  <h5 class="ellipsis">Anna Lee</h5>
-                  <h6>Member</h6>
-                </label>
-              </div>
-              <div class="col-item filterDiv" style="display: block;">
-                <label class="card-1 w-100">
-                  <div class="checkbox">
-                    <input type="checkbox" name="">
-                  </div>
-                  <img src="images/user8.png">
-                  <h5 class="ellipsis">Anna Lee</h5>
-                  <h6>Member</h6>
-                </label>
-              </div>
-              <div class="col-item filterDiv elite" style="display: block;">
-                <label class="card-1 w-100">
-                  <div class="checkbox">
-                    <input type="checkbox" name="">
-                  </div>
-                  <img src="images/user2.png">
-                  <h5 class="ellipsis">Anna Lee</h5>
-                  <h6>Member</h6>
-                </label>
-              </div>
-              <div class="col-item filterDiv" style="display: block;">
-                <label class="card-1 w-100">
-                  <div class="checkbox">
-                    <input type="checkbox" name="">
-                  </div>
-                  <img src="images/user3.png">
-                  <h5 class="ellipsis">Anna Lee</h5>
-                  <h6>Member</h6>
-                </label>
-              </div>
-              <div class="col-item filterDiv elite" style="display: block;">
-                <label class="card-1 w-100">
-                  <div class="checkbox">
-                    <input type="checkbox" name="">
-                  </div>
-                  <img src="images/user5.png">
-                  <h5 class="ellipsis">Anna Lee</h5>
-                  <h6>Member</h6>
-                </label>
-              </div>
-              <div class="col-item filterDiv" style="display: block;">
-                <label class="card-1 w-100">
-                  <div class="checkbox">
-                    <input type="checkbox" name="">
-                  </div>
-                  <img src="images/user2.png">
-                  <h5 class="ellipsis">Anna Lee</h5>
-                  <h6>Member</h6>
-                </label>
-              </div>
-              
-            </div>
-            <div class="mt-3 d-flex justify-content-end g2">
-              <div class="btn btn-outline-ramblers px-4">
-                        cancel
-              </div>
-              <div class="btn btn-ramblers px-4" data-bs-toggle="modal" data-bs-target="#sendNotification">
-                        Send
-              </div>
-            </div>
-          </div>
-          
         </div>
         
-      </div>
-    </div>
-  </div>
-  <div class="modal fade" id="sendNotification" tabindex="-1" aria-labelledby="sendNotificationLabel" aria-hidden="true">
-    <div class="modal-dialog  modal-dialog-centered modal-sm">
-      <div class="modal-content">
-
-        <div class="modal-body text-center p-5">
-           
-            <img src="images/check2.png" style="width: 100px;height: 100px;">
-            <h4 class="text-dark font-weight-600 mt-4 ">The notification has been sent successfully.</h4>
+        <div class="modal fade" id="sendNotification" tabindex="-1" aria-labelledby="sendNotificationLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-sm">
+                <div class="modal-content">
+                    <div class="modal-body text-center p-5">
+                        <img src="images/check2.png" style="width: 100px;height: 100px;">
+                        <h4 class="text-dark font-weight-600 mt-4">The notification has been sent successfully.</h4>
+                    </div>
+                </div>
+            </div>
         </div>
-        
-      </div>
-    </div>
-  </div>
-
-
-  <script src="js/script.js"></script>
-  <script>
-    // Filter elements based on category
-    function filterSelection(c) {
-      var x, i;
-      x = document.getElementsByClassName("filterDiv");
-      if (c == "all" || c == "") {
-        // Show all elements by setting display to "block"
-        for (i = 0; i < x.length; i++) {
-          x[i].style.display = "block";
-        }
-      } else {
-        // Filter elements based on the category
-        for (i = 0; i < x.length; i++) {
-          if (x[i].classList.contains(c)) {
-            x[i].style.display = "block";
-          } else {
-            x[i].style.display = "none";
-          }
-        }
-      }
-    }
     
-    // Add active class to the current control button (highlight it)
-    var btnContainer = document.getElementById("myBtnContainer");
-    var btns = btnContainer.getElementsByClassName("btn");
-    for (var i = 0; i < btns.length; i++) {
-      btns[i].addEventListener("click", function() {
-        var current = document.getElementsByClassName("active");
-        current[0].className = current[0].className.replace(" active", "");
-        this.className += " active";
-      });
-    }
+        <script src="js/script.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                loadUsers();
     
-    // Filter elements based on selection in dropdown menu
-    function selectFilter(select) {
-      var selectedValue = select.value;
-      filterSelection(selectedValue);
-    }
+                // Send notification on button click
+                document.getElementById('send-notification-button').addEventListener('click', sendNotification);
+            });
     
-    // Call filterSelection with "all" parameter when the page loads to show all elements by default
-    window.onload = function() {
-      filterSelection("all");
-    };
-  </script>
-  
-  
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      var selectAllButton = document.querySelector('.select-all');
-      if (selectAllButton) {
-        var allChecked = false; // Variable to track if all checkboxes are checked
-        selectAllButton.addEventListener('click', function() {
-          var checkboxes = document.querySelectorAll('.filterDiv input[type="checkbox"]');
-          checkboxes.forEach(function(checkbox) {
-            checkbox.checked = !allChecked; // Toggle checkbox state based on the variable
-          });
-          allChecked = !allChecked; // Update the variable
-          if (allChecked) {
-            selectAllButton.textContent = 'Unselect all';
-          } else {
-            selectAllButton.textContent = 'Select all';
-          }
-        });
-      }
-    });
-  </script>
-  
-  
+            // Load all users (students and coaches) dynamically
+            async function loadUsers() {
+                try {
+                  const organizationId = localStorage.getItem('organizationId'); // Assuming organizationId is stored in localStorage
 
-</body>
-</html>
+                  const response = await fetch('/api/user', {
+                        method: 'GET', // or 'POST', 'PUT', etc., depending on your API
+                        headers: {
+                        'Content-Type': 'application/json',
+                        'organizationId': organizationId // Include the organizationId in the headers
+                        }
+                  });  const users = await response.json();
+    
+                    const userContainer = document.getElementById('user-list');
+                    userContainer.innerHTML = users.map(user => `
+                        <div class="col-item filterDiv" style="display: block;">
+                            <label class="card-1 w-100">
+                                <div class="checkbox">
+                                    <input type="checkbox" name="user" value="${user._id}">
+                                </div>
+                                <img src="${user.profilePhoto || 'images/default-user.png'}" alt="Profile Photo">
+                                <h5 class="ellipsis">${user.firstName} ${user.lastName}</h5>
+                                <h6>${user.role}</h6>
+                            </label>
+                        </div>
+                    `).join('');
+                } catch (error) {
+                    console.error('Error loading users:', error);
+                }
+            }
+    
+            async function sendNotification() {
+                const title = document.getElementById('notification-title').value;
+                const message = document.getElementById('notification-message').value;
+                const selectedUserIds = Array.from(document.querySelectorAll('input[name="user"]:checked')).map(input => input.value);
+    
+                if (!title || !message || selectedUserIds.length === 0) {
+                    alert('Please fill out all fields and select at least one user.');
+                    return;
+                }
+    
+                try {
+                    const organizationId = localStorage.getItem('organizationId');
+                    const response = await fetch('/api/user/send-notification', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'organizationId': organizationId
+                                  },
+                        body: JSON.stringify({ userIds: selectedUserIds, title, message })
+                    });
+    
+                    if (response.ok) {
+                        $('#sendNotification').modal('show');
+                        updateNotificationIcon(); // Update the mail icon with a new notification indicator
+                    } else {
+                        alert('Failed to send notification.');
+                    }
+                } catch (error) {
+                    console.error('Error sending notification:', error);
+                    alert('Error sending notification.');
+                }
+            }
+    
+            function updateNotificationIcon() {
+                const mailIcon = document.querySelector('.navbar-nav .nav-item:nth-child(2) a span');
+                mailIcon.style.backgroundColor = '#FF862F'; // Update the mail icon to indicate a new notification
+            }
+        </script>
+    </body>
+    </html>
+    

@@ -2,7 +2,10 @@ const User = require('../models/Users');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const Category = require('../models/Category');
-const batch = require('../models/Batch');
+const Batch = require('../models/Batch');
+const Payment = require('../models/Payment');
+const Cart = require('../models/Cart');
+
 
 exports.getUserProfile = async (req, res) => {
   try {
@@ -21,7 +24,7 @@ exports.getStudentsById = async (req, res) => {
   const { organizationId, studentId } = req.params;
 
   //const organizationId = req.headers.organizationid;
-  console.log(organizationId, studentId);
+  //console.log(organizationId, studentId);
   try {
     // Find the student by ID and organization ID
     const student = await User.findOne({
@@ -82,12 +85,12 @@ exports.getUserById = async (req, res) => {
 // Get all coaches for a given organization
 exports.getCoaches = async (req, res) => {
   const organizationId = req.params.organizationId;
-  console.log('Organization ID from request:', organizationId);
+  //console.log('Organization ID from request:', organizationId);
 
   try {
     // Check the data in the database
     const coaches = await User.find({ role: 'coach', 'organizations.org_id': organizationId });
-    console.log('Coaches found:', coaches);
+    //console.log('Coaches found:', coaches);
 
     res.json(coaches);
   } catch (error) {
@@ -99,7 +102,7 @@ exports.getCoaches = async (req, res) => {
 // Get all coaches for a given organization
 exports.getOrgStudents = async (req, res) => {
   const organizationId = req.params.organizationId;
-  console.log('Organization ID from request:', organizationId);
+ // console.log('Organization ID from request:', organizationId);
 
   try {
     // Check the data in the database
@@ -199,34 +202,73 @@ exports.getCoachesNotAssigned = async (req, res) => {
   }
 };
 
+
+
 exports.assignStudentsToCoach = async (req, res) => {
   try {
-    const { studentIds, coachIds, batchId, courseId, paymentAmounts } = req.body;
+    const { studentIds, coachIds, batchId, courseId, paymentAmounts, paymentMethod, transactionId } = req.body;
 
-    if (!batchId || !studentIds || !coachIds || !courseId || !paymentAmounts) {
+    if (!batchId || !studentIds || !coachIds || !courseId || !paymentAmounts || !transactionId) {
+      console.log(batchId, studentIds, coachIds, courseId, paymentAmounts, transactionId);
       return res.status(400).send({ error: 'Missing batchId, studentIds, coachIds, courseId, or paymentAmounts' });
     }
 
     const organizationId = req.headers.organizationid;
-
     if (!organizationId) {
       return res.status(400).send({ error: 'Missing organization ID' });
     }
 
-    // Update students in the batch and set payment status
-    const batch = await Batch.findById(batchId);
+    const batch = await Batch.findById(batchId); 
     if (!batch) {
       return res.status(404).send({ error: 'Batch not found' });
     }
 
-    studentIds.forEach((studentId, index) => {
+    for (let i = 0; i < studentIds.length; i++) {
+      const studentId = studentIds[i];
+      const paymentAmount = paymentAmounts[i];
+
+      // Create a Payment record for each student
+      const payment = new Payment({
+        transactionId: generateTransactionId('course'),
+        userId: studentId,
+        organizationId,
+        itemType: 'course',
+        itemId: courseId,
+        amount: paymentAmount,
+        paymentMethod,
+        paymentStatus: 'pending'
+      });
+
+      await payment.save();
+
+      // Add the payment to the cart
+      let cart = await Cart.findOne({ userId: studentId });
+
+      if (!cart) {
+        cart = new Cart({ userId: studentId, items: [] });
+      }
+
+      cart.items.push({
+        userId: studentId,
+        paymentId: payment._id,
+        organizationId,
+        itemType: 'course',
+        itemId: courseId,
+        price: paymentAmount,
+        quantity: 1,
+        status: 'pending'
+      });
+
+      await cart.save();
+
       // Check if student is already assigned to the batch
       const existingPayment = batch.studentPayments.find(sp => sp.studentId.toString() === studentId);
       if (!existingPayment) {
         batch.studentPayments.push({
           studentId,
-          paymentAmount: paymentAmounts[index],
-          paymentStatus: 'pending', // Start with pending status
+          paymentAmount,
+          paymentStatus: 'pending',
+          paymentId: payment._id // Link to the created Payment document
         });
       }
 
@@ -234,7 +276,7 @@ exports.assignStudentsToCoach = async (req, res) => {
       if (!batch.students.includes(studentId)) {
         batch.students.push(studentId);
       }
-    });
+    }
 
     await batch.save();
 
@@ -318,33 +360,70 @@ exports.assignStudentsToCoach = async (req, res) => {
       }
     );
 
-    res.status(200).send({ message: 'Students and coaches successfully assigned to the batch with payment status.' });
+    res.status(200).send({ message: 'Students and coaches successfully assigned to the batch with payment status and added to cart.' });
   } catch (error) {
     console.error('Error assigning students to coach:', error);
     res.status(500).send({ error: 'Internal server error' });
   }
 };
 
+function generateTransactionId(itemType) {
+  let prefix = '';
+
+  switch (itemType) {
+    case 'booking':
+      prefix = 'bki_';
+      break;
+    case 'course':
+      prefix = 'crs_';
+      break;
+    case 'ecom':
+      prefix = 'com_';
+      break;
+    case 'combined':
+      prefix = 'cmd_';
+      break;
+    default:
+      prefix = 'txn_';
+      break;
+  }
+
+  return prefix + Math.random().toString(36).substr(2, 9);
+}
+
 exports.getAssignedStudents = async (req, res) => {
   const { courseId, batchId } = req.params;
   const organizationId = req.headers.organizationid;
 
   try {
-      const students = await User.find({
-          role: 'student',
-          'organizations': {
-              $elemMatch: {
-                  org_id: organizationId,
-                  'courses.course_id': courseId,
-                  'courses.batches.batch_id': batchId
-              }
-          }
-      });
+    // Fetch the batch with the student payments
+    const batch = await Batch.findOne({ _id: batchId, course: courseId })
+      .populate({
+        path: 'studentPayments.studentId',
+        select: 'firstName lastName email profilePhoto' // Select relevant fields from the User model
+      })
+      .exec();
 
-      res.json(students);
+    if (!batch) {
+      return res.status(404).json({ error: 'Batch not found' });
+    }
+
+    // Prepare the list of students with their payment status
+    const studentsWithPaymentStatus = batch.studentPayments.map(payment => ({
+      studentId: payment.studentId._id,
+      firstName: payment.studentId.firstName,
+      lastName: payment.studentId.lastName,
+      email: payment.studentId.email,
+      profilePhoto: payment.studentId.profilePhoto,
+      paymentStatus: payment.paymentStatus,
+      paymentAmount: payment.paymentAmount,
+      paymentDate: payment.paymentDate,
+    }));
+
+    res.json(studentsWithPaymentStatus);
   } catch (error) {
-      console.error('Error fetching assigned students:', error);
-      res.status(500).json({ error: 'Internal server error' });
+    console.error('Error fetching assigned students:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 };
 
@@ -399,7 +478,7 @@ exports.getAssignedCoachesByCourseId = async (req, res) => {
 
 exports.addCoach = async (req, res) => {
   const organizationId = req.params.organizationId;
-  console.log(organizationId);
+  //console.log(organizationId);
 
   try {
     const {
@@ -469,3 +548,173 @@ exports.addCoach = async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 };
+
+// Controller to fetch coach details
+exports.getCoachDetails = async (req, res) => {
+  try {
+    const coachId = req.params.coachId;
+    const coach = await User.findById(coachId)
+      .populate('organizations.org_id', 'name')
+      .exec();
+
+    if (!coach || coach.role !== 'coach') {
+      return res.status(404).json({ message: 'Coach not found' });
+    }
+
+    res.status(200).json(coach);
+  } catch (error) {
+    console.error('Error fetching coach details:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
+// Controller to fetch the schedule for a specific day
+exports.getCoachScheduleByDate = async (req, res) => {
+  try {
+    const { coachId, date } = req.params;
+    const selectedDate = new Date(date);
+    const batches = await Batch.find({
+      coaches: coachId,
+      startDate: { $lte: selectedDate },
+      endDate: { $gte: selectedDate }
+    })
+      .populate('course', 'name')
+      .exec();
+
+    if (!batches.length) {
+      return res.status(404).json({ message: 'No schedules found for this date' });
+    }
+
+    const schedule = batches.map(batch => ({
+      courseName: batch.course.name,
+      batchName: batch.name,
+      timeSlot: batch.timeSlot,
+      studentsCount: batch.students.length,
+      days: batch.days
+    }));
+
+    res.status(200).json({ schedule });
+  } catch (error) {
+    console.error('Error fetching schedule for the date:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
+// Controller to fetch the coach calendar for a specific month
+exports.getCoachCalendar = async (req, res) => {
+  try {
+    const { coachId } = req.params;
+    const { month, year } = req.query;
+
+    const startDate = new Date(year, month - 1, 1);
+    const endDate = new Date(year, month, 0);
+
+    const batches = await Batch.find({
+      coaches: coachId,
+      startDate: { $lte: endDate },
+      endDate: { $gte: startDate }
+    }).populate('course');
+
+    if (!batches) {
+      return res.status(404).json({ error: 'No batches found' });
+    }
+
+    const calendar = generateCalendar(batches, month, year);
+
+    res.status(200).json({ calendar });
+  } catch (error) {
+    console.error('Error fetching coach calendar:', error);
+    res.status(500).json({ error: 'Failed to fetch coach calendar' });
+  }
+};
+
+function generateCalendar(batches, month, year) {
+  const weeksInMonth = [];
+  const firstDayOfMonth = new Date(year, month - 1, 1);
+  const lastDayOfMonth = new Date(year, month, 0);
+  let currentDay = new Date(firstDayOfMonth);
+
+  while (currentDay <= lastDayOfMonth) {
+    const week = new Array(7).fill(null);
+    for (let i = 0; i < 7; i++) {
+      if (currentDay.getDay() === i && currentDay <= lastDayOfMonth) {
+        week[i] = {
+          date: currentDay.getDate(),
+          hasSchedule: false,
+          schedule: []
+        };
+        currentDay.setDate(currentDay.getDate() + 1);
+      }
+    }
+    weeksInMonth.push(week);
+  }
+
+  batches.forEach(batch => {
+    batch.days.forEach(day => {
+      const dayIndex = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"].indexOf(day);
+      weeksInMonth.forEach(week => {
+        if (week[dayIndex]) {
+          week[dayIndex].hasSchedule = true;
+          week[dayIndex].schedule.push({
+            courseName: batch.course.name,
+            batchName: batch.name,
+            timeSlot: batch.timeSlot,
+            studentsCount: batch.students.length
+          });
+        }
+      });
+    });
+  });
+
+  return weeksInMonth;
+}
+// Get coach availability
+exports.getCoachAvailability = async (req, res) => {
+  try {
+    const { coachId } = req.params;
+
+    const coach = await User.findById(coachId).select('availability');
+
+    if (!coach) {
+      return res.status(404).json({ error: 'Coach not found' });
+    }
+
+    res.status(200).json({ availability: coach.availability || [] });
+  } catch (error) {
+    console.error('Error fetching coach availability:', error);
+    res.status(500).json({ error: 'Failed to fetch coach availability' });
+  }
+};
+
+exports.updateCoachAvailability = async (req, res) => {
+  try {
+    const { coachId } = req.params;
+    let { availability } = req.body;
+    initializeAvailability();
+    // Ensure every entry has dayOfWeek and at least one valid timeSlot
+    availability = availability.filter(a => a.dayOfWeek && a.timeSlots.length > 0);
+    // console.log('availability:', availability);
+    const coach = await User.findById(coachId);
+    if (!coach) {
+      return res.status(404).json({ error: 'Coach not found' });
+    }
+
+    coach.availability = availability;
+    await coach.save();
+
+    res.status(200).json({ message: 'Availability updated successfully' });
+  } catch (error) {
+    console.error('Error updating coach availability:', error);
+    res.status(500).json({ error: 'Failed to update coach availability' });
+  }
+};
+function initializeAvailability() {
+  const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  return daysOfWeek.map(day => ({
+    dayOfWeek: day,
+    isAvailable: false,
+    timeSlots: []
+  }));
+}

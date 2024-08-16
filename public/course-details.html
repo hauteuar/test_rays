@@ -234,94 +234,109 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
     <script>
-        const organizationId = localStorage.getItem('organizationId');
-        let selectedBatchId;
+    const organizationId = localStorage.getItem('organizationId');
+let selectedBatchId;
 
-        // Fetch course details on page load
-        document.addEventListener('DOMContentLoaded', fetchCourseDetails);
+// Fetch course details on page load
+document.addEventListener('DOMContentLoaded', fetchCourseDetails);
 
-        async function fetchCourseDetails() {
-            try {
-                const courseId = new URLSearchParams(window.location.search).get('courseId');
-                const response = await fetch(`/api/courses/${courseId}`, {
-                    headers: { 'organizationId': organizationId }
-                });
-                const course = await response.json();
+async function fetchCourseDetails() {
+    try {
+        const courseId = new URLSearchParams(window.location.search).get('courseId');
+        const response = await fetch(`/api/courses/${courseId}`, {
+            headers: { 'organizationId': organizationId }
+        });
+        const course = await response.json();
 
-                populateCourseDetails(course);
-                loadBatches(course.batches);
-            } catch (error) {
-                console.error('Error fetching course details:', error);
+        populateCourseDetails(course);
+        loadBatches(course.batches);
+    } catch (error) {
+        console.error('Error fetching course details:', error);
+    }
+}
+
+function populateCourseDetails(course) {
+    document.getElementById('courseBanner').src = `/images/${course.bannerImage}`;
+    document.getElementById('courseTitle').innerText = course.title;
+    document.getElementById('courseTitleBottom').innerText = course.title;
+    document.getElementById('courseDuration').innerText = course.duration;
+    document.getElementById('coursePrice').innerText = `$${course.price}`;
+    document.getElementById('courseStartDate').innerText = new Date(course.startDate).toLocaleDateString();
+    document.getElementById('courseEndDate').innerText = new Date(course.endDate).toLocaleDateString();
+    document.getElementById('courseDescription').innerHTML = `<li>${course.description}</li>`;
+    document.getElementById('batchCount').innerText = course.batches.length;
+}
+
+async function loadBatches(batchIds) {
+    const batchesTab = document.getElementById('batchesTab');
+    const batchesTabContent = document.getElementById('batchesTabContent');
+
+    batchesTab.innerHTML = '';
+    batchesTabContent.innerHTML = '';
+
+    for (let index = 0; index < batchIds.length; index++) {
+        const batchId = batchIds[index];
+        const batch = await fetchBatchDetails(batchId);
+        if (batch) {
+            createBatchTab(batch, index === 0);
+            if (index === 0) {
+                selectedBatchId = batchId; // Set the first batch as the selected one by default
+                loadBatchContent(batch);
             }
         }
+    }
 
-        function populateCourseDetails(course) {
-            document.getElementById('courseBanner').src = `/images/${course.bannerImage}`;
-            document.getElementById('courseTitle').innerText = course.title;
-            document.getElementById('courseTitleBottom').innerText = course.title;
-            document.getElementById('courseDuration').innerText = course.duration;
-            document.getElementById('coursePrice').innerText = `$${course.price}`;
-            document.getElementById('courseStartDate').innerText = new Date(course.startDate).toLocaleDateString();
-            document.getElementById('courseEndDate').innerText = new Date(course.endDate).toLocaleDateString();
-            document.getElementById('courseDescription').innerHTML = `<li>${course.description}</li>`;
-            document.getElementById('batchCount').innerText = course.batches.length;
-        }
-
-        async function loadBatches(batchIds) {
-            const batchesTab = document.getElementById('batchesTab');
-            const batchesTabContent = document.getElementById('batchesTabContent');
-
-            batchesTab.innerHTML = '';
-            batchesTabContent.innerHTML = '';
-
-            for (let index = 0; index < batchIds.length; index++) {
-                const batchId = batchIds[index];
-                const batch = await fetchBatchDetails(batchId);
-                console.log(batch);
+    // Add event listener for batch tab click to load the corresponding batch content
+    batchesTab.addEventListener('click', (event) => {
+        if (event.target && event.target.matches("a.nav-link")) {
+            const batchId = event.target.getAttribute('data-batch-id');
+            selectedBatchId = batchId;
+            fetchBatchDetails(batchId).then(batch => {
                 if (batch) {
-                    createBatchTab(batch, index === 0);
-                    createBatchContent(batch, index === 0);
+                    loadBatchContent(batch);
                 }
-            }
+            });
+        }
+    });
+}
+
+async function fetchBatchDetails(batchId) {
+    try {
+        const response = await fetch(`/api/batches/${batchId}`, {
+            headers: { 'organizationId': organizationId }
+        });
+
+        if (!response.ok) {
+            console.error(`Batch not found for ID: ${batchId}`);
+            return null;
         }
 
-        async function fetchBatchDetails(batchId) {
-            try {
-                const response = await fetch(`/api/batches/${batchId}`, {
-                    headers: { 'organizationId': organizationId }
-                });
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching batch details:', error);
+        return null;
+    }
+}
 
-                if (!response.ok) {
-                    console.error(`Batch not found for ID: ${batchId}`);
-                    return null;
-                }
+function createBatchTab(batch, isActive) {
+    const batchesTab = document.getElementById('batchesTab');
+    const tabId = `batch-${batch._id}`;
 
-                return await response.json();
-            } catch (error) {
-                console.error('Error fetching batch details:', error);
-                return null;
-            }
-        }
+    batchesTab.innerHTML += `
+        <li class="nav-item">
+            <a class="nav-link ${isActive ? 'active' : ''}" id="${tabId}" data-toggle="pill" href="#batch-content-${batch._id}" role="tab" data-batch-id="${batch._id}">
+                ${Array.isArray(batch.days) ? batch.days.join(', ') : ''} ${batch.timeSlot || ''}
+            </a>
+        </li>
+    `;
+}
 
-        function createBatchTab(batch, isActive) {
-            const batchesTab = document.getElementById('batchesTab');
-            const tabId = `batch-${batch._id}`;
-
-            batchesTab.innerHTML += `
-                <li class="nav-item">
-                    <a class="nav-link ${isActive ? 'active' : ''}" id="${tabId}" data-toggle="pill" href="#batch-content-${batch._id}" role="tab">
-                        ${Array.isArray(batch.days) ? batch.days.join(', ') : ''} ${batch.timeSlot || ''}
-                    </a>
-                </li>
-            `;
-        }
-
-        function createBatchContent(batch, isActive) {
+function loadBatchContent(batch) {
     const batchesTabContent = document.getElementById('batchesTabContent');
     const tabContentId = `batch-content-${batch._id}`;
 
-    batchesTabContent.innerHTML += `
-        <div class="tab-pane fade ${isActive ? 'show active' : ''}" id="${tabContentId}" role="tabpanel">
+    batchesTabContent.innerHTML = `
+        <div class="tab-pane fade show active" id="${tabContentId}" role="tabpanel">
             <div class="batch-add-student">
                 <div class="dashboard row">
                     <div class="col-3 item">
@@ -378,6 +393,7 @@
     loadBatchStudents(batch._id);
     loadBatchCoaches(batch._id);
 }
+
 async function loadBatchStudents(batchId) {
     const studentContainer = document.getElementById(`batch-students-${batchId}`);
     const courseId = new URLSearchParams(window.location.search).get('courseId');
@@ -393,17 +409,22 @@ async function loadBatchStudents(batchId) {
         }
 
         const students = await response.json();
-        console.log('Students under this batch', students);
+        console.log('students:', students);
         document.getElementById(`student-count-${batchId}`).innerText = `(${students.length})`;
 
         students.forEach(student => {
+            const paymentStatus = student.paymentStatus || 'pending'; // Default to pending if status is null or undefined
+
             studentContainer.innerHTML += `
                 <div class="list">
                     <div class="person">
-                        <img src="${student.image || 'images/default-user.png'}" alt="">
+                        <img src="${student.profilePhoto || 'images/default-user.png'}" alt="">
                         <h4>${student.firstName} ${student.lastName}</h4>
                     </div>
-                    <img class="delete" src="images/delete-2.png" alt="" onclick="removeStudentFromBatch('${batchId}', '${student._id}')">
+                    <div class="status">
+                        ${paymentStatus}
+                    </div>
+                    <img class="delete" src="images/delete-2.png" alt="" onclick="removeStudentFromBatch('${batchId}', '${student.studentId}')">
                 </div>
             `;
         });
@@ -411,6 +432,7 @@ async function loadBatchStudents(batchId) {
         console.error('Error loading students:', error);
     }
 }
+
 
 async function loadBatchCoaches(batchId) {
     const coachContainer = document.getElementById(`batch-coaches-${batchId}`);
@@ -444,6 +466,7 @@ async function loadBatchCoaches(batchId) {
         console.error('Error loading coaches:', error);
     }
 }
+
         function setSelectedBatch(batchId) {
             selectedBatchId = batchId;
             const courseId = new URLSearchParams(window.location.search).get('courseId');
@@ -553,15 +576,24 @@ document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
 async function assignStudentCoaches() {
     const studentIds = Array.from(document.querySelectorAll('#studentsNotEnrolled input[name="student"]:checked')).map(input => input.value);
     const coachIds = Array.from(document.querySelectorAll('#coachesNotAssigned input[name="coach"]:checked')).map(input => input.value);
-    
+
+    // Example: you may get the course price and create an array of payment amounts
+    const coursePrice = document.getElementById('coursePrice').innerText.replace('$', '');
+    const paymentAmounts = studentIds.map(() => parseFloat(coursePrice)); // assuming all students pay the same amount
+    const transactionId = generateTransactionId('course');
     console.log('studentIds:', studentIds);
     console.log('coachIds:', coachIds);
-    
+    console.log('selectedBatchId:', selectedBatchId);
+    console.log('paymentsAmount:', paymentAmounts);
+
     const assignData = {
         studentIds,
         coachIds,
         batchId: selectedBatchId,
-        courseId: new URLSearchParams(window.location.search).get('courseId') // Ensure courseId is passed
+        courseId: new URLSearchParams(window.location.search).get('courseId'),
+        paymentAmounts, // Include the payment amounts in the request
+        paymentMethod: 'Card',
+        transactionId
     };
 
     try {
@@ -576,14 +608,137 @@ async function assignStudentCoaches() {
 
         if (response.ok) {
             console.log('Students and coaches successfully assigned.');
-            $('#add-student-to-batch').modal('hide');
+            
+            
+        //saveTransactionId(response._id, transactionId, 'course', paymentAmounts, 'card');
+        alert('Students and coaches successfully assigned.');
+        $('#add-student-to-batch').modal('hide');
+       // addToCart(response._id, paymentAmounts, courseId, transactionId); // Add booking to cart with additional info
+        
             fetchCourseDetails(); // Refresh the course details to reflect changes
         } else {
-            console.error('Error assigning student/coach:', response.statusText);
+            const errorData = await response.json();
+            console.error('Error assigning student/coach:', errorData.error);
         }
     } catch (error) {
         console.error('Error assigning student/coach:', error);
     }
+}
+async function updateCartIcon() {
+  try {
+    const userId = localStorage.getItem('userId'); // Assume you have stored the user's ID in localStorage
+    const organizationId = localStorage.getItem('organizationId'); // Get organizationId from localStorage
+
+    const response = await fetch(`/api/cart/${userId}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'organizationId': organizationId,
+      }
+    });
+
+    if (response.ok) {
+      const cart = await response.json();
+      const cartCount = cart.items.length;
+      $('#cart-icon').text(cartCount); // Assuming there's a cart icon with ID 'cart-icon'
+    } else {
+      console.error('Failed to load cart data');
+      $('#cart-icon').text(0); // Set to 0 if cart data cannot be loaded
+    }
+  } catch (error) {
+    console.error('Error updating cart icon:', error);
+    $('#cart-icon').text(0); // Set to 0 in case of error
+  }
+}
+
+// Call this function on page load or after any cart update
+document.addEventListener('DOMContentLoaded', updateCartIcon);
+
+function generateTransactionId(itemType) {
+    let prefix = '';
+  
+    switch (itemType) {
+      case 'booking':
+        prefix = 'bki_';
+        break;
+      case 'course':
+        prefix = 'crs_';
+        break;
+      case 'ecom':
+        prefix = 'com_';
+        break;
+      case 'combined':
+        prefix = 'cmd_';
+        break;
+      default:
+        prefix = 'txn_';
+        break;
+    }
+  
+    return prefix + Math.random().toString(36).substr(2, 9);
+  }
+  
+  async function saveTransactionId(itemId, transactionId, itemType, amount, paymentMethod) {
+    const saveData = {
+      transactionId,
+      userId: $('#userSelect').val(),
+      organizationId: localStorage.getItem('organizationId'),
+      itemType,
+      itemId,
+      amount,
+      paymentMethod,  // Ensure paymentMethod is included
+      paymentStatus: 'pending'
+    };
+  
+    try {
+      const response = await fetch('/api/payments/save-transaction', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(saveData),
+      });
+  
+      const result = await response.json();
+      if (!result.success) {
+        console.error('Failed to save transaction ID');
+      }
+    } catch (error) {
+      console.error('Error saving transaction ID:', error);
+    }
+  }
+  
+  
+function addToCart(bookingId, totalAmount, courtId, sportId, userId, transactionId) {
+  // Get the current cart from localStorage or initialize an empty one
+  let cart = JSON.parse(localStorage.getItem('cart')) || { items: [], totalAmount: 0 };
+
+  // Add the new booking to the cart
+  cart.items.push({
+    type: 'booking',
+    itemId: bookingId,
+    price: totalAmount,
+    quantity: 1,
+    status: 'pending',
+    courtId,
+    sportId,
+    userId,
+    transactionId
+  });
+
+  // Update the total amount in the cart
+  cart.totalAmount += totalAmount;
+
+  // Save the updated cart to localStorage
+  localStorage.setItem('cart', JSON.stringify(cart));
+
+  // Update the cart icon on the top bar
+  updateCartIcon();
+}
+
+function updateCartIcon() {
+  const cart = JSON.parse(localStorage.getItem('cart')) || { items: [] };
+  const cartCount = cart.items.length;
+  $('#cart-icon').text(cartCount); // Assuming there's a cart icon with ID 'cart-icon'
 }
 
 // Ensure modal doesn't close on checkbox clicks

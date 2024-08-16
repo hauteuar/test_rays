@@ -181,7 +181,7 @@ async function fetchCoursesAndStudents(coachId) {
     }
 
     // Fetch the user profile to get the list of courses
-    const profileResponse = await fetch(`/api/user/${coachId}`, {
+    const profileResponse = await fetch(`/api/user/coach/${coachId}`, {
       headers: { 'organizationId': organizationId }
     });
 
@@ -190,6 +190,12 @@ async function fetchCoursesAndStudents(coachId) {
     }
 
     const profile = await profileResponse.json();
+    
+    // Ensure the organizations array exists and contains at least one element
+    if (!profile.organizations || profile.organizations.length === 0) {
+      throw new Error('No organizations found for this coach');
+    }
+
     const courses = profile.organizations[0]?.courses || [];
 
     if (courses.length === 0) {
@@ -216,7 +222,6 @@ async function fetchCoursesAndStudents(coachId) {
     courseSelect.addEventListener('change', async () => {
       const selectedCourseId = courseSelect.value;
       localStorage.setItem('selectedCourseId', selectedCourseId); // Save the selected course
-
       if (selectedCourseId === 'all') {
         // Fetch all students assigned to the coach for all courses
         await fetchAllStudents(coachId, organizationId, studentSelect);
@@ -233,6 +238,7 @@ async function fetchCoursesAndStudents(coachId) {
 async function fetchStudentsForCourse(coachId, courseId, organizationId, studentSelect) {
   try {
     console.log(`Fetching students for course ${courseId}...`);
+    coachId = localStorage.getItem('userId'); 
     const studentsResponse = await fetch(`/api/user/assigned-student/${courseId}/${coachId}`, {
       headers: { 'organizationId': organizationId }
     });
@@ -282,7 +288,12 @@ async function fetchAllStudents(coachId, organizationId, studentSelect) {
 
     async function fetchInitialData() {
       try {
-        const coachId = await fetchCoachId();
+        //const coachId = await fetchCoachId();
+        const coachId = localStorage.getItem('userId');
+        if (!coachId) {
+          const coachId = localStorage.getItem('userId');
+        }
+        console.log('coachid-1', coachId);
         await fetchCoursesAndStudents(coachId);
       } catch (error) {
         console.error('Error fetching initial data:', error);
@@ -294,7 +305,13 @@ async function fetchAllStudents(coachId, organizationId, studentSelect) {
     async function fetchStudentsForSelectedCourse() {
       try {
         const courseSelect = document.getElementById('courseSelect');
-        const coachId = await fetchCoachId();
+        //const coachId = await fetchCoachId();
+        const coachId = localStorage.getItem('userId');
+
+        if (!coachId){
+          coachId = localStorage.getItem('userId');
+        }
+        console.log('coachId before calling', coachId);
         if (courseSelect.value !== 'Select Course') {
           await fetchCoursesAndStudents(coachId);
         }
@@ -319,7 +336,7 @@ async function fetchAllStudents(coachId, organizationId, studentSelect) {
         const organizationId = localStorage.getItem('organizationId');
         const userId = localStorage.getItem('userId');
 
-        const profileResponse = await fetch(`/api/user/${userId}`, {
+        const profileResponse = await fetch(`/api/user/coach/${userId}`, {
             headers: { 'organizationId': organizationId }
         });
 
@@ -328,9 +345,21 @@ async function fetchAllStudents(coachId, organizationId, studentSelect) {
         }
 
         const profile = await profileResponse.json();
+
+        // Ensure the profile and organizations exist and contain data
+        if (!profile.organizations || profile.organizations.length === 0) {
+            throw new Error('No organizations found for this user');
+        }
+
+        // Define selectedCourse
         const selectedCourse = profile.organizations[0].courses.find(course => course.course_id === courseSelect.value);
 
-        if (!selectedCourse || !selectedCourse.batches.length) {
+        // Check if the selected course exists and has batches
+        if (!selectedCourse) {
+            throw new Error('Selected course not found');
+        }
+
+        if (!selectedCourse.batches || selectedCourse.batches.length === 0) {
             throw new Error('No batches found for the selected course');
         }
 
@@ -354,14 +383,15 @@ async function fetchAllStudents(coachId, organizationId, studentSelect) {
                 const sanitizedFileName = file.name.replace(/\./g, '_'); // Replace '.' with '_'
                 assignmentData.media[sanitizedFileName] = base64String;
             }
+            console.log(assignmentData.media);
         }
 
         const response = await fetch('/api/tasks', {
             method: 'POST',
+            body: JSON.stringify(assignmentData),
             headers: {
                 'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(assignmentData),
+            }
         });
 
         if (!response.ok) {
@@ -374,6 +404,8 @@ async function fetchAllStudents(coachId, organizationId, studentSelect) {
         console.error('Error creating assignment:', error);
     }
 }
+
+
 
 // Function to convert a file to a base64 string
 function convertFileToBase64(file) {

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Courses</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/mobile.css">
+    <link rel="stylesheet" href="css/tab.css">
+    <link rel="shortcut icon" href="images/1.png" />
+    <script src="components/sidebar.js" type="text/javascript" defer></script>
+    <script src="components/topnav.js" type="text/javascript" defer></script>
+</head>
+
+<body>
+    <div class="container-scroller">
+        <topnav-component></topnav-component>
+        <div class="container-fluid page-body-wrapper">
+            <sidebar-component data-page="courses"></sidebar-component>
+            <div class="course-main">
+                <div class="mb-3 mt-2">
+                    <h4 class="m-0" style="font-weight: 650;">Courses</h4>
+                </div>
+                <div class="row coaches-dropdown align-items-end m-0" style="row-gap:15px;justify-content: space-between;">
+                    <div class="pl-0">
+                        <h6 class="text-gray package-count" style="font-size: 14px;">Total Courses :
+                            <span id="totalCourses">0</span>
+                        </h6>
+                        <h6 class="text-gray package-count" style="font-size: 14px;">Packages :
+                            <span id="totalPackages">0</span>
+                        </h6>
+                        <h6 class="text-gray package-count" style="font-size: 14px;">Assigned Courses :
+                            <span id="assignedCourses">0</span>
+                        </h6>
+                        <h6 class="text-gray package-count" style="font-size: 14px;">Enrolled Students :
+                            <span>123</span>
+                        </h6>
+                    </div>
+                </div>
+                <div class="radios">
+                    <label for="assigned">
+                        <input name="radio" type="radio" id="assigned">My Courses
+                    </label>
+                    <label for="new">
+                        <input name="radio" type="radio" id="new">New Courses
+                    </label>
+                </div>
+                <div class="package-container" id="coursesContainer">
+                    <!-- Courses will be dynamically added here -->
+                </div>
+                <div class="package-heading">
+                    <h4>Packages</h4>
+                </div>
+                <div class="package-container" id="packagesContainer">
+                    <!-- Packages will be dynamically added here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const coursesContainer = document.getElementById('coursesContainer');
+        const packagesContainer = document.getElementById('packagesContainer');
+        const organizationId = localStorage.getItem('organizationId');
+        const userId = localStorage.getItem('userId');
+        
+        async function fetchCourses(type) {
+            let url = '';
+            if (type === 'assigned') {
+                url = `/api/courses/assigned/${userId}`;
+            } else if (type === 'unassigned') {
+                url = `/api/courses/unassigned/${userId}`;
+            }
+            
+            try {
+                const response = await fetch(url, {
+                    headers: { 'organizationId': organizationId }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const courses = await response.json();
+                displayCourses(courses, type === 'assigned' ? 'My Courses' : 'New Courses');
+                updateCourseCounters(courses, type === 'assigned' ? 'My Courses' : 'New Courses');
+            } catch (error) {
+                console.error(`Error fetching ${type} courses:`, error);
+            }
+        }
+
+        async function fetchPackages() {
+            try {
+                const response = await fetch('/api/packages', {
+                    headers: { 'organizationId': organizationId }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const packages = await response.json();
+                displayPackages(packages);
+            } catch (error) {
+                console.error('Error fetching packages:', error);
+            }
+        }
+
+        function displayCourses(courses, category) {
+            coursesContainer.innerHTML = ''; // Clear previous content
+            courses.forEach(course => {
+                const imageUrl = course.bannerImage ? `/images/${course.bannerImage}` : 'images/summer-camp.jpg';
+                const courseElement = document.createElement('div');
+                courseElement.classList.add('package');
+                courseElement.innerHTML = `
+                    <div class="package-image">
+                        <img src="${imageUrl}" alt="${course.title}" onerror="this.onerror=null; this.src='images/summer-camp.jpg'">
+                        <div class="status-ribbon">
+                            <h4>${category}</h4>
+                        </div>
+                    </div>
+                    <div class="bottom">
+                        <div class="text">
+                            <h4>${course.title}</h4>
+                        </div>
+                        <div class="course-details">
+                            <h4><span>Start Date: </span>${new Date(course.startDate).toLocaleDateString()}</h4>
+                            <h4><span>End Date: </span>${new Date(course.endDate).toLocaleDateString()}</h4>
+                        </div>
+                    </div>
+                `;
+                courseElement.onclick = () => window.location.href = 
+                    category === 'My Courses' 
+                    ? `student-assigned-course-details.html?courseId=${course._id}`
+                    : `student-course-details.html?courseId=${course._id}`;
+                coursesContainer.appendChild(courseElement);
+            });
+        }
+
+        function displayPackages(packages) {
+            packagesContainer.innerHTML = ''; // Clear previous content
+            packages.forEach(package => {
+                const imageUrl = package.bannerImage ? `/images/${package.bannerImage}` : 'images/default-package.jpg';
+                const packageElement = document.createElement('div');
+                packageElement.classList.add('package');
+                packageElement.innerHTML = `
+                    <div class="package-image">
+                        <img src="${imageUrl}" alt="${package.name}" onerror="this.onerror=null; this.src='images/default-package.jpg'">
+                        <div class="status-ribbon">
+                            <h4>${package.status}</h4>
+                        </div>
+                    </div>
+                    <div class="bottom">
+                        <div class="text">
+                            <h4>${package.name}</h4>
+                        </div>
+                        <div class="course-details">
+                            <h4><span>Courses: </span>${package.courses.length}</h4>
+                            <h4><span>Start Date: </span>${new Date(package.startDate).toLocaleDateString()}</h4>
+                            <h4><span>End Date: </span>${new Date(package.endDate).toLocaleDateString()}</h4>
+                        </div>
+                    </div>
+                `;
+                packageElement.onclick = () => window.location.href = `package-details.html?packageId=${package._id}`;
+                packagesContainer.appendChild(packageElement);
+            });
+        }
+
+        function updateCourseCounters(courses, category) {
+            const totalCourses = document.getElementById('totalCourses');
+            const assignedCourses = document.getElementById('assignedCourses');
+
+            totalCourses.textContent = parseInt(totalCourses.textContent) + courses.length;
+            if (category === 'My Courses') {
+                assignedCourses.textContent = parseInt(assignedCourses.textContent) + courses.length;
+            }
+        }
+
+        document.getElementById('assigned').addEventListener('click', () => fetchCourses('assigned'));
+        document.getElementById('new').addEventListener('click', () => fetchCourses('unassigned'));
+
+        // Initial Load
+        fetchCourses('assigned'); // Load assigned courses initially
+        fetchPackages(); // Load packages
+    </script>
+</body>
+
+</html>
