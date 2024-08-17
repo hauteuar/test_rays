@@ -64,9 +64,10 @@ const documentRoutes = require('./routes/documentRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
 const cartRoutes = require('./routes/cartRoutes');
 const feedbackRoutes = require('./routes/feedbackRoutes');
+const orgRoutes = require('./routes/orgRoutes');
 
 app.use('/auth', authRoutes);
-app.use('/organizations', organizationRoutes);
+app.use('/api/organizations', organizationRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/courses', courseRoutes);
 app.use('/api/batches', batchRoutes);
@@ -78,6 +79,7 @@ app.use('/api/documents', documentRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/feedback', feedbackRoutes);
+app.use('/api/org', orgRoutes);
 
 
 app.get('/', (req, res) => {
@@ -189,10 +191,13 @@ app.get('/cancel', async (req, res) => {
 
 // Define the corporate admin dashboard route
 app.get('/corp_admin/dashboard', authMiddleware, async (req, res) => {
-  //console.log('Request passed through authMiddleware');
   try {
     const organizations = await Organization.find({});
-    res.render('corpAdminDashboard', { organizations });
+    const selectedOrgId = null; // or set a default value if needed
+    const selectedOrg = null; // or set a default value if needed
+
+    // Pass the variables to the view
+    res.render('corpAdminDashboard', { organizations, selectedOrgId, selectedOrg });
   } catch (error) {
     console.error('Error fetching organizations:', error);
     res.status(500).json({ error: 'Internal server error' });

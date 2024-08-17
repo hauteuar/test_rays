@@ -41,6 +41,7 @@ db.once('open', async function() {
     const eliteAdminPassword = await bcrypt.hash('elite_admin_password', 10);
     const tjsAdminPassword = await bcrypt.hash('tjs_admin_password', 10);
     const headCoachPassword = await bcrypt.hash('head_coach_password', 10);
+    const freelanceCoachPassword = await bcrypt.hash('freelance_coach_password', 10);
 
     // Create Users
     const corpAdmin = new User({
@@ -110,10 +111,32 @@ db.once('open', async function() {
       ]
     });
 
+    const freelanceCoach = new User({
+      firstName: 'Freelance',
+      lastName: 'Coach',
+      dob: new Date('1985-01-01'),
+      gender: 'F',
+      email: 'freelance_coach@rayssport.com',
+      contactNumber: '1234567894',
+      password: freelanceCoachPassword,
+      role: 'freelance_coach',
+      organizations: [
+        {
+          org_id: eliteAcademy._id,
+          courses: []
+        },
+        {
+          org_id: tjsSports._id,
+          courses: []
+        }
+      ]
+    });
+
     await corpAdmin.save();
     await eliteAdmin.save();
     await tjsAdmin.save();
     await headCoach.save();
+    await freelanceCoach.save();
 
     // Create additional users
     const eliteCoachPasswords = await Promise.all(
@@ -178,7 +201,7 @@ db.once('open', async function() {
 
     await User.insertMany([...eliteCoaches, tjsCoach, ...eliteStudents, ...tjsStudents]);
 
-    console.log('Database initialized successfully with additional users');
+    console.log('Database initialized successfully with additional users, including a freelance coach.');
   } catch (error) {
     console.error('Error initializing database:', error);
   } finally {

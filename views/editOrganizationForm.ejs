@@ -1,0 +1,18 @@
+<div id="edit-organization" class="form-section" style="display: none;">  
+    <h3>Edit Organization</h3>
+    <form action="/api/org/<%= selectedOrgId ? selectedOrgId : '' %>" method="POST">
+        <div>
+            <label for="orgName">Organization Name:</label>
+            <input type="text" id="orgName" name="name" value="<%= selectedOrg ? selectedOrg.name : '' %>">
+        </div>
+        <div>
+            <label for="orgDomain">Organization Domain:</label>
+            <input type="text" id="orgDomain" name="domain" value="<%= selectedOrg ? selectedOrg.domain : '' %>">
+        </div>
+        <div>
+            <label for="orgThemeColor">Theme Color:</label>
+            <input type="color" id="orgThemeColor" name="theme_color" value="<%= selectedOrg ? selectedOrg.theme_color : '' %>">
+        </div>
+        <button type="submit">Save Changes</button>
+    </form>
+</div>

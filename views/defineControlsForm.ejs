@@ -1,0 +1,22 @@
+<h2>Define <%= role.charAt(0).toUpperCase() + role.slice(1) %> Controls</h2>
+
+<!-- Organization Dropdown -->
+<select id="<%= role %>OrgSelect" onchange="loadControls('<%= role %>')">
+    <option value="">Select an organization</option>
+    <% organizations.forEach(function(org) { %>
+        <option value="<%= org._id %>"><%= org.name %></option>
+    <% }) %>
+</select>
+
+<!-- Controls List -->
+<div id="<%= role %>ControlsList">
+    <label><input type="checkbox" name="controls" value="calendar"> Calendar</label>
+    <label><input type="checkbox" name="controls" value="courses"> Courses</label>
+    <label><input type="checkbox" name="controls" value="coaches"> Coaches</label>
+    <label><input type="checkbox" name="controls" value="student_management"> Student Management</label>
+    <label><input type="checkbox" name="controls" value="notifications"> Notifications</label>
+    <label><input type="checkbox" name="controls" value="billing"> Billing</label>
+    <!-- Add more as needed -->
+</div>
+
+<button onclick="saveControls('<%= role %>')">Save Controls</button>

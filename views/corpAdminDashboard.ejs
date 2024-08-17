@@ -1,25 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Corporate Admin Dashboard</title>
-  <link rel="stylesheet" href="/css/corp.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="/css/admin-style.css">
 </head>
 <body>
-  <%- include('partials/header') %>
-  <div class="dashboard-container">
-    <h2>Organizations</h2>
-    <ul id="organizationList">
-      <% organizations.forEach(function(org) { %>
-        <li>
-          <h3><%= org.name %></h3>
-          <p>Domain: <%= org.domain %></p>
-          <p>Theme Color: <%= org.theme_color %></p>
-          <img src="<%= org.logo_url %>" alt="<%= org.name %> Logo">
-        </li>
-      <% }) %>
-    </ul>
+    <%- include('partials/header') %>
+
+    <div class="container">
+        <%- include('partials/sidebar') %>
+
+        <div class="main-content">
+            <!-- Add Organization -->
+            <div id="add-organization" class="form-section active">
+                <%- include('addOrganizationForm') %>
+            </div>
+
+            <!-- Organization List -->
+            <div id="organization-list" class="form-section">
+              <h3>Organization List</h3>
+              <ul>
+                  <% organizations.forEach(function(org) { %>
+                      <li>
+                          <h4><%= org.name %></h4>
+                          <p>Domain: <%= org.domain %></p>
+                          <p>Theme Color: <span style="background-color: <%= org.theme_color %>; padding: 5px; color: #fff;"><%= org.theme_color %></span></p>
+                          <img src="<%= org.logo_url %>" alt="<%= org.name %> Logo" style="max-width: 100px;">
+                          <a href="#" onclick="editOrganization('<%= org._id %>')">Edit</a>
+                      </li>
+                  <% }) %>
+              </ul>
+          </div>    
+
+          <!-- Edit Organization Modal -->
+          <!-- Edit Organization Modal -->
+<div id="editOrganizationModal" class="modal">
+  <div class="modal-content">
+      <span class="close" onclick="closeModal('editOrganizationModal')">&times;</span>
+      <h3>Edit Organization</h3>
+      <form id="editOrgForm" enctype="multipart/form-data">
+          <input type="hidden" id="orgId" name="orgId" value="">
+          <div>
+              <label for="orgName">Organization Name:</label>
+              <input type="text" id="orgName" name="name" value="">
+          </div>
+          <div>
+              <label for="orgDomain">Organization Domain:</label>
+              <input type="text" id="orgDomain" name="domain" value="">
+          </div>
+          <div>
+              <label for="orgThemeColor">Theme Color:</label>
+              <input type="color" id="orgThemeColor" name="theme_color" value="">
+          </div>
+          <div>
+              <label for="orgLogo">Organization Logo (optional):</label>
+              <input type="file" id="orgLogo" name="logo">
+          </div>
+          <button type="submit">Save Changes</button>
+      </form>
   </div>
+</div>
+
+            <!-- Define Admin Controls -->
+            <div id="define-admin-controls" class="form-section">
+                <%- include('defineControlsForm', { role: 'admin' }) %>
+            </div>
+
+            <!-- Define Coach Controls -->
+            <div id="define-coach-controls" class="form-section">
+                <%- include('defineControlsForm', { role: 'coach' }) %>
+            </div>
+
+            <!-- Define Student Controls -->
+            <div id="define-student-controls" class="form-section">
+                <%- include('defineControlsForm', { role: 'student' }) %>
+            </div>
+
+            <!-- Define Parent Controls -->
+            <div id="define-parent-controls" class="form-section">
+                <%- include('defineControlsForm', { role: 'parent' }) %>
+            </div>
+        </div>
+    </div>
+
+    <%- include('partials/footer') %>
+    <script src="/js/corpdashboard.js"></script>
 </body>
 </html>

@@ -112,45 +112,54 @@
     });
 
     document.getElementById('loginForm').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-      console.log("Email:", email); // Debug log
-      console.log("Password:", password); // Debug log
-      try {
-        const response = await fetch('/auth/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ email, password })
-        });
-        const result = await response.json();
-        if (response.ok) {
-          localStorage.setItem('token', result.token);
-          localStorage.setItem('user', email);
-          if (result.organization) {
-            localStorage.setItem('org_id', result.organization);
-          } else {
-            localStorage.removeItem('org_id'); // Remove if undefined
-          }
-          if (result.role === 'org_admin') {
-            window.location.href = '/booking_management.html';
-          } else if (result.role === 'corp_admin') {
-            window.location.href = '/corp_admin/dashboard';
-          } else if (result.role === 'coach') {
-            window.location.href = '/assignmentview.html';
-          } else {
-            window.location.href = '/student_tasks.html';
-          }
-        } else {
-          alert(result.error);
+        e.preventDefault();
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        try {
+            const response = await fetch('/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, password })
+            });
+            const result = await response.json();
+
+            if (response.ok) {
+                localStorage.setItem('token', result.token);
+                localStorage.setItem('user', email);
+                console.log(result);
+                if (result.role === 'corp_admin') {
+                    // Redirect corp_admin directly to the corporate dashboard
+                    window.location.href = '/corp_admin/dashboard';
+                } else if (result.organizations && result.organizations.length > 1) {
+                    localStorage.removeItem('org_id'); // Clear any previously selected organization
+                    window.location.href = '/select-organization.html'; // Redirect to organization selection page
+                } else if (result.organization) {
+                    localStorage.setItem('org_id', result.organization);
+                    redirectToDashboard(result.role);
+                } else {
+                    window.location.href = '/select-organization.html'; // Redirect if no organization is selected
+                }
+            } else {
+                alert(result.error);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred during login. Please try again.');
         }
-      } catch (error) {
-        console.error('Error:', error);
-        alert('An error occurred during login. Please try again.');
-      }
     });
+
+    function redirectToDashboard(role) {
+        if (role === 'org_admin') {
+            window.location.href = '/booking_management.html';
+        } else if (role === 'coach') {
+            window.location.href = '/assignmentview.html';
+        } else {
+            window.location.href = '/student_tasks.html';
+        }
+    }
   </script>
 </body>
 </html>

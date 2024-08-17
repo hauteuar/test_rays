@@ -45,6 +45,34 @@ class Sidebar extends HTMLElement {
         console.error('Error:', error);
     }
 }
+async fetchOrganizationThemeColor(organizationId) {
+  try {
+      const response = await fetch(`/api/organizations/${organizationId}/theme`, {
+          method: 'GET',
+          headers: {
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+      });
+
+      const data = await response.json();
+
+      if (response.status === 200 && data.theme_color) {
+          // Apply the theme color to the sidebar
+          this.applyThemeColor(data.theme_color);
+      } else {
+          console.error('Failed to fetch organization theme color', data.error);
+      }
+  } catch (error) {
+      console.error('Error fetching organization theme color:', error);
+  }
+}
+
+applyThemeColor(themeColor) {
+  const sidebar = this.querySelector('.sidebar-offcanvas');
+  if (sidebar) {
+      sidebar.style.backgroundColor = themeColor;
+  }
+}
 
   renderSidebar(userProfile) {
     var page = this.getAttribute('data-page');
@@ -68,7 +96,35 @@ class Sidebar extends HTMLElement {
         </ul>
       </nav>
     `;
+
+    const organizationId = localStorage.getItem('organizationId');
+    if (organizationId) {
+      this.fetchOrganizationThemeColor(organizationId);
+    }
+    this.applyCustomScrollbar();
   }
+
+  applyCustomScrollbar() {
+    const style = document.createElement('style');
+    style.textContent = `
+      .sidebar-offcanvas {
+        scrollbar-width: thin;
+        scrollbar-color: blue transparant;
+      }
+      .sidebar-offcanvas::-webkit-scrollbar {
+        width: 8px;
+      }
+      .sidebar-offcanvas::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .sidebar-offcanvas::-webkit-scrollbar-thumb {
+        background-color: transparent;
+        border-radius: 10px;
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
 
   getRoleSpecificMenu(role, page) {
     switch (role.toLowerCase()) {
@@ -187,7 +243,7 @@ class Sidebar extends HTMLElement {
             <li class="nav-item ${page == 'live_practice' ? 'active' : ''}">
               <div class="nav-link">
                 <img src="images/live-practice.png">
-                <span class="menu-title">Live Practice</span>
+                <span class="menu-title">Connect Live</span>
               </div>
             </li>
           </a>
@@ -254,7 +310,7 @@ class Sidebar extends HTMLElement {
             <li class="nav-item ${page == 'live_practice' ? 'active' : ''}">
               <div class="nav-link">
                 <img src="images/live-practice.png">
-                <span class="menu-title">Live Practice</span>
+                <span class="menu-title">Connect Live</span>
               </div>  
             </li>
           </a>

@@ -1,6 +1,9 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/Users');
+const Organization = require('../models/Organizations'); // Assuming you have an Organization model
+const axios = require('axios');
+
 
 exports.login = async (req, res) => {
   const { email, password } = req.body;
@@ -12,10 +15,7 @@ exports.login = async (req, res) => {
       return res.status(401).json({ error: 'Invalid email or password.' });
     }
 
-    //console.log('User found:', user.email); // Debug log
-
     const passwordMatch = await bcrypt.compare(password, user.password);
-    //console.log('Password match:', passwordMatch); // Debug log
     if (!passwordMatch) {
       console.log('Password mismatch');
       return res.status(401).json({ error: 'Invalid email or password.' });
@@ -31,10 +31,10 @@ exports.login = async (req, res) => {
       secure: process.env.NODE_ENV === 'production' // Ensure this is true in production
     });
 
-    // Handle undefined organization for corp_admin
-    const organizationId = user.organizations.length > 0 ? user.organizations[0].org_id._id : null;
+    // Map the organizations array to get all the organization IDs
+    const organizationIds = user.organizations.map(org => org.org_id._id);
 
-    res.json({ token, role: user.role, organization: organizationId });
+    res.json({ token, role: user.role, organizations: organizationIds });
   } catch (error) {
     console.error('Error during login:', error);
     res.status(500).json({ error: 'Internal server error.' });
@@ -51,8 +51,9 @@ exports.logout = async (req, res) => {
   }
 };
 
+
 exports.register = async (req, res) => {
-  const { firstName, lastName, dob, gender, email, contactNumber, password, role } = req.body;
+  const { firstName, lastName, dob, gender, email, contactNumber, emergencyContactNumber, streetAddress, apartmentNumber, city, state, postalCode, country, password, role, organizationId } = req.body;
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -63,13 +64,112 @@ exports.register = async (req, res) => {
       gender,
       email,
       contactNumber,
+      emergencyContactNumber,
+      address: {
+        street: streetAddress,
+        apartment: apartmentNumber,
+        city,
+        state,
+        postalCode,
+        country
+      },
       password: hashedPassword,
       role
     });
+
+    // Create the user in the database first
+    await user.save();
+
+    // Assuming organizationId is an array of organization IDs if the user is part of multiple organizations
+    for (let orgId of organizationId) {
+      const organization = await Organization.findById(orgId);
+
+      if (organization) {
+        // Call the payment API to create a customer ID
+        const paymentResponse = await axios.post('https://api-payments.rayssportsnetwork.com/create-customer', {
+          name: `${firstName} ${lastName}`,
+          email: email,
+          clientId: `HWZTHAT202401-${orgId}` // Unique clientId for each organization
+        });
+
+        const paymentCustomerId = paymentResponse.data.customerId;
+
+        // Update the user with the payment customer ID for the specific organization
+        user.organizations.push({
+          org_id: orgId,
+          paymentCustomerId: paymentCustomerId
+        });
+      }
+    }
+
     await user.save();
 
     res.status(201).json({ message: 'User registered successfully.', user });
   } catch (error) {
-    res.status(500).json({ error: 'Internal server error.' });
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({ error: error.message, details: error.errors });
+    }
+    res.status(500).json({ error: 'Internal server error.', details: error });
+  }
+};
+
+exports.registerChild = async (req, res) => {
+  const { firstName, lastName, dob, gender, email, contactNumber, emergencyContactNumber, streetAddress, apartmentNumber, city, state, postalCode, country, password, organizationId } = req.body;
+
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = new User({
+      firstName,
+      lastName,
+      dob,
+      gender,
+      email,
+      contactNumber,
+      emergencyContactNumber,
+      address: {
+        street: streetAddress,
+        apartment: apartmentNumber,
+        city,
+        state,
+        postalCode,
+        country
+      },
+      password: hashedPassword,
+      role: 'student'
+    });
+
+    // Create the user in the database first
+    await user.save();
+
+    // Assuming organizationId is an array of organization IDs if the user is part of multiple organizations
+    for (let orgId of organizationId) {
+      const organization = await Organization.findById(orgId);
+
+      if (organization) {
+        // Call the payment API to create a customer ID
+        const paymentResponse = await axios.post('https://api-payments.rayssportsnetwork.com/create-customer', {
+          name: `${firstName} ${lastName}`,
+          email: email,
+          clientId: `HWZTHAT202401-${orgId}` // Unique clientId for each organization
+        });
+
+        const paymentCustomerId = paymentResponse.data.customerId;
+
+        // Update the user with the payment customer ID for the specific organization
+        user.organizations.push({
+          org_id: orgId,
+          paymentCustomerId: paymentCustomerId
+        });
+      }
+    }
+
+    await user.save();
+
+    res.status(201).json({ message: 'Child registered successfully as a student.', user });
+  } catch (error) {
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({ error: error.message, details: error.errors });
+    }
+    res.status(500).json({ error: 'Internal server error.', details: error });
   }
 };

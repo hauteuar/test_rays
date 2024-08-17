@@ -30,7 +30,7 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   role: { type: String, enum: ['corp_admin', 'org_admin', 'freelance_coach', 'coach', 'student', 'parent'], required: true },
   organization: { type: mongoose.Schema.Types.ObjectId, ref: 'Organization' },
-  organizationName: { type: String }, // New field to store organization name
+  organizationName: { type: String },
   permissions: [String],
   tokens: [{
     token: { type: String, required: true }
@@ -41,6 +41,7 @@ const userSchema = new mongoose.Schema({
   organizations: [
     {
       org_id: mongoose.Schema.Types.ObjectId,
+      paymentCustomerId: { type: String }, // Unique payment customer ID for each organization
       courses: [
         {
           course_id: mongoose.Schema.Types.ObjectId,
@@ -73,10 +74,10 @@ const userSchema = new mongoose.Schema({
       created_at: { type: Date, default: Date.now }
     }
   ],
-  profilePhoto: { type: String }, // URL to the profile photo
-  coachingCertifications: String, // Certifications for coaches
-  about: String, // About me section for coaches
-  availability: [availabilitySchema], // Availability for coaches
+  profilePhoto: { type: String },
+  coachingCertifications: String,
+  about: String,
+  availability: [availabilitySchema]
 }, { timestamps: true });
 
 module.exports = mongoose.models.User || mongoose.model('User', userSchema);

@@ -8,5 +8,6 @@ router.get('/login', (req, res) => res.render('login'));
 router.post('/login', authController.login);
 router.post('/logout', authMiddleware, authController.logout);
 router.post('/register', authController.register);
+router.post('/register/child', authController.registerChild);
 
 module.exports = router;

@@ -398,7 +398,7 @@
       
               if (response.ok) {
                   alert('Registration successful');
-                  window.location.href = '/login';
+                  window.location.href = '/login.html';
               } else {
                   const error = await response.json();
                   alert('Registration failed: ' + error.error);

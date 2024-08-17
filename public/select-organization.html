@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="zxx">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Select Organization</title>
+    <link rel="stylesheet" href="css/style-1.css">
+    <style>
+        .register-container {
+            display: flex;
+            flex-wrap: wrap;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .register-left {
+            width: 40%;
+            position: relative;
+            height: 100vh;
+        }
+        .register-right {
+            width: 60%;
+            height: 100vh;
+            overflow: auto;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            justify-content: space-between;
+        }
+        .register-logo {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            object-fit: contain;
+        }
+        .middle-card-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        .card {
+            padding: 20px;
+            border-radius: 10px;
+            width: fit-content;
+            min-width: 200px;
+            transition: .3s;
+        }
+        .card:hover {
+            transform: translateY(-10px);
+        }
+        .card h6 {
+            color: white; /* Make the organization name font color white */
+        }
+        @media(max-width: 990px) {
+            .register-left, .register-right {
+                width: 50%;
+                height: auto;
+            }
+        }
+        @media(max-width: 768px) {
+            .register-left, .register-right {
+                width: 100%;
+            }
+            .register-container {
+                overflow: auto;
+            }
+            .register-right {
+                justify-content: flex-start;
+                padding: 20px;
+                gap: 20px;
+            }
+            .back-header {
+                position: fixed;
+                top:20px;
+                left: 20px;
+            }
+            .card {
+                min-width: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <div class="register-container">
+            <div class="register-left">
+                <img src="images/register-bg.png" class="w-100" alt="bg" style="height: 100%; object-fit:cover;">
+                <img src="images/logo.png" class="register-logo" alt="logo"> 
+            </div>
+            <div class="register-right">
+                <div class="flex-align back-header">
+                    <h4 style="font-family: gt-walsheim4">Select Your Organization</h4>
+                </div>
+                <div class="middle-card">
+                    <div class="middle-card-container" id="organizationList">
+                        <!-- Organizations will be listed here -->
+                    </div>
+                </div>
+                <div class="w-100" style="margin-top: 50px; display: flex; justify-content: center; align-items: flex-end; gap: 15px;">
+                    Powered by 
+                    <img src="images/rays-sports.png" style="width: 150px;" alt="logo">
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = '/login.html';
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/organizations', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                const organizations = await response.json();
+                const organizationList = document.getElementById('organizationList');
+                
+                organizations.forEach(org => {
+                    const orgCard = document.createElement('a');
+                    orgCard.href = '#';
+                    orgCard.classList.add('card', 'text-center');
+                    orgCard.innerHTML = `
+                        <img src="${org.logo_url}" class="circle" style="width: 80px; height:80px;" alt="${org.name}">
+                        <h6 class="text-center mt-1" style="font-weight: 600;">${org.name}</h6>
+                    `;
+                    orgCard.addEventListener('click', () => selectOrganization(org._id, org.role));
+                    organizationList.appendChild(orgCard);
+                });
+            } catch (error) {
+                console.error('Error fetching organizations:', error);
+            }
+        });
+       
+        function selectOrganization(orgId, role) {
+            localStorage.setItem('org_id', orgId);
+            redirectToDashboard(role);
+        }
+
+        function redirectToDashboard(role) {
+            if (role === 'org_admin') {
+                window.location.href = '/booking_management.html';
+            } else if (role === 'corp_admin') {
+                window.location.href = '/corp_admin/dashboard';
+            } else if (role === 'coach') {
+                window.location.href = '/assignmentview.html';
+            } else {
+                window.location.href = '/student_tasks.html';
+            }
+        }
+    </script>
+</body>
+</html>
