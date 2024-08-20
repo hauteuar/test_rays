@@ -134,7 +134,7 @@ applyThemeColor(themeColor) {
           <a href="booking_management.html">
             <li class="nav-item ${page == 'calendar' ? 'active' : ''}">
               <div class="nav-link">
-                <img src="images/calendar2.png">
+                <img src="images/calendar.png">
                 <span class="menu-title">Calendar</span>
               </div>
             </li>
@@ -150,7 +150,7 @@ applyThemeColor(themeColor) {
           <a href="coaches.html">
             <li class="nav-item ${page == 'coaches' ? 'active' : ''}">
               <div class="nav-link">
-                <img src="images/coaches.png">
+                <img src="images/coach.png">
                 <span class="menu-title">Coaches</span>
               </div>
             </li>
@@ -190,7 +190,7 @@ applyThemeColor(themeColor) {
           <a href="reports.html">
             <li class="nav-item ${page == 'report' ? 'active' : ''}">
               <div class="nav-link">
-                <img src="images/reports.png">
+                <img src="images/Report.png">
                 <span class="menu-title">Report</span>
               </div>
             </li>
@@ -214,7 +214,7 @@ applyThemeColor(themeColor) {
           <a href="e_com.html">
             <li class="nav-item ${page == 'e_com' ? 'active' : ''}">
               <div class="nav-link">
-                <img src="images/addons.png">
+                <img src="images/Store.png">
                 <span class="menu-title">E Com</span>
               </div>
             </li>

@@ -123,8 +123,13 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="components/sidebar.js" type="text/javascript" defer></script>
-    <script src="components/topnav.js" type="text/javascript" defer></script>
+    
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+  
+  <script src="js/off-canvas.js"></script>
+  <script src="js/template.js"></script>
+
     <script>
 document.addEventListener('DOMContentLoaded', function () {
     const organizationId = localStorage.getItem('organizationId');
@@ -140,6 +145,7 @@ document.addEventListener('DOMContentLoaded', function () {
     })
     .then(response => response.json())
     .then(students => {
+        console.log(students);
         Promise.all(students.map(student => loadStudentPaymentStatus(student)))
             .then(studentElements => {
                 // Sort student elements by payment status
@@ -216,12 +222,50 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    function createStudentElement(student, paymentStatus) {
+        const li = document.createElement('li');
+        li.className = 'nav-item';
+        li.style.width = '100%';
+        li.innerHTML = `
+            <a class="nav-link" id="${student._id}-tab" data-toggle="pill" href="#${student._id}" role="tab" aria-controls="${student._id}" aria-selected="false" style="padding: 0;">
+                <div class="student-list" style="display: flex; align-items: center;">
+                    <div class="profile" style="display: flex; align-items: center;">
+                        <img src="images/coach-dp.png" alt="" style="margin-right: 10px;">
+                        <h4 style="margin: 0;">${student.firstName} ${student.lastName}</h4>
+                    </div>
+                    ${paymentStatus === 100 ? 
+                        '<div class="status-indicator fully-paid" style="margin-left: auto;">Fully paid</div>' :
+                        `<input id="billing-range" type="range" min="0" max="100" value="${paymentStatus >= 0 ? paymentStatus : 0}" class="range ${getStatusClass(paymentStatus)}" disabled style="margin-left: auto; width: 50%;">`
+                    }
+                </div>
+            </a>
+        `;
+        li.querySelector('a').addEventListener('click', () => loadStudentDetails(student));
+        return li;
+    }
+
+    function getStatusClass(paymentStatus) {
+        if (paymentStatus === -1) return 'white'; // No payments found
+        if (paymentStatus >= 75) return 'green';
+        if (paymentStatus >= 50) return 'orange';
+        return 'red';
+    }
+
+    function loadStudentDetails(student) {
+        fetch(`/api/payments/user/${student._id}`)
+        .then(response => response.json())
+        .then(payments => {
+            const detailsContainer = document.getElementById('student-details');
+            detailsContainer.innerHTML = createStudentDetails(student, payments);
+        });
+    }
+
     function createStudentDetails(student, payments) {
         let html = `
             <div class="billing-header">
                 <div class="profile">
                     <img src="images/coach-dp.png" alt="">
-                    <h4 class="name">${student.name}</h4>
+                    <h4 class="name">${student.firstName} ${student.lastName}</h4>
                 </div>
             </div>
             <div class="table-container">
@@ -298,7 +342,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 <div class="coach-list">
                     <div class="profile">
                         <img src="images/coach-dp.png" alt="">
-                        <h4>${coach.name}</h4>
+                        <h4>${coach.firstName} ${coach.lastName}</h4>
                     </div>
                 </div>
             </a>
