@@ -109,7 +109,7 @@
                 try {
                   const organizationId = localStorage.getItem('organizationId'); // Assuming organizationId is stored in localStorage
 
-                  const response = await fetch('/api/user', {
+                  const response = await fetch(`/api/user/${organizationId}`, {
                         method: 'GET', // or 'POST', 'PUT', etc., depending on your API
                         headers: {
                         'Content-Type': 'application/json',

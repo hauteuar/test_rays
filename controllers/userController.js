@@ -115,6 +115,24 @@ exports.getOrgStudents = async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 };
+
+exports.getOrgParents = async (req, res) => {
+  const organizationId = req.params.organizationId;
+ // console.log('Organization ID from request:', organizationId);
+
+  try {
+    // Check the data in the database
+    const students = await User.find({ role: 'parent', 'organizations.org_id': organizationId });
+    //console.log('Coaches found:', coaches);
+
+    res.json(students);
+  } catch (error) {
+    console.error('Error fetching parents:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+
 // Create a new user
 exports.createUser = async (req, res) => {
   const userData = req.body;

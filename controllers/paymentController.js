@@ -84,3 +84,21 @@ exports.getPayment = async (req, res) => {
     res.status(500).json({ success: false, message: 'Internal server error.' });
   }
 };
+
+// Retrieve all payments for a specific user
+exports.getPaymentsByUserId = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const payments = await Payment.find({ userId }).populate('organizationId');
+
+    if (!payments || payments.length === 0) {
+      return res.status(404).json({ success: false, message: 'No payments found for this user.' });
+    }
+
+    res.status(200).json({ success: true, payments });
+  } catch (error) {
+    console.error('Error retrieving payments:', error);
+    res.status(500).json({ success: false, message: 'Internal server error.' });
+  }
+};

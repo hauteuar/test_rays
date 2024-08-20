@@ -21,13 +21,13 @@ class topnav extends HTMLElement {
         </ul>
         <ul class="navbar-nav navbar-nav-right">
           <li class="nav-item">
-            <a class="position-relative p-0" href="#" id="cart-icon">
+            <a class="position-relative p-0" href="/checkout.html" id="cart-icon">
               <img src="images/cart.png" class="icon5">
-              <span id="cart-count" style="background-color: #FF862F;width:16px;height:16px;position: absolute;top: 5px;right: -5px;border-radius: 50%;font-size: 10px;text-align: center;line-height: 16px;color: #fff;"></span>
+              <span id="cart-count" style="background-color: #FF862F;width:16px;height:16px;position: absolute;top: 5px;right: -5px;border-radius: 50%;font-size: 10px;text-align: center;line-height: 16px;color: #fff; display: none;"></span>
             </a>
           </li>
           <li class="nav-item">
-            <a class="position-relative p-0" id="mail-icon">
+            <a class="position-relative p-0" href="/notification.html" id="mail-icon">
               <img src="images/message.png" class="icon5">
               <span id="mail-notification" style="background-color: transparent;width:8px;height:8px;position: absolute;top: 5px;right: -5px;border-radius: 50%;"></span>
             </a>
@@ -50,7 +50,7 @@ class topnav extends HTMLElement {
     `;
 
     this.fetchOrganizationLogo();
-    this.updateCartCount();
+    this.updateCartIcon();
     this.updateMailIcon();
     this.checkOrganizations();
 
@@ -76,11 +76,23 @@ class topnav extends HTMLElement {
     .catch(error => console.error('Error fetching organization logo:', error));
   }
 
-  updateCartCount() {
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    const cartCount = cart.length;
-    const cartCountElement = document.getElementById('cart-count');
-    cartCountElement.textContent = cartCount > 0 ? cartCount : '';
+  async updateCartIcon() {
+    try {
+      const userId = localStorage.getItem('userId');
+      const response = await fetch(`/api/cart/${userId}`);
+  
+      if (response.ok) {
+        const cart = await response.json();
+        const cartCount = cart.items.length;
+        const cartCountElement = document.getElementById('cart-count');
+        cartCountElement.textContent = cartCount;
+        cartCountElement.style.display = cartCount > 0 ? 'block' : 'none';
+      } else {
+        console.error('Failed to load cart data');
+      }
+    } catch (error) {
+      console.error('Error updating cart icon:', error);
+    }
   }
 
   updateMailIcon() {
@@ -96,6 +108,7 @@ class topnav extends HTMLElement {
         const unreadCount = data.unreadCount || 0;
         const mailNotificationElement = document.getElementById('mail-notification');
         mailNotificationElement.style.backgroundColor = unreadCount > 0 ? '#FF862F' : 'transparent';
+        mailNotificationElement.style.display = unreadCount > 0 ? 'block' : 'none';
     })
     .catch(error => console.error('Error fetching unread notifications:', error));
   }

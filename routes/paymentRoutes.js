@@ -11,4 +11,6 @@ router.post('/update-payment-status', paymentController.updatePaymentStatus);
 // Route to retrieve payment information
 router.get('/payment/:transactionId', paymentController.getPayment);
 
+router.get('/user/:userId', paymentController.getPaymentsByUserId);
+
 module.exports = router;

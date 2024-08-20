@@ -12,7 +12,7 @@ const documentSchema = new mongoose.Schema({
   },
   category: {
     type: String,
-    enum: ['Registration', 'Consent', 'Other'],
+    enum: ['Registration', 'Consent', 'Other', 'Templates'],
     required: true,
   },
   description: {

@@ -44,12 +44,14 @@ app.use(session({
   cookie: { secure: false } // Set secure: true in production with HTTPS
 }));
 
+
 const storage = multer.memoryStorage();
 const uploadMiddleware = multer({ 
     storage: storage,
     limits: { fileSize: 50 * 1024 * 1024 } // 50 MB limit for example
 }).any(); // .any() allows any file type
 
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Routes
 const authRoutes = require('./routes/authRoutes');
 const organizationRoutes = require('./routes/organizationRoutes');
@@ -65,6 +67,9 @@ const paymentRoutes = require('./routes/paymentRoutes');
 const cartRoutes = require('./routes/cartRoutes');
 const feedbackRoutes = require('./routes/feedbackRoutes');
 const orgRoutes = require('./routes/orgRoutes');
+const waiverRoutes = require('./routes/waiverRoutes');
+const itemRoutes = require('./routes/itemRoutes');
+const sponsorRoutes = require('./routes/sponsorRoutes');
 
 app.use('/auth', authRoutes);
 app.use('/api/organizations', organizationRoutes);
@@ -80,7 +85,9 @@ app.use('/api/payments', paymentRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/feedback', feedbackRoutes);
 app.use('/api/org', orgRoutes);
-
+app.use('/api/waivers', waiverRoutes);
+app.use('/api/items', itemRoutes);
+app.use('/api/sponsors', sponsorRoutes);
 
 app.get('/', (req, res) => {
   res.redirect('/auth/login');
@@ -204,9 +211,9 @@ app.get('/corp_admin/dashboard', authMiddleware, async (req, res) => {
   }
 });
 
-app.get('/org_admin/dashboard', authMiddleware, (req, res) => {
-  res.redirect('/booking_management.html');
-});
+//app.get('/org_admin/dashboard', authMiddleware, (req, res) => {
+//  res.redirect('/booking_management.html');
+//});
 
 app.get('/coach/dashboard', authMiddleware, (req, res) => {
   res.render('coachDashboard');

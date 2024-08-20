@@ -35,13 +35,14 @@ const userSchema = new mongoose.Schema({
   tokens: [{
     token: { type: String, required: true }
   }],
-  signedDocuments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'SignedDocument' }],
+  
   parent: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   age: Number,
   organizations: [
     {
       org_id: mongoose.Schema.Types.ObjectId,
       paymentCustomerId: { type: String }, // Unique payment customer ID for each organization
+      signedDocuments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'SignedDocument' }],
       courses: [
         {
           course_id: mongoose.Schema.Types.ObjectId,

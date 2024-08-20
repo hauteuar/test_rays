@@ -1,106 +1,159 @@
-  <!DOCTYPE html>
-  <html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Hwzthat</title>
-    <link rel="stylesheet" href="css/style.css">
-    
-    <link rel="shortcut icon" href="images/favicon.png" />
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/mobile.css">
+  <link rel="stylesheet" href="/css/tab.css">
+  <link rel="stylesheet" href="/css/calendar.css">
+  <link rel="stylesheet" href="css/style22.css">
+  <link rel="stylesheet" href="css/style2.css">
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+  <script src="components/topnav.js" type="text/javascript" defer></script>
+  <script src="components/sidebar.js" type="text/javascript" defer></script>
 
-    <!-- Bootstrap and jQuery JS -->
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.theme.min.css">
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.js"></script>
+</head>
 
-    <script src="components/sidebar.js" type="text/javascript" defer></script>
-    <script src="components/topnav.js" type="text/javascript" defer></script>
-  </head>
+<body>
+  <div class="container-scroller">
+    <topnav-component></topnav-component>
+    <div class="container-fluid page-body-wrapper">
+      <sidebar-component data-page="student_management"></sidebar-component>
+      <div class="main-panel">
+        <div class="content-wrapper">
+          <div class="flex-align second-header mb-3">
+            <h4 class="m-0" style="font-weight: 600;">Student Management</h4>
+          </div>
+          <div class="tabs-to-dropdown">
+            <div class="nav-wrapper d-flex align-items-center justify-content-between mb-2 border-bottom"
+              style="flex-flow: wrap;gap:20px;">
+              <ul class="nav nav-pills d-md-flex" id="pills-tab" role="tablist" style="width:auto;">
+                <!-- Hide Schedule Tab -->
+                <li class="nav-item" role="presentation" style="display: none;">
+                  <a class="nav-link" id="pills-scheduled-tab" data-toggle="pill" href="#pills-scheduled" role="tab"
+                    aria-controls="pills-scheduled" aria-selected="true">Schedule</a>
+                </li>
+                <!-- Student Tab -->
+                <li class="nav-item" role="presentation">
+                  <a class="nav-link active" id="pills-student-tab" data-toggle="pill" href="#pills-student" role="tab"
+                    aria-controls="pills-student" aria-selected="false">Student</a>
+                </li>
+                <!-- Parent Tab -->
+                <li class="nav-item" role="presentation">
+                  <a class="nav-link" id="pills-parent-tab" data-toggle="pill" href="#pills-parent" role="tab"
+                    aria-controls="pills-parent" aria-selected="false">Parent</a>
+                </li>
+              </ul>
+              <div class="d-flex" style="gap:10px;white-space: nowrap;">
+                <a href="new-schedule.html"><button id="schedule-btn" class="btn site-btn-success hoverbtn"
+                    style="margin-top: -7px; display: none;">+ New schedule</button></a>
 
-  <body>
-    <div class="container-scroller">
-      <topnav-component></topnav-component>
-      <div class="container-fluid page-body-wrapper">
-        <sidebar-component data-page="student-management"></sidebar-component>
-        <div class="main-panel">
-          <div class="content-wrapper">
-            <div class="flex-align second-header mb-3">
-              <h4 class="m-0" style="font-weight: 600;">Student Management</h4>
-            </div>
-            <div class="tabs-to-dropdown">
-              <div class="nav-wrapper d-flex align-items-center justify-content-between mb-2 border-bottom"
-                style="flex-flow: wrap;gap:20px;">
-                <ul class="nav nav-pills d-md-flex" id="pills-tab" role="tablist" style="width:auto;">
-                  <li class="nav-item" role="presentation" onclick="toggleFilter('schedule-btn', true)">
-                    <a class="nav-link active" id="pills-scheduled-tab" data-toggle="pill" href="#pills-scheduled"
-                        role="tab" aria-controls="pills-scheduled" aria-selected="true">Schedule</a>
-                  </li>
-                  <li class="nav-item" role="presentation" onclick="toggleFilter('student-btn', false)">
-                      <a class="nav-link" id="pills-student-tab" data-toggle="pill" href="#pills-student" role="tab"
-                          aria-controls="pills-student" aria-selected="false">Student</a>
-                  </li>
-                </ul>
-                <div class="d-flex" style="gap:10px;white-space: nowrap;">
-                  <a href="new-schedule.html"><button id="schedule-btn" class="btn site-btn-success hoverbtn" style="margin-top: -7px;">+ New schedule</button></a>
-                  
-
-                <div  id="student-btn" class="dropdown" style=" display: none;">
-                  <button  class="btn dropdown-toggle site-btn-success hoverbtn" style="margin-top: -7px;" 
+                <div id="student-btn" class="dropdown">
+                  <button class="btn dropdown-toggle site-btn-success hoverbtn" style="margin-top: -7px;"
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                     + New student
                   </button>
-                  <div class="dropdown-menu dropdown-menu-right" >
-                    <a href="athlet.html" class="dropdown-item text-success py-2" href="#">Add manually</a>
-                    <a class="dropdown-item text-success py-2" href="#" data-toggle="modal" data-target="#linkModal">Generate invitation link</a>
+                  <div class="dropdown-menu dropdown-menu-right">
+                    <a href="athlet.html" class="dropdown-item text-success py-2">Add manually</a>
+                    <a class="dropdown-item text-success py-2" href="#" data-toggle="modal"
+                      data-target="#linkModal">Generate invitation link</a>
                   </div>
-                </div>
                 </div>
               </div>
-              <div class="tab-content mt-3" id="pills-tabContent">
-                <div class="tab-pane fade show active" id="pills-scheduled" role="tabpanel"
-                  aria-labelledby="pills-scheduled-tab">
-                  <!-- Schedule content -->
-                </div>
-                <div class="tab-pane fade" id="pills-student" role="tabpanel" aria-labelledby="pills-student-tab">
-                  <div class="row studentes-dropdown align-items-center mb-2"
-                    style="row-gap:15px;margin-left: -6px;margin-right: -6px;justify-content: end;">
-                    <div class="col-md-6">
-                      <h6 class="m-0 text-gray" style="font-size: 12px;">Total 15</h6>
-                    </div>
-                    <div class="col-md-2 col-6" style="padding: 0 6px;">
-                      <div class="top-search">
-                        <input type="" name="" class="hwzthat-input w-100" placeholder="search">
-                      </div>
-                    </div>
-                    <div class="col-md-2 col-6 dropdown" style="padding: 0 6px;">
-                      <button class="btn dropdown-toggle w-100 hwzthat-dropdown" type="button" id="dropdownMenuDate2"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="font-size: 13px;">
-                        Branch name
-                      </button>
-                      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownStudent">
-                        <a class="dropdown-item" href="#">Branch name 1</a>
-                        <a class="dropdown-item" href="#">Branch name 2</a>
-                      </div>
-                    </div>
-                    <div class="col-md-2 col-6 dropdown" style="padding: 0 6px;">
-                      <button class="btn dropdown-toggle w-100 hwzthat-dropdown" type="button" id="dropdownMenuDate2"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="font-size: 13px;">
-                        Specialized
-                      </button>
-                      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownStudent">
-                        <a class="dropdown-item" href="#">Specialized 1</a>
-                        <a class="dropdown-item" href="#">Specialized 2</a>
-                      </div>
+            </div>
+            <div class="tab-content mt-3" id="pills-tabContent">
+              <!-- Schedule Content (Hidden) -->
+              <div class="tab-pane fade" id="pills-scheduled" role="tabpanel" aria-labelledby="pills-scheduled-tab">
+                <!-- Schedule content -->
+              </div>
+              <!-- Student Content -->
+              <div class="tab-pane fade show active" id="pills-student" role="tabpanel"
+                aria-labelledby="pills-student-tab">
+                <div class="row studentes-dropdown align-items-center mb-2"
+                  style="row-gap:15px;margin-left: -6px;margin-right: -6px;justify-content: end;">
+                  <div class="col-md-6">
+                    <h6 class="m-0 text-gray" style="font-size: 12px;">Total 15</h6>
+                  </div>
+                  <div class="col-md-2 col-6" style="padding: 0 6px;">
+                    <div class="top-search">
+                      <input type="text" name="" class="hwzthat-input w-100" placeholder="search">
                     </div>
                   </div>
-                  <div class="hwzthat-studentes">
-                    <div class="row m-0">
-                      <!-- Student cards will be dynamically loaded here -->
+                  <div class="col-md-2 col-6 dropdown" style="padding: 0 6px;">
+                    <button class="btn dropdown-toggle w-100 hwzthat-dropdown" type="button" id="dropdownMenuDate2"
+                      data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="font-size: 13px;">
+                      Branch name
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownStudent">
+                      <a class="dropdown-item" href="#">Branch name 1</a>
+                      <a class="dropdown-item" href="#">Branch name 2</a>
                     </div>
+                  </div>
+                  <div class="col-md-2 col-6 dropdown" style="padding: 0 6px;">
+                    <button class="btn dropdown-toggle w-100 hwzthat-dropdown" type="button" id="dropdownMenuDate2"
+                      data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="font-size: 13px;">
+                      Specialized
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownStudent">
+                      <a class="dropdown-item" href="#">Specialized 1</a>
+                      <a class="dropdown-item" href="#">Specialized 2</a>
+                    </div>
+                  </div>
+                </div>
+                <div class="hwzthat-studentes">
+                  <div class="row m-0">
+                    <!-- Student cards will be dynamically loaded here -->
+                  </div>
+                </div>
+              </div>
+              <!-- Parent Content -->
+              <div class="tab-pane fade" id="pills-parent" role="tabpanel" aria-labelledby="pills-parent-tab">
+                <div class="row parents-dropdown align-items-center mb-2"
+                  style="row-gap:15px;margin-left: -6px;margin-right: -6px;justify-content: end;">
+                  <div class="col-md-6">
+                    <h6 class="m-0 text-gray" style="font-size: 12px;">Total Parents</h6>
+                  </div>
+                  <div class="col-md-2 col-6" style="padding: 0 6px;">
+                    <div class="top-search">
+                      <input type="text" name="" class="hwzthat-input w-100" placeholder="search">
+                    </div>
+                  </div>
+                  <div class="col-md-2 col-6 dropdown" style="padding: 0 6px;">
+                    <button class="btn dropdown-toggle w-100 hwzthat-dropdown" type="button" id="dropdownMenuDate2"
+                      data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="font-size: 13px;">
+                      Branch name
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownParent">
+                      <a class="dropdown-item" href="#">Branch name 1</a>
+                      <a class="dropdown-item" href="#">Branch name 2</a>
+                    </div>
+                  </div>
+                  <div class="col-md-2 col-6 dropdown" style="padding: 0 6px;">
+                    <button class="btn dropdown-toggle w-100 hwzthat-dropdown" type="button" id="dropdownMenuDate2"
+                      data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="font-size: 13px;">
+                      Specialized
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownParent">
+                      <a class="dropdown-item" href="#">Specialized 1</a>
+                      <a class="dropdown-item" href="#">Specialized 2</a>
+                    </div>
+                  </div>
+                </div>
+                <div class="hwzthat-parents">
+                  <div class="row m-0">
+                    <!-- Parent cards will be dynamically loaded here -->
                   </div>
                 </div>
               </div>
@@ -109,306 +162,404 @@
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- Modal for adding a new student -->
-    <div class="modal fade" id="addStudentModal">
-      <div class="modal-dialog modal-md" role="document">
-        <div class="modal-content">
-          <div class="modal-header align-items-center">
-            <h5 class="modal-title" id="addStudentModalLabel">Add New Student</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <form id="addStudentForm">
-              <div class="form-group">
-                <label for="firstName">First Name</label>
-                <input type="text" class="form-control" id="firstName" name="firstName" required>
-              </div>
-              <div class="form-group">
-                <label for="lastName">Last Name</label>
-                <input type="text" class="form-control" id="lastName" name="lastName" required>
-              </div>
-              <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" class="form-control" id="email" name="email" required>
-              </div>
-              <div class="form-group">
-                <label for="phone">Phone</label>
-                <input type="text" class="form-control" id="phone" name="phone">
-              </div>
-              <div class="form-group">
-                <label for="profilePicture">Profile Picture</label>
-                <input type="file" class="form-control-file" id="profilePicture" name="profilePicture">
-              </div>
-              <button type="submit" class="btn btn-primary">Add Student</button>
-            </form>
-          </div>
+  <!-- Modal for adding a new student -->
+  <div class="modal fade" id="addStudentModal">
+    <div class="modal-dialog modal-md" role="document">
+      <div class="modal-content">
+        <div class="modal-header align-items-center">
+          <h5 class="modal-title" id="addStudentModalLabel">Add New Student</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="addStudentForm">
+            <div class="form-group">
+              <label for="firstName">First Name</label>
+              <input type="text" class="form-control" id="firstName" name="firstName" required>
+            </div>
+            <div class="form-group">
+              <label for="lastName">Last Name</label>
+              <input type="text" class="form-control" id="lastName" name="lastName" required>
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+              <label for="phone">Phone</label>
+              <input type="text" class="form-control" id="phone" name="phone">
+            </div>
+            <div class="form-group">
+              <label for="profilePicture">Profile Picture</label>
+              <input type="file" class="form-control-file" id="profilePicture" name="profilePicture">
+            </div>
+            <button type="submit" class="btn btn-primary">Add Student</button>
+          </form>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- Modal for displaying student details -->
-    <div class="modal fade" id="studentModal">
-      <div class="modal-dialog modal-xl" role="document">
-        <div class="modal-content">
-          <div class="modal-header align-items-center">
-            <h5 class="modal-title" id="studentModalLabel">Student Details</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <div class="profile-right-body py-0">
-              <div class="d-flex pb-4 align-items-center">
-                <div style="width: 130px;">
-                  <img src="images/user-placeholder.png" id="studentImage" style="width: 100px;height: 100px;object-fit: cover;border-radius: 50%;">
-                </div>
-                <div style="width: calc(100% - 130px);">
-                  <div class="row" style="row-gap: 15px;">
-                    <div class="col-12">
-                      <h4 class="mb-0" id="studentName">Student Name</h4>
-                    </div>
-                    <div class="col-6 d-flex align-items-center email">
-                      <img src="images/email.png" class="icon">
-                      <h6 class="mb-0 pl-2" id="studentEmail">Email</h6>
-                    </div>
-                    <div class="col-6 d-flex align-items-center call">
-                      <img src="images/call.png" class="icon">
-                      <h6 class="mb-0 pl-2" id="studentPhone">Phone</h6>
-                    </div>
+  <!-- Modal for displaying student details -->
+  <div class="modal fade" id="studentModal">
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content">
+        <div class="modal-header align-items-center">
+          <h5 class="modal-title" id="studentModalLabel">Student Details</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="profile-right-body py-0">
+            <div class="d-flex pb-4 align-items-center">
+              <div style="width: 130px;">
+                <img src="images/user-dp.png" id="studentImage"
+                  style="width: 100px;height: 100px;object-fit: cover;border-radius: 50%;">
+              </div>
+              <div style="width: calc(100% - 130px);">
+                <div class="row" style="row-gap: 15px;">
+                  <div class="col-12">
+                    <h4 class="mb-0" id="studentName">Student Name</h4>
                   </div>
-                </div>
-                <div style="position:absolute;right:30px;top:10px;">
-                  <img src="images/dots.png" data-toggle="dropdown" id="moreDropdown" style="height: 16px;width: 16px;object-fit: contain;cursor: pointer;">
-                  <div class="dropdown-menu dropdown-menu-right" aria-labelledby="moreDropdown">
-                    <a class="dropdown-item mb-2">Edit</a>
-                    <a class="dropdown-item">Delete</a>
+                  <div class="col-6 d-flex align-items-center email">
+                    <img src="images/email.png" class="icon">
+                    <h6 class="mb-0 pl-2" id="studentEmail">Email</h6>
+                  </div>
+                  <div class="col-6 d-flex align-items-center call">
+                    <img src="images/call.png" class="icon">
+                    <h6 class="mb-0 pl-2" id="studentPhone">Phone</h6>
                   </div>
                 </div>
               </div>
-              <div class="row border-top py-3 m-0">
-                <div class="col-lg-4 col-sm-6 col-6">
-                  <h6 class="mb-2 text-gray">Date of Birth</h6>
-                  <h5 class="m-0" id="studentDOB">DOB</h5>
-                </div>
-                <div class="col-lg-4 col-sm-6 col-6">
-                  <h6 class="mb-2 text-gray">Emergency Contact Name</h6>
-                  <h5 class="m-0" id="studentEmergencyContactName">Emergency Contact Name</h5>
-                </div>
-                <div class="col-lg-4 col-sm-6 col-6">
-                  <h6 class="mb-2 text-gray">Emergency Contact Number</h6>
-                  <h5 class="m-0" id="studentEmergencyContactNumber">Emergency Contact Number</h5>
-                </div>
-                <div class="col-lg-4 col-sm-6 col-6">
-                  <h6 class="mb-2 text-gray">Specialized</h6>
-                  <h5 class="m-0" id="studentSpecialized">Specialized</h5>
-                </div>
-                <div class="col-lg-4 col-sm-6 col-6">
-                  <h6 class="mb-2 text-gray">Batting Style</h6>
-                  <h5 class="m-0" id="studentBattingStyle">Batting Style</h5>
-                </div>
-                <div class="col-lg-4 col-sm-6 col-6">
-                  <h6 class="mb-2 text-gray">Branch Name</h6>
-                  <h5 class="m-0" id="studentBranchName">Branch Name</h5>
+              <div style="position:absolute;right:30px;top:10px;">
+                <img src="images/dots.png" data-toggle="dropdown" id="moreDropdown"
+                  style="height: 16px;width: 16px;object-fit: contain;cursor: pointer;">
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="moreDropdown">
+                  <a class="dropdown-item mb-2">Edit</a>
+                  <a class="dropdown-item">Delete</a>
                 </div>
               </div>
-              <div class="row border-top py-3 m-0">
-                <div class="col-12 p-0">
-                  <h4 class="m-0" style="font-size: 15px;">Address Details</h4>
-                </div>
-                <div class="col-lg-4 col-sm-6 col-6">
-                  <h6 class="mb-2 text-gray">Street</h6>
-                  <h5 class="m-0" id="studentStreet">Street</h5>
-                </div>
-                <div class="col-lg-4 col-sm-6 col-6">
-                  <h6 class="mb-2 text-gray">City</h6>
-                  <h5 class="m-0" id="studentCity">City</h5>
-                </div>
-                <div class="col-lg-4 col-sm-6 col-6">
-                  <h6 class="mb-2 text-gray">State</h6>
-                  <h5 class="m-0" id="studentState">State</h5>
-                </div>
-                <div class="col-lg-4 col-sm-6 col-6">
-                  <h6 class="mb-2 text-gray">ZIP Code</h6>
-                  <h5 class="m-0" id="studentZIP">ZIP Code</h5>
-                </div>
-                <div class="col-lg-4 col-sm-6 col-6">
-                  <h6 class="mb-2 text-gray">Country</h6>
-                  <h5 class="m-0" id="studentCountry">Country</h5>
-                </div>
+            </div>
+            <div class="row border-top py-3 m-0">
+              <div class="col-lg-4 col-sm-6 col-6">
+                <h6 class="mb-2 text-gray">Date of Birth</h6>
+                <h5 class="m-0" id="studentDOB">DOB</h5>
+              </div>
+              <div class="col-lg-4 col-sm-6 col-6">
+                <h6 class="mb-2 text-gray">Emergency Contact Name</h6>
+                <h5 class="m-0" id="studentEmergencyContactName">Emergency Contact Name</h5>
+              </div>
+              <div class="col-lg-4 col-sm-6 col-6">
+                <h6 class="mb-2 text-gray">Emergency Contact Number</h6>
+                <h5 class="m-0" id="studentEmergencyContactNumber">Emergency Contact Number</h5>
+              </div>
+              <div class="col-lg-4 col-sm-6 col-6">
+                <h6 class="mb-2 text-gray">Specialized</h6>
+                <h5 class="m-0" id="studentSpecialized">Specialized</h5>
+              </div>
+              <div class="col-lg-4 col-sm-6 col-6">
+                <h6 class="mb-2 text-gray">Batting Style</h6>
+                <h5 class="m-0" id="studentBattingStyle">Batting Style</h5>
+              </div>
+              <div class="col-lg-4 col-sm-6 col-6">
+                <h6 class="mb-2 text-gray">Branch Name</h6>
+                <h5 class="m-0" id="studentBranchName">Branch Name</h5>
+              </div>
+            </div>
+            <div class="row border-top py-3 m-0">
+              <div class="col-12 p-0">
+                <h4 class="m-0" style="font-size: 15px;">Address Details</h4>
+              </div>
+              <div class="col-lg-4 col-sm-6 col-6">
+                <h6 class="mb-2 text-gray">Street</h6>
+                <h5 class="m-0" id="studentStreet">Street</h5>
+              </div>
+              <div class="col-lg-4 col-sm-6 col-6">
+                <h6 class="mb-2 text-gray">City</h6>
+                <h5 class="m-0" id="studentCity">City</h5>
+              </div>
+              <div class="col-lg-4 col-sm-6 col-6">
+                <h6 class="mb-2 text-gray">State</h6>
+                <h5 class="m-0" id="studentState">State</h5>
+              </div>
+              <div class="col-lg-4 col-sm-6 col-6">
+                <h6 class="mb-2 text-gray">ZIP Code</h6>
+                <h5 class="m-0" id="studentZIP">ZIP Code</h5>
+              </div>
+              <div class="col-lg-4 col-sm-6 col-6">
+                <h6 class="mb-2 text-gray">Country</h6>
+                <h5 class="m-0" id="studentCountry">Country</h5>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+  </div>
 
-    
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-    <script src="js/off-canvas.js"></script>
-    <script src="js/template.js"></script>
+  <script src="js/off-canvas.js"></script>
+  <script src="js/template.js"></script>
 
-    <script>
-      function toggleFilter(btnIdToShow, isSchedule) {
-          var scheduleBtn = document.getElementById('schedule-btn');
-          var studentBtn = document.getElementById('student-btn');
+  <script>
+    function toggleFilter(btnIdToShow, isSchedule) {
+      var scheduleBtn = document.getElementById('schedule-btn');
+      var studentBtn = document.getElementById('student-btn');
 
-          if (isSchedule) {
-              scheduleBtn.style.display = 'block';
-              studentBtn.style.display = 'none';
-          } else {
-              scheduleBtn.style.display = 'none';
-              studentBtn.style.display = 'block';
+      if (isSchedule) {
+        scheduleBtn.style.display = 'block';
+        studentBtn.style.display = 'none';
+      } else {
+        scheduleBtn.style.display = 'none';
+        studentBtn.style.display = 'block';
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      fetchUserProfile();
+
+      function fetchUserProfile() {
+        const token = localStorage.getItem('token');
+
+        $.ajax({
+          url: '/api/user/profile',
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          success: function (response) {
+            const organizationName = response.organizationName;
+            localStorage.setItem('organizationName', organizationName);
+            fetchStudents(organizationName);
+            fetchParents(organizationName); // Fetch parents data
+          },
+          error: function (error) {
+            console.error('Error fetching user profile', error);
           }
+        });
       }
-      document.addEventListener("DOMContentLoaded", function() {
-  fetchUserProfile();
 
-  function fetchUserProfile() {
-    const token = localStorage.getItem('token');
+      function fetchStudents(organizationName) {
+        const token = localStorage.getItem('token');
+        const accessToken = `Bearer ${token}`;
+        const organizationId = localStorage.getItem('organizationId')
 
-    $.ajax({
-      url: '/api/user/profile',
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      success: function(response) {
-        const organizationName = response.organizationName;
-        localStorage.setItem('organizationName', organizationName);
-        fetchStudents(organizationName);
-      },
-      error: function(error) {
-        console.error('Error fetching user profile', error);
+        fetch(`/api/user/organization/${organizationId}/students`, {
+          method: 'GET',
+          headers: {
+            'Authorization': accessToken,
+            'organizationId': organizationId // Ensure the organization name is correctly set in the headers
+          }
+        })
+          .then(response => response.json())
+          .then(data => {
+            console.log(data);
+            if (data) {
+              loadStudents(data);
+            }
+          })
+          .catch(error => console.error('Error:', error));
       }
-    });
-  }
 
-  function fetchStudents(organizationName) {
-    const token = localStorage.getItem('token');
-    const accessToken = `Bearer ${token}`;
-    const organizationId = localStorage.getItem('organizationId')
-    
-    fetch(`/api/user/organization/${organizationId}/students`, {
-      method: 'GET',
-      headers: {
-        'Authorization': accessToken,
-        'organizationId': organizationId // Ensure the organization name is correctly set in the headers
+      function fetchParents(organizationName) {
+        const token = localStorage.getItem('token');
+        const accessToken = `Bearer ${token}`;
+        const organizationId = localStorage.getItem('organizationId')
+
+        fetch(`/api/user/organization/${organizationId}/parents`, {
+          method: 'GET',
+          headers: {
+            'Authorization': accessToken,
+            'organizationId': organizationId
+          }
+        })
+          .then(response => response.json())
+          .then(data => {
+            console.log(data);
+            if (data) {
+              loadParents(data);
+            }
+          })
+          .catch(error => console.error('Error:', error));
       }
-    })
-    .then(response => response.json())
-    .then(data => {
-      console.log(data);
-      if (data) {
-        loadStudents(data);
-      }
-    })
-    .catch(error => console.error('Error:', error));
-  }
 
-  function loadStudents(students) {
-    const studentContainer = document.querySelector('.hwzthat-studentes .row');
-    studentContainer.innerHTML = ''; // Clear existing students
+      function loadStudents(students) {
+        const studentContainer = document.querySelector('.hwzthat-studentes .row');
+        studentContainer.innerHTML = ''; // Clear existing students
 
-    students.forEach(student => {
-      const studentCard = `
-        <div class="hwzthat-cards-col-2">
-          <div class="card hwzthat-cards team-member-card">
-            <div style="position:absolute;right:10px;top:10px;">
-              <img src="images/dots.png" data-toggle="dropdown" id="moreDropdown" style="height: 12px;width: 12px;object-fit: contain;cursor: pointer;">
-            </div>
-            <div class="cursor-pointer" data-toggle="modal" data-target="#studentModal" data-id="${student._id}">
-
-              <img src="${student.profilePicture || 'images/user-placeholder.png'}" width="70" class=" mb-2 mx-auto">
-              <div class="mt-1">
-                <h4>${student.firstName} ${student.lastName}</h4>
-                <h5>${student.email}</h5>
-                <h6 style="color: #436681;">${student.specialization || ''}</h6>
-                <a class="text-success pt-2" style="font-size: 12px;text-decoration: underline;">View more</a>
+        students.forEach(student => {
+          const studentCard = `
+            <div class="hwzthat-cards-col-2">
+              <div class="card hwzthat-cards team-member-card">
+                <div style="position:absolute;right:10px;top:10px;">
+                  <img src="images/dots.png" data-toggle="dropdown" id="moreDropdown"
+                    style="height: 12px;width: 12px;object-fit: contain;cursor: pointer;">
+                </div>
+                <div class="cursor-pointer" data-toggle="modal" data-target="#studentModal" data-id="${student._id}">
+                  <img src="${student.profilePicture || 'images/user1.png'}" width="70" class=" mb-2 mx-auto">
+                  <div class="mt-1">
+                    <h4>${student.firstName} ${student.lastName}</h4>
+                    <h5>${student.email}</h5>
+                    <h6 style="color: #436681;">${student.specialization || ''}</h6>
+                    <a class="text-success pt-2" style="font-size: 12px;text-decoration: underline;">View more</a>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        </div>`;
-      studentContainer.insertAdjacentHTML('beforeend', studentCard);
-    });
+            </div>`;
+          studentContainer.insertAdjacentHTML('beforeend', studentCard);
+        });
 
-    document.querySelectorAll('.team-member-card .cursor-pointer').forEach(item => {
-      item.addEventListener('click', function() {
-        const studentId = this.getAttribute('data-id');
-        fetchStudentDetails(studentId);
+        document.querySelectorAll('.team-member-card .cursor-pointer').forEach(item => {
+          item.addEventListener('click', function () {
+            const studentId = this.getAttribute('data-id');
+            fetchStudentDetails(studentId);
+          });
+        });
+      }
+
+      function loadParents(parents) {
+        const parentContainer = document.querySelector('.hwzthat-parents .row');
+        parentContainer.innerHTML = ''; // Clear existing parents
+
+        parents.forEach(parent => {
+          const parentCard = `
+            <div class="hwzthat-cards-col-2">
+              <div class="card hwzthat-cards team-member-card">
+                <div style="position:absolute;right:10px;top:10px;">
+                  <img src="images/dots.png" data-toggle="dropdown" id="moreDropdown"
+                    style="height: 12px;width: 12px;object-fit: contain;cursor: pointer;">
+                </div>
+                <div class="cursor-pointer" data-toggle="modal" data-target="#parentModal" data-id="${parent._id}">
+                  <img src="${parent.profilePicture || 'images/user2.png'}" width="70" class=" mb-2 mx-auto">
+                  <div class="mt-1">
+                    <h4>${parent.firstName} ${parent.lastName}</h4>
+                    <h5>${parent.email}</h5>
+                    <h6 style="color: #436681;">${parent.specialization || ''}</h6>
+                    <a class="text-success pt-2" style="font-size: 12px;text-decoration: underline;">View more</a>
+                  </div>
+                </div>
+              </div>
+            </div>`;
+          parentContainer.insertAdjacentHTML('beforeend', parentCard);
+        });
+
+        document.querySelectorAll('.team-member-card .cursor-pointer').forEach(item => {
+          item.addEventListener('click', function () {
+            const parentId = this.getAttribute('data-id');
+            fetchParentDetails(parentId);
+          });
+        });
+      }
+
+      function fetchStudentDetails(studentId) {
+        const token = localStorage.getItem('token');
+        const accessToken = `Bearer ${token}`;
+        const organizationId = localStorage.getItem('organizationId');
+        fetch(`/api/user/student/${organizationId}/${studentId}`, {
+          headers: {
+            'Authorization': accessToken,
+            'organizationId': organizationId
+          }
+        })
+          .then(response => response.json())
+          .then(student => {
+            if (student) {
+              populateStudentModal(student);
+            }
+          })
+          .catch(error => console.error('Error:', error));
+      }
+
+      function fetchParentDetails(parentId) {
+        const token = localStorage.getItem('token');
+        const accessToken = `Bearer ${token}`;
+        const organizationId = localStorage.getItem('organizationId');
+        fetch(`/api/user/parent/${organizationId}/${parentId}`, {
+          headers: {
+            'Authorization': accessToken,
+            'organizationId': organizationId
+          }
+        })
+          .then(response => response.json())
+          .then(parent => {
+            if (parent) {
+              populateParentModal(parent);
+            }
+          })
+          .catch(error => console.error('Error:', error));
+      }
+
+      function populateStudentModal(student) {
+        document.getElementById('studentImage').src = student.profilePicture || 'images/user-placeholder.png';
+        document.getElementById('studentName').innerText = `${student.firstName} ${student.lastName}`;
+        document.getElementById('studentEmail').innerText = student.email;
+        document.getElementById('studentPhone').innerText = student.phone || 'N/A';
+        document.getElementById('studentDOB').innerText = student.dob || 'N/A';
+        document.getElementById('studentEmergencyContactName').innerText = student.emergencyContactName || 'N/A';
+        document.getElementById('studentEmergencyContactNumber').innerText = student.emergencyContactNumber || 'N/A';
+        document.getElementById('studentSpecialized').innerText = student.specialized || 'N/A';
+        document.getElementById('studentBattingStyle').innerText = student.battingStyle || 'N/A';
+        document.getElementById('studentBranchName').innerText = student.branchName || 'N/A';
+        document.getElementById('studentStreet').innerText = student.address?.street || 'N/A';
+        document.getElementById('studentCity').innerText = student.address?.city || 'N/A';
+        document.getElementById('studentState').innerText = student.address?.state || 'N/A';
+        document.getElementById('studentZIP').innerText = student.address?.zip || 'N/A';
+        document.getElementById('studentCountry').innerText = student.address?.country || 'N/A';
+      }
+
+      function populateParentModal(parent) {
+        document.getElementById('parentImage').src = parent.profilePicture || 'images/user-placeholder.png';
+        document.getElementById('parentName').innerText = `${parent.firstName} ${parent.lastName}`;
+        document.getElementById('parentEmail').innerText = parent.email;
+        document.getElementById('parentPhone').innerText = parent.phone || 'N/A';
+        document.getElementById('parentDOB').innerText = parent.dob || 'N/A';
+        document.getElementById('parentEmergencyContactName').innerText = parent.emergencyContactName || 'N/A';
+        document.getElementById('parentEmergencyContactNumber').innerText = parent.emergencyContactNumber || 'N/A';
+        document.getElementById('parentSpecialized').innerText = parent.specialized || 'N/A';
+        document.getElementById('parentBattingStyle').innerText = parent.battingStyle || 'N/A';
+        document.getElementById('parentBranchName').innerText = parent.branchName || 'N/A';
+        document.getElementById('parentStreet').innerText = parent.address?.street || 'N/A';
+        document.getElementById('parentCity').innerText = parent.address?.city || 'N/A';
+        document.getElementById('parentState').innerText = parent.address?.state || 'N/A';
+        document.getElementById('parentZIP').innerText = parent.address?.zip || 'N/A';
+        document.getElementById('parentCountry').innerText = parent.address?.country || 'N/A';
+      }
+
+      document.getElementById('addStudentForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        addStudent();
       });
+
+      function addStudent() {
+        const token = localStorage.getItem('token');
+        const accessToken = `Bearer ${token}`;
+        const formData = new FormData(document.getElementById('addStudentForm'));
+
+        fetch('/api/students', {
+          method: 'POST',
+          headers: {
+            'Authorization': accessToken
+          },
+          body: formData
+        })
+          .then(response => response.json())
+          .then(student => {
+            if (student) {
+              $('#addStudentModal').modal('hide');
+              fetchStudents(); // Refresh the student list
+            }
+          })
+          .catch(error => console.error('Error:', error));
+      }
     });
-  }
-
-  function fetchStudentDetails(studentId) {
-    const token = localStorage.getItem('token');
-    const accessToken = `Bearer ${token}`;
-    const organizationId = localStorage.getItem('organizationId');
-    fetch(`/api/user/student/${organizationId}/${studentId}`, {
-      headers: {
-        'Authorization': accessToken,
-        'organizationId': organizationId
-      }
-    })
-    .then(response => response.json())
-    .then(student => {
-      if (student) {
-        populateStudentModal(student);
-      }
-    })
-    .catch(error => console.error('Error:', error));
-  }
-
-  function populateStudentModal(student) {
-    document.getElementById('studentImage').src = student.profilePicture || 'images/user-placeholder.png';
-    document.getElementById('studentName').innerText = `${student.firstName} ${student.lastName}`;
-    document.getElementById('studentEmail').innerText = student.email;
-    document.getElementById('studentPhone').innerText = student.phone || 'N/A';
-    document.getElementById('studentDOB').innerText = student.dob || 'N/A';
-    document.getElementById('studentEmergencyContactName').innerText = student.emergencyContactName || 'N/A';
-    document.getElementById('studentEmergencyContactNumber').innerText = student.emergencyContactNumber || 'N/A';
-    document.getElementById('studentSpecialized').innerText = student.specialized || 'N/A';
-    document.getElementById('studentBattingStyle').innerText = student.battingStyle || 'N/A';
-    document.getElementById('studentBranchName').innerText = student.branchName || 'N/A';
-    document.getElementById('studentStreet').innerText = student.address?.street || 'N/A';
-    document.getElementById('studentCity').innerText = student.address?.city || 'N/A';
-    document.getElementById('studentState').innerText = student.address?.state || 'N/A';
-    document.getElementById('studentZIP').innerText = student.address?.zip || 'N/A';
-    document.getElementById('studentCountry').innerText = student.address?.country || 'N/A';
-  }
-
-  document.getElementById('addStudentForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    addStudent();
-  });
-
-  function addStudent() {
-    const token = localStorage.getItem('token');
-    const accessToken = `Bearer ${token}`;
-    const formData = new FormData(document.getElementById('addStudentForm'));
-
-    fetch('/api/students', {
-      method: 'POST',
-      headers: {
-        'Authorization': accessToken
-      },
-      body: formData
-    })
-    .then(response => response.json())
-    .then(student => {
-      if (student) {
-        $('#addStudentModal').modal('hide');
-        fetchStudents(); // Refresh the student list
-      }
-    })
-    .catch(error => console.error('Error:', error));
-  }
-});
-
   </script>
-  </body>
-  </html>
+</body>
+
+</html>

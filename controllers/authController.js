@@ -79,7 +79,7 @@ exports.register = async (req, res) => {
 
     // Create the user in the database first
     await user.save();
-
+    console.log('user saved sucessfully');
     // Assuming organizationId is an array of organization IDs if the user is part of multiple organizations
     for (let orgId of organizationId) {
       const organization = await Organization.findById(orgId);
@@ -89,7 +89,7 @@ exports.register = async (req, res) => {
         const paymentResponse = await axios.post('https://api-payments.rayssportsnetwork.com/create-customer', {
           name: `${firstName} ${lastName}`,
           email: email,
-          clientId: `HWZTHAT202401-${orgId}` // Unique clientId for each organization
+          clientId: `HWZTHAT202401` // Unique clientId for each organization
         });
 
         const paymentCustomerId = paymentResponse.data.customerId;
@@ -117,6 +117,28 @@ exports.registerChild = async (req, res) => {
   const { firstName, lastName, dob, gender, email, contactNumber, emergencyContactNumber, streetAddress, apartmentNumber, city, state, postalCode, country, password, organizationId } = req.body;
 
   try {
+    console.log('Received organizationId:', organizationId);
+
+    if (!organizationId) {
+      return res.status(400).json({ error: 'Organization ID is required.' });
+    }
+
+    // If organizationId is a string, convert it to an array to maintain consistency
+    const organizationIds = Array.isArray(organizationId) ? organizationId : [organizationId];
+    console.log('Organization IDs:', organizationIds);
+
+    // Convert each organizationId to ObjectId with error handling
+    const validOrganizationIds = organizationIds.map(id => {
+      try {
+        return id;
+      } catch (err) {
+        console.error('Invalid ObjectId:', id, err);
+        throw new Error(`Invalid Organization ID: ${id}`);
+      }
+    });
+
+    console.log('Valid Organization IDs:', validOrganizationIds);
+
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = new User({
       firstName,
@@ -135,24 +157,26 @@ exports.registerChild = async (req, res) => {
         country
       },
       password: hashedPassword,
-      role: 'student'
+      role: 'student',
+      organizations: validOrganizationIds.map(orgId => ({ org_id: orgId, courses: [] }))
     });
 
-    // Create the user in the database first
+    // Save the user in the database first
     await user.save();
+    console.log('User saved successfully');
 
-    // Assuming organizationId is an array of organization IDs if the user is part of multiple organizations
-    for (let orgId of organizationId) {
+    for (let orgId of validOrganizationIds) {
       const organization = await Organization.findById(orgId);
+      console.log('Organization found:', organization);
 
       if (organization) {
         // Call the payment API to create a customer ID
         const paymentResponse = await axios.post('https://api-payments.rayssportsnetwork.com/create-customer', {
           name: `${firstName} ${lastName}`,
           email: email,
-          clientId: `HWZTHAT202401-${orgId}` // Unique clientId for each organization
+          clientId: `HWZTHAT202401` // Unique clientId for each organization
         });
-
+        console.log('Payment Response:', paymentResponse.data);
         const paymentCustomerId = paymentResponse.data.customerId;
 
         // Update the user with the payment customer ID for the specific organization
@@ -167,6 +191,7 @@ exports.registerChild = async (req, res) => {
 
     res.status(201).json({ message: 'Child registered successfully as a student.', user });
   } catch (error) {
+    console.error('Error during registration:', error);
     if (error.name === 'ValidationError') {
       return res.status(400).json({ error: error.message, details: error.errors });
     }

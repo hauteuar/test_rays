@@ -11,15 +11,42 @@
   <link rel="stylesheet" href="/css/calendar.css">
   <link rel="stylesheet" href="css/style22.css">
   <link rel="stylesheet" href="css/style2.css">
-
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.2/dist/signature_pad.umd.min.js"></script>
+  <script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
+  <script>
+    // Ensure pdfjsLib is initialized
+    window.pdfjsLib = window['pdfjs-dist/build/pdf'];
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://mozilla.github.io/pdf.js/build/pdf.worker.js';
+  </script>
   <script src="components/topnav.js" type="text/javascript" defer></script>
   <script src="components/sidebar.js" type="text/javascript" defer></script>
+  
+<style>
+    /* Custom styles */
+    .modal-lg {
+      max-width: 80%;
+    }
+
+    .modal-body {
+      max-height: 70vh;
+      overflow-y: auto;
+    }
+
+    .signature-pad {
+      border: 2px solid #0d6efd;
+    }
+
+    .fixed-submit-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1000;
+    }
+  </style>
 </head>
 <body>
   <div class="container-scroller">
@@ -27,68 +54,81 @@
     <div class="container-fluid page-body-wrapper">
       <sidebar-component data-page="registration-form"></sidebar-component>
       <div class="main-section main-section2">
-        <div class="tab1" id="registration">
-          <div class="filter-bar mt-3" style="align-items: flex-end;">
-            <h5 class="font-weight-400 text-4">Total <span class="font-weight-600">03</span></h5>
-            <a id="create-new-btn" class="btn btn-ramblers px-4">
-              + Create New
-            </a>
-          </div>
-          <div class="row mx-0 mt-3" style="row-gap:25px;">
-            <div class="col-12 p-0">
-              <div class="table-sec" style="overflow: auto; min-height: auto;">
-                <table class="table1">
-                  <thead>
-                    <tr>
-                      <th class="text-gray">Created date</th>
-                      <th class="text-gray">Category</th>
-                      <th class="text-gray">Title</th>
-                      <th class="text-gray">Status</th>
-                      <th class="text-gray">Document</th>
-                    </tr>
-                  </thead>
-                  <tbody id="document-list">
-                    <!-- Documents will be populated here by JavaScript -->
-                  </tbody>
-                </table>
+        <!-- Tabs for Templates and Waivers -->
+        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="pills-templates-tab" data-bs-toggle="pill" data-bs-target="#pills-templates" type="button" role="tab" aria-controls="pills-templates" aria-selected="true">Templates</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="pills-waivers-tab" data-bs-toggle="pill" data-bs-target="#pills-waivers" type="button" role="tab" aria-controls="pills-waivers" aria-selected="false">Waivers</button>
+          </li>
+        </ul>
+        <div class="tab-content" id="pills-tabContent">
+          <!-- Templates Tab -->
+          <div class="tab-pane fade show active" id="pills-templates" role="tabpanel" aria-labelledby="pills-templates-tab">
+            <div class="tab1" id="template_section">
+              <div class="filter-bar mt-3" style="align-items: flex-end;">
+                <h5 class="font-weight-400 text-4">Total <span class="font-weight-600">03</span></h5>
+                <a id="create-new-btn" class="btn btn-ramblers px-4" data-bs-toggle="modal" data-bs-target="#createTemplateModal">
+                  + Create New Template
+                </a>
+              </div>
+              <div class="row mx-0 mt-3" style="row-gap:25px;">
+                <div class="col-12 p-0">
+                  <div class="table-sec" style="overflow: auto; min-height: auto;">
+                    <table class="table1">
+                      <thead>
+                        <tr>
+                          <th class="text-gray">Created date</th>
+                          <th class="text-gray">Category</th>
+                          <th class="text-gray">Title</th>
+                          <th class="text-gray">Status</th>
+                          <th class="text-gray">Document</th>
+                        </tr>
+                      </thead>
+                      <tbody id="document-list">
+                        <!-- Documents will be populated here by JavaScript -->
+                      </tbody>
+                    </table>
+                    <!-- Message to show if no templates are found -->
+                    <div id="no-templates-msg" style="display:none;">
+                      <p>No templates found. Click 'Create New Template' to add one.</p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <div class="tab2" id="registration_form" style="display: none;">
-          <div class="flex-align3 g4 mt-4 cursor-pointer">
-            <a id="registration_btn">
-              <img src="images/rounded-left.png" style="width:30px;object-fit: contain;">
-            </a>
-            <h4>Create new form</h4>
-          </div>
-          <div class="mt-4" style="padding-left: 50px; max-width: 1000px;">
-            <div class="row mt-3" style="row-gap: 10px;">
-              <div class="col-12 col-item">
-                <h5 class="font-weight-600 mb-2">Upload Document</h5>
-                <input type="file" id="document-upload" name="document" class="form-control" accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png">
+          <!-- Waivers Tab -->
+          <div class="tab-pane fade" id="pills-waivers" role="tabpanel" aria-labelledby="pills-waivers-tab">
+            <div class="tab1" id="waiver_section">
+              <div class="filter-bar mt-3" style="align-items: flex-end;">
+                <h5 class="font-weight-400 text-4">Total <span class="font-weight-600">03</span></h5>
+                <a id="create-waiver-btn" class="btn btn-ramblers px-4 ms-2" data-bs-toggle="modal" data-bs-target="#waiverFormModal">
+                  + Add Waiver Form
+                </a>
               </div>
-              <div class="col-12 col-item">
-                <h5 class="font-weight-600 mb-2">Category</h5>
-                <select id="document-category" class="form-select">
-                  <option>Select category</option>
-                  <option value="Registration">Registration</option>
-                  <option value="Consent">Consent</option>
-                  <option value="Other">Other</option>
-                </select>
+              <div class="row mx-0 mt-3" style="row-gap:25px;">
+                <div class="col-12 p-0">
+                  <div class="table-sec" style="overflow: auto; min-height: auto;">
+                    <table class="table1">
+                      <thead>
+                        <tr>
+                          <th class="text-gray">Created date</th>
+                          <th class="text-gray">Student Name</th>
+                          <th class="text-gray">Template</th>
+                          <th class="text-gray">Status</th>
+                          <th class="text-gray">Signed Waiver</th>
+                        </tr>
+                      </thead>
+                      <tbody id="waiver-list">
+                        <!-- Waivers will be populated here by JavaScript -->
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
               </div>
-              <div class="col-12 col-item">
-                <h5 class="font-weight-600 mb-2">Title</h5>
-                <input type="text" id="document-title" placeholder="Enter title of your document" class="form-control">
-              </div>
-              <div class="col-12 col-item">
-                <h5 class="font-weight-600 mb-2">Description <span class="font-weight-400 text-gray" style="font-style: italic;">Optional</span></h5>
-                <textarea id="document-description" class="form-control" style="min-height: 100px;"></textarea>
-              </div>
-            </div>
-            <div class="mt-2 d-flex justify-content-end g2">
-              <button id="upload-document-btn" class="btn btn-ramblers4 px-4">Upload Document</button>
             </div>
           </div>
         </div>
@@ -96,131 +136,526 @@
     </div>
   </div>
 
+  <!-- Create Template Modal -->
+  <div class="modal fade" id="createTemplateModal" tabindex="-1" aria-labelledby="createTemplateModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="createTemplateModalLabel">Create New Template</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row" style="row-gap: 10px;">
+            <div class="col-12 col-item">
+              <h5 class="font-weight-600 mb-2">Upload Document</h5>
+              <input type="file" id="document-upload" name="document" class="form-control" accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png">
+            </div>
+            <div class="col-12 col-item">
+              <h5 class="font-weight-600 mb-2">Category</h5>
+              <select id="document-category" class="form-select">
+                <option>Select category</option>
+                <option value="Registration">Registration</option>
+                <option value="Consent">Consent</option>
+                <option value="Templates">Templates</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="col-12 col-item">
+              <h5 class="font-weight-600 mb-2">Title</h5>
+              <input type="text" id="document-title" placeholder="Enter title of your document" class="form-control">
+            </div>
+            <div class="col-12 col-item">
+              <h5 class="font-weight-600 mb-2">Description <span class="font-weight-400 text-gray" style="font-style: italic;">Optional</span></h5>
+              <textarea id="document-description" class="form-control" style="min-height: 100px;"></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="upload-document-btn" class="btn btn-ramblers4 px-4">Upload Document</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Waiver Form Modal -->
+  <div class="modal fade" id="waiverFormModal" tabindex="-1" aria-labelledby="waiverFormModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="waiverFormModalLabel">Cricket Academy Waiver Form</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body waiver-form-content">
+          <div class="row" style="row-gap: 10px;">
+            <div class="col-12 col-item">
+              <h5 class="font-weight-600 mb-2">Template</h5>
+              <select id="template-select" class="form-select">
+                <!-- Template options populated via JavaScript -->
+              </select>
+            </div>
+            <div id="template-content" class="col-12 col-item mb-3">
+              <!-- Loaded template content will be displayed here -->
+            </div>
+            <div class="col-12 col-item">
+              <h5 class="font-weight-600 mb-2">Student</h5>
+              <select id="student-select" class="form-select">
+                <!-- Student options populated via JavaScript -->
+              </select>
+            </div>
+            <div class="col-12 col-item">
+              <h5 class="font-weight-600 mb-2">Student Address</h5>
+              <input type="text" id="student-address" class="form-control" readonly>
+            </div>
+            <div class="col-12 col-item">
+              <h5 class="font-weight-600 mb-2">Primary Phone</h5>
+              <input type="text" id="primary-phone" class="form-control" readonly>
+            </div>
+            <div class="col-12 col-item">
+              <h5 class="font-weight-600 mb-2">Emergency Phone</h5>
+              <input type="text" id="emergency-phone" class="form-control" readonly>
+            </div>
+            <div class="col-12 col-item">
+              <h5 class="font-weight-600 mb-2">Email</h5>
+              <input type="text" id="email" class="form-control" readonly>
+            </div>
+            <div class="col-12 col-item">
+              <h5 class="font-weight-600 mb-2" id="parent-signature" style="display:none;">Parent Signature Required:</h5>
+              <input type="text" id="parent-name" class="form-control" placeholder="Enter Parent's Name" style="display:none;">
+              <canvas id="signature-pad" class="signature-pad"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="submit-waiver-btn" class="site-btn-success hoverbtn px-5">Submit Waiver Form</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
   <!-- Document Viewer Modal -->
   <div class="modal fade" id="documentViewer" tabindex="-1" aria-labelledby="documentViewerLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="documentViewerLabel">Document Viewer</h5>
+          <h5 class="modal-title" id="documentViewerLabel">View Document</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <iframe id="document-viewer-iframe" src="" width="100%" height="500px"></iframe>
+          <canvas id="pdf-canvas" width="100%" height="500px"></canvas>
         </div>
       </div>
     </div>
   </div>
 
-  <script src="js/script.js"></script>
   <script>
-  
     document.addEventListener('DOMContentLoaded', function() {
-      fetchDocuments();
-       // Add event listener to the "Create New" button
-  document.getElementById('create-new-btn').addEventListener('click', function() {
-    toggleRegistrationForm();
-  });
+      window.viewDocument = function(documentType, documentId) {
+        let apiUrl = '';
 
-  // Add event listener to the back button on the registration form
-  document.getElementById('registration_btn').addEventListener('click', function() {
-    toggleRegistrationForm(false);
-  });
-    });
-// Function to toggle the registration form visibility
-function toggleRegistrationForm(showForm = true) {
-  const registrationForm = document.getElementById('registration_form');
-  const documentList = document.getElementById('registration');
-
-  if (showForm) {
-    registrationForm.style.display = 'block';
-    documentList.style.display = 'none';
-  } else {
-    registrationForm.style.display = 'none';
-    documentList.style.display = 'block';
-  }
-}
-    function fetchDocuments() {
-      fetch('/api/documents', {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          'organizationId': localStorage.getItem('organizationId')
-        }
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          populateDocumentList(data.documents);
+        // Determine the correct API endpoint based on the document type
+        if (documentType === 'waiver') {
+            apiUrl = `/api/waivers/documents/${documentId}`;
         } else {
-          console.error('Failed to fetch documents:', data.message);
+            apiUrl = `/api/documents/${documentId}`;
         }
-      })
-      .catch(error => console.error('Error fetching documents:', error));
-    }
 
-    function populateDocumentList(documents) {
-      const documentList = document.getElementById('document-list');
-      documentList.innerHTML = '';
+        fetch(apiUrl)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
 
-      documents.forEach(doc => {
-        documentList.innerHTML += `
-          <tr>
-            <td>${new Date(doc.createdAt).toLocaleDateString()}</td>
-            <td>${doc.category}</td>
-            <td>${doc.title}</td>
-            <td>${doc.status}</td>
-            <td>
-                 <a href="#" onclick="viewDocument('${doc._id}')">
-                <img src="images/attatch.png" class="user-dp3">
-              </a>
-            </td>
-          </tr>
-        `;
-      });
-    }
+                const contentType = response.headers.get('Content-Type');
+                if (contentType === 'application/pdf') {
+                    return response.blob();
+                } else {
+                    return response.json();
+                }
+            })
+            .then(data => {
+                if (data instanceof Blob) {
+                    const pdfDataUri = URL.createObjectURL(data);
+                    console.log('PDF Blob URL:', pdfDataUri); // Debugging output to ensure URL is created
 
-    function viewDocument(documentId) {
-  const iframe = document.getElementById('document-viewer-iframe');
-  iframe.src = `/api/documents/${documentId}`;
-  const documentViewerModal = new bootstrap.Modal(document.getElementById('documentViewer'));
-  documentViewerModal.show();
+                    renderPDF(pdfDataUri);  // Render the PDF using PDF.js
+
+                    // Show the document viewer modal
+                    const documentViewerModal = new bootstrap.Modal(document.getElementById('documentViewer'));
+                    documentViewerModal.show();
+                } else if (data.success === false) {
+                    console.error('Failed to fetch the document:', data.message);
+                } else {
+                    console.error('Unexpected data format:', data);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching the document:', error);
+            });
+      };
+
+      function renderPDF(pdfUrl) {
+  const loadingTask = pdfjsLib.getDocument(pdfUrl);
+  loadingTask.promise.then(pdf => {
+    // Get the first page of the PDF document
+    pdf.getPage(1).then(page => {
+      const scale = 1.5;
+      const viewport = page.getViewport({ scale: scale });
+
+      // Prepare canvas using PDF page dimensions
+      const canvas = document.getElementById('pdf-canvas');
+      const context = canvas.getContext('2d');
+      canvas.height = viewport.height;
+      canvas.width = viewport.width;
+
+      // Render PDF page into canvas context
+      const renderContext = {
+        canvasContext: context,
+        viewport: viewport,
+      };
+      page.render(renderContext);
+    });
+  }).catch(error => {
+    console.error('Error rendering PDF:', error);
+  });
 }
 
 
-    document.getElementById('upload-document-btn').addEventListener('click', function() {
-      const fileInput = document.getElementById('document-upload');
-      const category = document.getElementById('document-category').value;
-      const title = document.getElementById('document-title').value;
-      const description = document.getElementById('document-description').value;
+      const signaturePad = new SignaturePad(document.getElementById('signature-pad'), {
+        penColor: 'rgb(0, 0, 255)'
+      });
 
-      if (fileInput.files.length === 0) {
-        alert('Please select a file to upload.');
-        return;
+      fetchDocuments();
+      fetchTemplates();
+      fetchStudents();
+      fetchWaivers();
+
+      let selectedTemplateName = '';
+      let selectedStudentName = '';
+      let studentAge = 0;
+
+      document.getElementById('template-select').addEventListener('change', function() {
+        const selectedTemplate = this.options[this.selectedIndex];
+        selectedTemplateName = selectedTemplate.text;
+        const selectedTemplateId = this.value;
+
+        fetch(`/api/waivers/documents/${selectedTemplateId}`)
+          .then(response => response.json())
+          .then(data => {
+            console.log(data);
+            if (data.success) {
+              document.getElementById('template-content').innerHTML = `<div>${data.template.data}</div>`;
+            } else {
+              console.error('Failed to fetch template content:', data.message);
+            }
+          })
+          .catch(error => console.error('Error fetching template content:', error));
+      });
+
+      document.getElementById('student-select').addEventListener('change', function() {
+        const selectedStudentId = this.value;
+        console.log(selectedStudentId);
+        selectedStudentName = this.options[this.selectedIndex].text;
+        const organizationId = localStorage.getItem('organizationId');
+
+        fetch(`/api/user/student/${organizationId}/${selectedStudentId}`,{
+              headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                'organizationId': localStorage.getItem('organizationId')
+              }
+            })
+          .then(response => response.json())
+          .then(data => {
+            console.log(data);
+            if (data) {
+              document.getElementById('student-address').value = data.address.street;
+              document.getElementById('primary-phone').value = data.contactNumber;
+              document.getElementById('emergency-phone').value = data.emergencyContactNumber;
+              document.getElementById('email').value = data.email;
+              studentAge = calculateAge(data.birthDate);
+
+              if (studentAge < 16) {
+                document.getElementById('parent-signature').style.display = 'block';
+                document.getElementById('parent-name').style.display = 'block';
+              } else {
+                document.getElementById('parent-signature').style.display = 'none';
+                document.getElementById('parent-name').style.display = 'none';
+              }
+            }
+          })
+          .catch(error => console.error('Error fetching student details:', error));
+      });
+
+      // Handle template upload
+      document.getElementById('upload-document-btn').addEventListener('click', function() {
+        const fileInput = document.getElementById('document-upload');
+        const category = document.getElementById('document-category').value;
+        const title = document.getElementById('document-title').value;
+        const description = document.getElementById('document-description').value;
+
+        if (fileInput.files.length === 0) {
+          alert('Please select a file to upload.');
+          return;
+        }
+
+        const formData = new FormData();
+        formData.append('document', fileInput.files[0]);
+        formData.append('category', category);
+        formData.append('title', title);
+        formData.append('description', description);
+        let api_Url = '';
+        if (category === 'Templates') {
+          api_Url = '/api/waivers/uploads';
+        } else {
+          api_Url = '/api/documents/upload';
+        }
+
+        fetch(api_Url, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            'organizationId': localStorage.getItem('organizationId')
+          },
+          body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert('Document uploaded successfully.');
+            fetchDocuments(); // Refresh document list
+            document.getElementById('createTemplateModal').querySelector('.btn-close').click();
+          } else {
+            console.error('Failed to upload document:', data.message);
+          }
+        })
+        .catch(error => console.error('Error uploading document:', error));
+      });
+
+      // Handle waiver form submission
+      document.getElementById('submit-waiver-btn').addEventListener('click', function() {
+        const studentId = document.getElementById('student-select').value;
+        const signature = signaturePad.toDataURL('image/png');
+        const templateId = document.getElementById('template-select').value;
+        console.log(templateId);
+        const documentName = `${selectedStudentName} - ${selectedTemplateName}`;
+        const signedBy = studentAge < 16 ? document.getElementById('parent-name').value : selectedStudentName;
+
+        if (studentId && !signaturePad.isEmpty() && signedBy) {
+          const waiverData = {
+            studentId,
+            documentName,
+            templateId,
+            signature,
+            signedBy
+          };
+
+          fetch('/api/waivers/create', {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('token')}`,
+              'organizationId': localStorage.getItem('organizationId'),
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(waiverData)
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              alert('Waiver form submitted successfully.');
+              document.getElementById('waiverFormModal').querySelector('.btn-close').click();
+            } else {
+              console.error('Failed to submit waiver form:', data.message);
+            }
+          })
+          .catch(error => console.error('Error submitting waiver form:', error));
+        } else {
+          alert('Please fill out all required fields and sign the document.');
+        }
+      });
+
+      function calculateAge(birthDate) {
+        const birth = new Date(birthDate);
+        const today = new Date();
+        let age = today.getFullYear() - birth.getFullYear();
+        const monthDiff = today.getMonth() - birth.getMonth();
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+          age--;
+        }
+        return age;
       }
 
-      const formData = new FormData();
-      formData.append('document', fileInput.files[0]);
-      formData.append('category', category);
-      formData.append('title', title);
-      formData.append('description', description);
+      // Utility functions
+      function fetchDocuments() {
+        fetch('/api/documents', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            'organizationId': localStorage.getItem('organizationId')
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            populateDocumentList(data.documents);
+          } else {
+            console.error('Failed to fetch documents:', data.message);
+          }
+        })
+        .catch(error => console.error('Error fetching documents:', error));
+      }
 
-      fetch('/api/documents/upload', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          'organizationId': localStorage.getItem('organizationId')
-        },
-        body: formData
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          alert('Document uploaded successfully.');
-          fetchDocuments(); // Refresh document list
-        } else {
-          console.error('Failed to upload document:', data.message);
-        }
-      })
-      .catch(error => console.error('Error uploading document:', error));
+      function fetchTemplates() {
+        fetch('/api/waivers/templates', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            'organizationId': localStorage.getItem('organizationId')
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            populateTemplateDropdown(data.templates);
+          } else {
+            console.error('Failed to fetch templates:', data.message);
+            document.getElementById('no-templates-msg').style.display = 'block';
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching templates:', error);
+          document.getElementById('no-templates-msg').style.display = 'block';
+        });
+      }
+
+      function fetchStudents() {
+        const organizationId = localStorage.getItem('organizationId');
+        fetch(`/api/user/organization/${organizationId}/students`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            'organizationId': organizationId
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data) {
+            populateStudentDropdown(data);
+          } else {
+            console.error('Failed to fetch students:', data.message);
+          }
+        })
+        .catch(error => console.error('Error fetching students:', error));
+      }
+
+      function fetchWaivers() {
+        fetch('/api/waivers/documents', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            'organizationId': localStorage.getItem('organizationId')
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            populateWaiverList(data.documents);
+          } else {
+            console.error('Failed to fetch waivers:', data.message);
+          }
+        })
+        .catch(error => console.error('Error fetching waivers:', error));
+      }
+
+      function populateDocumentList(documents) {
+        const documentList = document.getElementById('document-list');
+        documentList.innerHTML = '';
+
+        documents.forEach(doc => {
+          documentList.innerHTML += `
+            <tr>
+              <td>${new Date(doc.createdAt).toLocaleDateString()}</td>
+              <td>${doc.category}</td>
+              <td>${doc.title}</td>
+              <td>${doc.status}</td>
+              <td>
+                <a href="#" onclick="viewDocument('Template', '${doc._id}')">
+                  <img src="images/attatch.png" class="user-dp3">
+                </a>
+              </td>
+            </tr>
+          `;
+        });
+      }
+
+      function populateTemplateDropdown(templates) {
+        console.log(templates);
+        const templateSelect = document.getElementById('template-select');
+        templateSelect.innerHTML = '';
+
+        templates.forEach(template => {
+          templateSelect.innerHTML += `
+            <option value="${template._id}">${template.documentName}</option>
+          `;
+        });
+
+        templateSelect.addEventListener('change', function () {
+          const selectedTemplateId = this.value;
+
+          fetch(`/api/waivers/documents/${selectedTemplateId}`, {
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('token')}`,
+              'organizationId': localStorage.getItem('organizationId')
+            }
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              document.getElementById('template-content').innerHTML = `<div>${data.template.content}</div>`;
+            } else {
+              console.error('Failed to fetch template content:', data.message);
+            }
+          })
+          .catch(error => console.error('Error fetching template content:', error));
+        });
+      }
+
+      function populateStudentDropdown(students) {
+        const studentSelect = document.getElementById('student-select');
+        studentSelect.innerHTML = '';
+
+        students.forEach(student => {
+          studentSelect.innerHTML += `
+            <option value="${student._id}">${student.firstName} ${student.lastName}</option>
+          `;
+        });
+
+        studentSelect.addEventListener('change', function() {
+          const selectedStudent = students.find(student => student._id === this.value);
+          if (selectedStudent) {
+            document.getElementById('student-address').value = selectedStudent.address.street;
+            document.getElementById('primary-phone').value = selectedStudent.contactNumber;
+            document.getElementById('emergency-phone').value = selectedStudent.emergencyContactNumber;
+            document.getElementById('email').value = selectedStudent.email;
+          }
+        });
+      }
+
+      function populateWaiverList(waivers) {
+        const waiverList = document.getElementById('waiver-list');
+        waiverList.innerHTML = '';
+        console.log(waivers);
+        waivers.forEach(waiver => {
+          waiverList.innerHTML += `
+            <tr>
+              <td>${new Date(waiver.createdAt).toLocaleDateString()}</td>
+              <td>${waiver.studentName}</td>
+              <td>${waiver.templateTitle}</td>
+              <td>${waiver.status}</td>
+              <td>
+                <a href="#" onclick="viewDocument('waiver' , '${waiver._id}')">
+                  <img src="images/attatch.png" class="user-dp3">
+                </a>
+              </td>
+            </tr>
+          `;
+        });
+      }
     });
   </script>
 </body>

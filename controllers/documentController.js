@@ -1,4 +1,5 @@
 const fs = require('fs');
+const mongoose = require('mongoose');
 const Document = require('../models/Document');
 
 exports.uploadDocument = async (req, res) => {
@@ -57,6 +58,11 @@ exports.getDocuments = async (req, res) => {
 exports.getDocumentById = async (req, res) => {
   try {
     const { id } = req.params;
+    // Ensure 'id' is a valid ObjectId
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ success: false, message: 'Invalid document ID.' });
+    }
+
     const document = await Document.findById(id);
 
     if (!document) {
@@ -67,6 +73,21 @@ exports.getDocumentById = async (req, res) => {
     res.send(document.file.data);
   } catch (error) {
     console.error('Error fetching document:', error);
+    res.status(500).json({ success: false, message: 'Internal server error.' });
+  }
+};
+
+exports.getTemplates = async (req, res) => {
+  try {
+    const templates = await Document.find({ category: 'Templates' });
+
+    if (!templates || templates.length === 0) {
+      return res.status(404).json({ success: false, message: 'No templates found.' });
+    }
+
+    res.status(200).json({ success: true, templates });
+  } catch (error) {
+    console.error('Error fetching templates:', error);
     res.status(500).json({ success: false, message: 'Internal server error.' });
   }
 };

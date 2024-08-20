@@ -53,6 +53,8 @@ router.get('/student/:organizationId/:studentId', authMiddleware, userController
 
 router.get('/organization/:organizationId/students', authMiddleware, userController.getOrgStudents);
 
+router.get('/organization/:organizationId/parents', authMiddleware, userController.getOrgParents);
+
 // Route to fetch coach details
 router.get('/coach/:coachId', userController.getCoachDetails);
 

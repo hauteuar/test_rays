@@ -460,34 +460,9 @@ input[type="checkbox"] {
   height: 16px;
 }
 /*checkbox-end*/
-
+  
 
 /*tabs start*/
-
-
-.nav-tabs .nav-link {
-    padding: 0px 10px;
-    margin-right: 15px;
-    padding-bottom: 5px;
-}
-.nav-link {
-    color: #2D2D2D;
-    border: none!important;
-    border-bottom: 3px solid transparent!important;
-}
-.nav-link:hover {
-    border: none;
-
-}
-.nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
-    border: none;
-    border-bottom: 3px solid #C3282E!important;
-    color: #C3282E;
-    font-weight: 600;
-}
-.nav-link:focus, .nav-link:hover{
-    color: #C3282E;
-}
 /*tabs end*/
 
 /*tabs script start*/

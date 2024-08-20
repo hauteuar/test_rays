@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <title>Admin</title>
   <meta charset="utf-8">
@@ -24,7 +23,6 @@
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.theme.min.css">
-
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.js"></script>
 </head>
 
@@ -32,12 +30,12 @@
   <div class="container-scroller">
     <topnav-component></topnav-component>
     <div class="container-fluid page-body-wrapper">
-    <sidebar-component data-page="sponsors"></sidebar-component>
+      <sidebar-component data-page="advs_management"></sidebar-component>
 
       <div class="main-section">
         <div class="flex-align mt-3" style="flex-wrap: wrap; row-gap: 20px;">
           <div>
-            <h5 class="font-weight-400 text-gray">Sponsors <span class="text-dark font-weight-50">04</span></h5>
+            <h5 class="font-weight-400 text-gray">Sponsors <span id="sponsor-count" class="text-dark font-weight-50">0</span></h5>
             <h5 class="mt-3">You can rearrange the sponsor ads by clicking and dragging.</h5>
           </div>
           <div class="flex-align3 g2" style="flex-wrap:wrap;">
@@ -45,176 +43,24 @@
               <img src="images/clock-red.png" style="width: 16px;">
               Set Time
             </a>
-            <a  class="btn btn-ramblers" data-bs-toggle="modal" data-bs-target="#addSponsors">
+            <a class="btn btn-ramblers" data-bs-toggle="modal" data-bs-target="#addSponsors">
               + Add Sponsors
             </a>
           </div>
-        
         </div>
         <div class="row my-3">
           <div class="w-100p-450px">
-            <div class="sponsors-cards">
-              <div class="sponsors-cards-child flex-align3 g3 mb-2">
-                <span>1</span>
-                <div class="sponsors-card flex-align3 g4 w-100 border rounded p-3 pe-4">
-                  <div class="flex-align3 g3 pe-4 mr-3" style="border-right: 1px solid #1111114D;">
-                    <img src="images/menu2.png" style="width: 20px;">
-                    <img src="images/win.png" style="width: 90px; height:70px;">
-                  </div>
-                  <div class="flex-align g2 w-100">
-                    <div>
-                      <h6 class=" font-weight-500">WIN Sports and Uniforms</h6>
-                      <h6 class="text-gray mt-2">Web address</h6>
-                    </div>
-                    <div class="dropdown">
-                      <img src="images/dots.png" class="dropdown-toggle" type="button" data-bs-toggle="dropdown" style="width:15px;height: 15px;object-fit: contain;" aria-expanded="false">
-                      <ul class="dropdown-menu" >
-                        <li><a class="dropdown-item">Edit</a></li>
-                        <li><a class="dropdown-item" href="#">Delete</a></li>
-                      </ul>
-                    </div>
-
-                  </div>
-
-                </div>
-
-              </div>
-              <div class="sponsors-cards-child flex-align3 g3 mb-2">
-                <span>2</span>
-                <div class="sponsors-card flex-align3 g4 w-100 border rounded p-3 pe-4">
-                  <div class="flex-align3 g3 pe-4 mr-3" style="border-right: 1px solid #1111114D;">
-                    <img src="images/menu2.png" style="width: 20px;">
-                    <img src="images/forex.png" style="width: 90px; height:70px;">
-                  </div>
-                  <div class="flex-align g2 w-100">
-                    <div>
-                      <h6 class=" font-weight-500">My Forex Funds</h6>
-                      <h6 class="text-gray mt-2">Web address</h6>
-                    </div>
-                    <div class="dropdown">
-                      <img src="images/dots.png" class="dropdown-toggle" type="button" data-bs-toggle="dropdown" style="width:15px;height: 15px;object-fit: contain;" aria-expanded="false">
-                      <ul class="dropdown-menu" >
-                        <li><a class="dropdown-item">Edit</a></li>
-                        <li><a class="dropdown-item" href="#">Delete</a></li>
-                      </ul>
-                    </div>
-
-                  </div>
-
-                </div>
-
-              </div>
-              <div class="sponsors-cards-child flex-align3 g3 mb-2">
-                <span>3</span>
-                <div class="sponsors-card flex-align3 g4 w-100 border rounded p-3 pe-4">
-                  <div class="flex-align3 g3 pe-4 mr-3" style="border-right: 1px solid #1111114D;">
-                    <img src="images/menu2.png" style="width: 20px;">
-                    <img src="images/lazeez.png" style="width: 90px; height:70px;">
-                  </div>
-                  <div class="flex-align g2 w-100">
-                    <div>
-                      <h6 class=" font-weight-500">Lazeez Shawarma</h6>
-                      <h6 class="text-gray mt-2">Web address</h6>
-                    </div>
-                    <div class="dropdown">
-                      <img src="images/dots.png" class="dropdown-toggle" type="button" data-bs-toggle="dropdown" style="width:15px;height: 15px;object-fit: contain;" aria-expanded="false">
-                      <ul class="dropdown-menu" >
-                        <li><a class="dropdown-item">Edit</a></li>
-                        <li><a class="dropdown-item" href="#">Delete</a></li>
-                      </ul>
-                    </div>
-
-                  </div>
-
-                </div>
-
-              </div>
-              <div class="sponsors-cards-child flex-align3 g3 mb-2">
-                <span>1</span>
-                <div class="sponsors-card flex-align3 g4 w-100 border rounded p-3 pe-4">
-                  <div class="flex-align3 g3 pe-4 mr-3" style="border-right: 1px solid #1111114D;">
-                    <img src="images/menu2.png" style="width: 20px;">
-                    <img src="images/win.png" style="width: 90px; height:70px;">
-                  </div>
-                  <div class="flex-align g2 w-100">
-                    <div>
-                      <h6 class=" font-weight-500">WIN Sports and Uniforms</h6>
-                      <h6 class="text-gray mt-2">Web address</h6>
-                    </div>
-                    <div class="dropdown">
-                      <img src="images/dots.png" class="dropdown-toggle" type="button" data-bs-toggle="dropdown" style="width:15px;height: 15px;object-fit: contain;" aria-expanded="false">
-                      <ul class="dropdown-menu" >
-                        <li><a class="dropdown-item">Edit</a></li>
-                        <li><a class="dropdown-item" href="#">Delete</a></li>
-                      </ul>
-                    </div>
-
-                  </div>
-
-                </div>
-
-              </div>
-              <div class="sponsors-cards-child flex-align3 g3 mb-2">
-                <span>2</span>
-                <div class="sponsors-card flex-align3 g4 w-100 border rounded p-3 pe-4">
-                  <div class="flex-align3 g3 pe-4 mr-3" style="border-right: 1px solid #1111114D;">
-                    <img src="images/menu2.png" style="width: 20px;">
-                    <img src="images/forex.png" style="width: 90px; height:70px;">
-                  </div>
-                  <div class="flex-align g2 w-100">
-                    <div>
-                      <h6 class=" font-weight-500">My Forex Funds</h6>
-                      <h6 class="text-gray mt-2">Web address</h6>
-                    </div>
-                    <div class="dropdown">
-                      <img src="images/dots.png" class="dropdown-toggle" type="button" data-bs-toggle="dropdown" style="width:15px;height: 15px;object-fit: contain;" aria-expanded="false">
-                      <ul class="dropdown-menu" >
-                        <li><a class="dropdown-item">Edit</a></li>
-                        <li><a class="dropdown-item" href="#">Delete</a></li>
-                      </ul>
-                    </div>
-
-                  </div>
-
-                </div>
-
-              </div>
-              <div class="sponsors-cards-child flex-align3 g3 mb-2">
-                <span>3</span>
-                <div class="sponsors-card flex-align3 g4 w-100 border rounded p-3 pe-4">
-                  <div class="flex-align3 g3 pe-4 mr-3" style="border-right: 1px solid #1111114D;">
-                    <img src="images/menu2.png" style="width: 20px;">
-                    <img src="images/lazeez.png" style="width: 90px; height:70px;">
-                  </div>
-                  <div class="flex-align g2 w-100">
-                    <div>
-                      <h6 class=" font-weight-500">Lazeez Shawarma</h6>
-                      <h6 class="text-gray mt-2">Web address</h6>
-                    </div>
-                    <div class="dropdown">
-                      <img src="images/dots.png" class="dropdown-toggle" type="button" data-bs-toggle="dropdown" style="width:15px;height: 15px;object-fit: contain;" aria-expanded="false">
-                      <ul class="dropdown-menu" >
-                        <li><a class="dropdown-item">Edit</a></li>
-                        <li><a class="dropdown-item" href="#">Delete</a></li>
-                      </ul>
-                    </div>
-
-                  </div>
-
-                </div>
-
-              </div>
-
+            <div class="sponsors-cards" id="sponsors-list">
+              <!-- Sponsor cards will be dynamically inserted here -->
             </div>
           </div>
           <div class="w-450px">
-            <h5 class="font-weight-600">Sponsors logo in mobile </h5>
+            <h5 class="font-weight-600">Sponsors logo in mobile</h5>
             <div class="mob-screen mt-5">
               <img src="images/mob-mockup.png" class="mob-mockup">
               <div class="mob-screen-container">
-                
                 <div class="flex-align g2 pt-4 px-4">
-                  <img src="images/ramblers-text.png" style="width: 120px;">
+                  <img src="images/ramblers-text.png" id="mobile-logo" style="width: 120px;">
                   <div class="flex-align3 g3">
                     <img src="images/chat.png" style="width: 20px;">
                     <img src="images/bell.png" style="width: 20px;">
@@ -222,111 +68,45 @@
                 </div>
                 <div class="mob-body">
                   <h6 class="font-weight-400 text-gray mb-3">Sponsors</h6>
-                
-               
-                  <style>
-                    .carousel-indicators {
-                      bottom: -40px;
-                  }
-                  .owl-theme .owl-controls .owl-page span{
-
-                   background-color:  #C3282E;
-                   border: 1px solid  #C3282E;
-                   margin: 3px;
-                  }
-
-          
-               </style>
-    
-                 
-                <div id="banner-slider" class="owl-carousel">
-                  <div class="item active">
-                    <img src="images/mob-banner.png" style="width:100%;">
+                  <div id="sponsor-carousel" class="owl-carousel">
+                    <!-- Dynamic sponsor logos will be inserted here -->
                   </div>
-
-                  <div class="item">
-                    <img src="images/mob-banner.png" style="width:100%;">
-
-                  </div>
-                
-                  <div class="item">
-                    <img src="images/mob-banner.png" style="width:100%;">
-
-                  </div>
-                  <div class="item">
-                    <img src="images/mob-banner.png" style="width:100%;">
-
-                  </div>
-                </div>
-             
-                  <h6 class="font-weight-400 text-gray mb-3">My dashboard</h6>
-                  <div class="row" style="row-gap: 20px;">
-                    <div class="col-6">
-                      <div class="card mockup-card">
-                        <div class="mob-card-img">
-                          <img src="images/club-matches.png">
+                  <div id="tiles-section" class="mt-4">
+                    <!-- Tiles for courses, coaches, students, packages -->
+                    <div class="row" style="row-gap: 20px;">
+                      <div class="col-6">
+                        <div class="card mockup-card">
+                          <div class="mob-card-img">
+                            <img src="images/courses.png" alt="Courses">
+                          </div>
+                          <h6 class="font-weight-600 mt-1 text-center">Courses</h6>
                         </div>
-                        <h6 class="font-weight-600 mt-1 text-center">Club Matches </h6>
                       </div>
-                    </div>
-                    <div class="col-6">
-                      <div class="card mockup-card">
-                        <div class="mob-card-img">
-                          <img src="images/schedule-match.png">
+                      <div class="col-6">
+                        <div class="card mockup-card">
+                          <div class="mob-card-img">
+                            <img src="images/coaches.png" alt="Coaches">
+                          </div>
+                          <h6 class="font-weight-600 mt-1 text-center">Coaches</h6>
                         </div>
-                        <h6   class="font-weight-600 mt-1 text-center">My Schedule</h6>
                       </div>
-                    </div>
-                    <div class="col-6">
-                      <div class="card mockup-card">
-                        <div class="mob-card-img">
-                          <img src="images/stats-match.png">
+                      <div class="col-6">
+                        <div class="card mockup-card">
+                          <div class="mob-card-img">
+                            <img src="images/user-dp.png" alt="Students">
+                          </div>
+                          <h6 class="font-weight-600 mt-1 text-center">Students</h6>
                         </div>
-                        <h6 class="font-weight-600 mt-1 text-center">My stats </h6>
                       </div>
-                    </div>
-                    <div class="col-6">
-                      <div class="card mockup-card">
-                        <div class="mob-card-img">
-                          <img src="images/club-executive-matches.png">
+                      <div class="col-6">
+                        <div class="card mockup-card">
+                          <div class="mob-card-img">
+                            <img src="images/club-documents.png" alt="Packages">
+                          </div>
+                          <h6 class="font-weight-600 mt-1 text-center">Packages</h6>
                         </div>
-                        <h6 class="font-weight-600 mt-1 text-center">Club Executives</h6>
                       </div>
                     </div>
-                    <div class="col-6">
-                      <div class="card mockup-card">
-                        <div class="mob-card-img">
-                          <img src="images/payment-matches.png">
-                        </div>
-                        <h6 class="font-weight-600 mt-1 text-center">Payment</h6>
-                      </div>
-                    </div>
-                    <div class="col-6">
-                      <div class="card mockup-card">
-                        <div class="mob-card-img">
-                          <img src="images/club-document-matches.png">
-                        </div>
-                        <h6 class="font-weight-600 mt-1 text-center">Club documents</h6>
-                      </div>
-                    </div>
-                  </div>
-                  <div style="background-color: #C3282E26; height: 1px; width: 100%; margin: 20px 0;"></div>
-                  <div class="row" style="row-gap: 20px;">
-                    <div class="col-6">
-                      <h6 class="font-weight-400 text-gray mb-3">Admin login</h6>
-
-                      <div class="card mockup-card">
-                        <img src="images/login.png" style="height: 40px; width: 70px; object-fit:contain; margin:0 auto;">
-                    </div>
-                    </div>
-                    <div class="col-6">
-                      <h6 class="font-weight-400 text-gray mb-3">Better Coaching</h6>
-
-                      <div class="card mockup-card">
-                          <img src="images/hwzthat.png" style="height: 40px; width: 100px; object-fit:contain; margin:0 auto;">
-                      </div>
-                    </div>
-
                   </div>
                 </div>
                 <div class="mob-footer">
@@ -347,143 +127,356 @@
                       <img src="images/profile.png">
                       <h6>Profile</h6>
                     </div>
-
                   </div>
-
                 </div>
               </div>
-              
-              
             </div>
           </div>
-
         </div>
       </div>
-    </div>
-  </div>
-  <div class="modal fade" id="addSponsors" tabindex="-1" aria-labelledby="addSponsorsLabel" aria-hidden="true">
-    <div class="modal-dialog  modal-dialog-centered modal-md">
-      <div class="modal-content">
-       
-        <div class="modal-body p-4">
-            
-            <div class="flex-align moadl-head2 pb-4 border-bottom">
-              <h3>Add Sponsors</h3>
-              <img src="images/close.png" data-bs-dismiss="modal" style="cursor: pointer;width: 20px;height: 20px;">
-            </div>
-            <div class="modal-body2 p-md-3 p-0">
-              
-              <div class="row mt-3" style="row-gap: 20px;">
-                    <div class="col-lg-4 col-md-6 col-item" style="padding-right: 20px;">
-                      <h5 class="font-weight-500 mb-2">Sponsors Logo</h5>
-                      <div class="image-picker image-picker2" style="height: 150px;">
-                        <input type="file" accept="image/*" class="input w-100">
-                        <div class="image-picker-tab">
-                          <img src="images/upload3.png">
-                          Upload image
-                        </div>
-                      </div>
-                    </div>
-                    
-                    
-                    <div class="col-md-12 col-item">
-                      <div class="mb-4">
-                        <h5 class="font-weight-500 mb-2">Sponsor name</h5>
-                        <input type="type" value="Jan 12, 2024" name="" class="input w-100">
-                      </div>
-                      <div>
-                        <h5 class="font-weight-500 mb-2">Sponsor web address</h5>
-                        <input type="type" value="Http//:" name="" class="input w-100">
-                      </div>
-                      <label class="flex-align3 g2 mt-4">
-                        <input id="sponsors" type="checkbox" style="accent-color: red;">
-                        <h5 class="font-weight-600 text-dark">Highlight sponsor </h5>
-                      </label>
-                    </div>
 
-                    
-                    
-                    
+      <!-- Add Sponsor Modal -->
+      <div class="modal fade" id="addSponsors" tabindex="-1" aria-labelledby="addSponsorsLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-md">
+          <div class="modal-content">
+            <div class="modal-body p-4">
+              <div class="flex-align modal-head2 pb-4 border-bottom">
+                <h3>Add Sponsor</h3>
+                <img src="images/close.png" data-bs-dismiss="modal" style="cursor: pointer;width: 20px;height: 20px;">
               </div>
-              <div class="modal-footer2 d-flex justify-content-end g2 mt-5">
-                <button type="button" class="btn btn-ramblers px-4">Save</button>
-              </div>
-            </div>
-        </div>
-        
-      </div>
-    </div>
-  </div>
-  <div class="modal fade" id="setTime" tabindex="-1" aria-labelledby="setTimeLabel" aria-hidden="true">
-    <div class="modal-dialog  modal-dialog-centered modal-sm">
-      <div class="modal-content">
-       
-        <div class="modal-body p-4">
-            
-            <div class="flex-align moadl-head2 pb-4 border-bottom">
-              <h3>Set time</h3>
-              <img src="images/close.png" data-bs-dismiss="modal" style="cursor: pointer;width: 20px;height: 20px;">
-            </div>
-            <div class="modal-body2 py-4">
-              <div class="flex-align3 g2">
-                <h4 class="font-weight-500">Auto slide</h4>
-                <div class="toggle-tab-container3  toggle" >
-                  <input type="checkbox" name="">
-                  <span class="toggle-bar"></span>
-                </div>
-              </div>
-              <div class="flex-align3 g4 my-4">
-                <label for="right" class="flex-align3 g1 cursor-pointer">
-                  <input id="right" type="radio" name="slide" checked style="accent-color: #c3282e; width: 18px; height: 18px;">
-                  <h4 class="font-weight-500">Slide right to left</h4>
-                </label>
-                <label for="left" class="flex-align3 g1 cursor-pointer">
-                  <input id="left" type="radio" name="slide" style="accent-color: #c3282e; width: 18px; height: 18px;">
-                  <h4 class="font-weight-500">Slide Left to right</h4>
-                </label>
-              </div>
-              <div class="py-3">
-                <h4>Slide speed</h4>
-                <div class="button-tabs g1 flex-align3 mt-3" style="flex-wrap: wrap;">
-                  <button class="btn btn-outline-danger" style="min-width: 80px;">Slow</button>
-                  <button class="btn btn-outline-danger active-btn-danger" style="min-width: 80px;">Medium</button>
-                  <button class="btn btn-outline-danger" style="min-width: 80px;">Fast</button>
-                  
-                </div>
-  
-              </div>
-              <div class="py-3">
-                <h4>Ad display time</h4>
-                <div class="input-with-btn flex-align3 mt-3">
-                  <input type="text" value="5" class="input w-100">
-                  <div style="position: absolute;right: 0; display: flex;">
-                    <div class="btn btn-outline-danger active-btn-danger px-3" style="border-top-right-radius: 0; border-bottom-right-radius: 0; height: 38px;">Sec</div>
-                    <div class="btn">Min</div>
+              <div class="modal-body2 p-md-3 p-0">
+                <div class="row mt-3" style="row-gap: 20px;">
+                  <div class="col-lg-4 col-md-6 col-item" style="padding-right: 20px;">
+                    <h5 class="font-weight-500 mb-2">Sponsor Logo</h5>
+                    <div class="image-picker image-picker2" style="height: 150px;">
+                      <input type="file" id="sponsorLogo" accept="image/*" class="input w-100">
+                      <div class="image-picker-tab">
+                        <img src="images/upload3.png">
+                        Upload image
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-12 col-item">
+                    <div class="mb-4">
+                      <h5 class="font-weight-500 mb-2">Sponsor Name</h5>
+                      <input type="text" id="sponsorName" class="input w-100" placeholder="Enter sponsor name">
+                    </div>
+                    <div class="mb-4">
+                      <h5 class="font-weight-500 mb-2">Sponsor Web Address</h5>
+                      <input type="text" id="sponsorWebAddress" class="input w-100" placeholder="Enter web address">
+                    </div>
+                    <label class="flex-align3 g2 mt-4">
+                      <input id="highlightSponsor" type="checkbox" style="accent-color: red;">
+                      <h5 class="font-weight-600 text-dark">Highlight sponsor</h5>
+                    </label>
                   </div>
                 </div>
-  
-              </div>
-              <div class="modal-footer2 d-flex justify-content-center g2 mt-4">
-                <button type="button" class="btn btn-ramblers px-4">Save</button>
+                <div class="modal-footer2 d-flex justify-content-end g2 mt-5">
+                  <button type="button" class="btn btn-ramblers px-4" onclick="saveSponsor()">Save</button>
+                </div>
               </div>
             </div>
+          </div>
         </div>
-        
+      </div>
+
+      <!-- Set Time Modal -->
+      <div class="modal fade" id="setTime" tabindex="-1" aria-labelledby="setTimeLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+          <div class="modal-content">
+            <div class="modal-body p-4">
+              <div class="flex-align modal-head2 pb-4 border-bottom">
+                <h3>Set time</h3>
+                <img src="images/close.png" data-bs-dismiss="modal" style="cursor: pointer;width: 20px;height: 20px;">
+              </div>
+              <div class="modal-body2 py-4">
+                <div class="flex-align3 g2">
+                  <h4 class="font-weight-500">Auto slide</h4>
+                  <div class="toggle-tab-container3 toggle">
+                    <input type="checkbox" id="autoSlide">
+                    <span class="toggle-bar"></span>
+                  </div>
+                </div>
+                <div class="flex-align3 g4 my-4">
+                  <label for="right" class="flex-align3 g1 cursor-pointer">
+                    <input id="right" type="radio" name="slideDirection" checked style="accent-color: #c3282e; width: 18px; height: 18px;">
+                    <h4 class="font-weight-500">Slide right to left</h4>
+                  </label>
+                  <label for="left" class="flex-align3 g1 cursor-pointer">
+                    <input id="left" type="radio" name="slideDirection" style="accent-color: #c3282e; width: 18px; height: 18px;">
+                    <h4 class="font-weight-500">Slide left to right</h4>
+                  </label>
+                </div>
+                <div class="py-3">
+                  <h4>Slide speed</h4>
+                  <div class="button-tabs g1 flex-align3 mt-3" style="flex-wrap: wrap;">
+                    <button class="btn btn-outline-danger" style="min-width: 80px;" onclick="setSlideSpeed('slow')">Slow</button>
+                    <button class="btn btn-outline-danger active-btn-danger" style="min-width: 80px;" onclick="setSlideSpeed('medium')">Medium</button>
+                    <button class="btn btn-outline-danger" style="min-width: 80px;" onclick="setSlideSpeed('fast')">Fast</button>
+                  </div>
+                </div>
+                <div class="py-3">
+                  <h4>Ad display time</h4>
+                  <div class="input-with-btn flex-align3 mt-3">
+                    <input type="text" id="adDisplayTime" value="5" class="input w-100">
+                    <div style="position: absolute;right: 0; display: flex;">
+                      <div class="btn btn-outline-danger active-btn-danger px-3" style="border-top-right-radius: 0; border-bottom-right-radius: 0; height: 38px;">Sec</div>
+                      <div class="btn" onclick="setDisplayTime('min')">Min</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer2 d-flex justify-content-center g2 mt-4">
+                  <button type="button" class="btn btn-ramblers px-4" onclick="saveTimeSettings()">Save</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-</div>
+
+  <script>
+    async function saveSponsor() {
+      const organizationId = localStorage.getItem('organizationId');
+      const token = localStorage.getItem('token');
+      const sponsorLogo = document.getElementById('sponsorLogo').files[0];
+      const sponsorName = document.getElementById('sponsorName').value;
+      const sponsorWebAddress = document.getElementById('sponsorWebAddress').value;
+      const highlightSponsor = document.getElementById('highlightSponsor').checked;
+
+      if (!sponsorLogo || !sponsorName || !sponsorWebAddress) {
+        alert('Please fill in all required fields.');
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('imageUrl', sponsorLogo); // Changed to match multer field name
+      formData.append('name', sponsorName);
+      formData.append('webAddress', sponsorWebAddress);
+      formData.append('highlight', highlightSponsor);
+
+      try {
+        const response = await fetch(`/api/sponsors/${organizationId}/sponsors`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          },
+          body: formData
+        });
+
+        if (response.ok) {
+          $('#addSponsors').modal('hide');
+          fetchSponsors();
+          
+          location.reload();
+        } else {
+          const errorData = await response.json();
+          alert('Failed to save sponsor: ' + errorData.message);
+        }
+      } catch (error) {
+        console.error('Error saving sponsor:', error);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      const organizationId = localStorage.getItem('organizationId');
+      const token = localStorage.getItem('token');
+
+      // Fetch sponsors and render them
+      async function fetchSponsors() {
+        try {
+          const response = await fetch(`/api/sponsors/${organizationId}/sponsors`, {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
+          const data = await response.json();
+          if (data.success) {
+            renderSponsors(data.sponsors);
+            document.getElementById('sponsor-count').textContent = data.sponsors.length;
+          } else {
+            console.error('Failed to load sponsors');
+          }
+        } catch (error) {
+          console.error('Error fetching sponsors:', error);
+        }
+      }
+
+      // Render sponsors
+      function renderSponsors(sponsors) {
+        const sponsorsList = document.getElementById('sponsors-list');
+        const sponsorCarousel = document.getElementById('sponsor-carousel');
+        sponsorsList.innerHTML = '';
+        sponsorCarousel.innerHTML = '';
+
+        sponsors.forEach((sponsor, index) => {
+          const sponsorCard = document.createElement('div');
+          sponsorCard.classList.add('sponsors-cards-child', 'flex-align3', 'g3', 'mb-2');
+          sponsorCard.setAttribute('data-id', sponsor._id);
+          sponsorCard.innerHTML = `
+            <span>${index + 1}</span>
+            <div class="sponsors-card flex-align3 g4 w-100 border rounded p-3 pe-4">
+              <div class="flex-align3 g3 pe-4 mr-3" style="border-right: 1px solid #1111114D;">
+                <img src="images/menu2.png" style="width: 20px;">
+                <img src="${sponsor.logoUrl}" style="width: 90px; height:70px;">
+              </div>
+              <div class="flex-align g2 w-100">
+                <div>
+                  <h6 class="font-weight-500">${sponsor.name}</h6>
+                  <h6 class="text-gray mt-2">${sponsor.webAddress}</h6>
+                </div>
+                <div class="dropdown">
+                  <img src="images/dots.png" class="dropdown-toggle" type="button" data-bs-toggle="dropdown" style="width:15px;height: 15px;object-fit: contain;" aria-expanded="false">
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item">Edit</a></li>
+                    <li><a class="dropdown-item" href="#" onclick="deleteSponsor('${sponsor._id}')">Delete</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          `;
+          sponsorsList.appendChild(sponsorCard);
+
+          const sponsorLogoElement = document.createElement('div');
+          sponsorLogoElement.classList.add('item');
+          sponsorLogoElement.innerHTML = `<img src="${sponsor.logoUrl}" alt="${sponsor.name}" style="width: 100%; height: auto; max-width: 80px; margin: 0 auto;">`;
+          sponsorCarousel.appendChild(sponsorLogoElement);
+        });
+
+        // Initialize or reinitialize the Owl Carousel
+        $("#sponsor-carousel").owlCarousel({
+          items: 3,
+          pagination: true,
+          navigation: false,
+          autoPlay: true,
+          slideSpeed: 300,
+          paginationSpeed: 400,
+          rewindSpeed: 500,
+          loop: true
+        });
+      }
+
+      // Delete sponsor
+      async function deleteSponsor(sponsorId) {
+        if (!confirm('Are you sure you want to delete this sponsor?')) return;
+
+        try {
+          const response = await fetch(`/api/sponsors/${sponsorId}`, {
+            method: 'DELETE',
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
+          if (response.ok) {
+            fetchSponsors();
+            location.reload();
+          } else {
+            alert('Failed to delete sponsor.');
+          }
+        } catch (error) {
+          console.error('Error deleting sponsor:', error);
+        }
+      }
+
+      // Initialize drag and drop for reordering
+      $("#sponsors-list").sortable({
+        update: function(event, ui) {
+          const reorderedSponsors = [];
+          $("#sponsors-list .sponsors-cards-child").each(function(index, element) {
+            reorderedSponsors.push({
+              _id: element.getAttribute('data-id'),
+              displayOrder: index + 1
+            });
+          });
+          reorderSponsors(reorderedSponsors);
+        }
+      });
+
+      // Reorder sponsors on the server
+      async function reorderSponsors(sponsors) {
+        try {
+          await fetch(`/api/sponsors/${organizationId}/sponsors/reorder`, {
+            method: 'PUT',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ sponsors })
+          });
+          fetchSponsors();
+          location.reload();
+        } catch (error) {
+          console.error('Error reordering sponsors:', error);
+        }
+      }
+
+      // Fetch sponsors on page load
+      fetchSponsors();
+    });
+  </script>
+
   <script src="js/script.js"></script>
   <script type="text/javascript">
     $(document).ready(function(){
-    $("#banner-slider").owlCarousel({
+      $("#banner-slider").owlCarousel({
         items:1,
         pagination:true,
         navigation:false,
         autoPlay:true
+      });
     });
+  </script>
+
+
+    <script> document.addEventListener('DOMContentLoaded', async () => {
+      const organizationId = localStorage.getItem('organizationId');
+      const token = localStorage.getItem('token');
+    
+      try {
+        // Fetch and apply organization logo
+        const logoResponse = await fetch(`/api/organizations/${organizationId}/logo`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'organizationId': organizationId,
+          }
+        });
+        const logoData = await logoResponse.json();
+        if (logoData.logo_url) {
+          const logoImg = document.querySelector('.mob-screen-container img[src="images/ramblers-text.png"]');
+          if (logoImg) {
+            logoImg.src = logoData.logo_url;
+          }
+        }
+    
+        // Fetch and apply organization theme color
+        const themeResponse = await fetch(`/api/organizations/${organizationId}/theme`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        const themeData = await themeResponse.json();
+
+    
+        if (themeData && themeData.theme_color) {
+          console.log('Fetched theme color:', themeData.theme_color);  // Debugging: Log the fetched color
+          const mobileScreenContainer = document.querySelector('.mob-screen-container');
+          if (mobileScreenContainer) {
+            mobileScreenContainer.style.backgroundColor = themeData.theme_color;
+            console.log('Applied theme color to mobile screen container');
+          } else {
+            console.error('Mobile screen container not found');
+          }
+        } else {
+          console.error('Theme color not found in API response');
+        }
+      } catch (error) {
+        console.error('Error fetching organization data:', error);
+      }
     });
-    </script>
+    
+</script>
 </body>
 
-</html>
+</html> 
