@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Admin</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/mobile.css">
+  <link rel="stylesheet" href="/css/tab.css">
+  <link rel="stylesheet" href="/css/calendar.css">
+  <link rel="stylesheet" href="css/style22.css">
+  <link rel="stylesheet" href="css/style2.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.2/dist/signature_pad.umd.min.js"></script>
+  <script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
+  <script>
+    // Ensure pdfjsLib is initialized
+    window.pdfjsLib = window['pdfjs-dist/build/pdf'];
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://mozilla.github.io/pdf.js/build/pdf.worker.js';
+  </script>
+  <script src="components/topnav.js" type="text/javascript" defer></script>
+  <script src="components/sidebar.js" type="text/javascript" defer></script>
+  
+<style>
+    /* Custom styles */
+    .modal-lg {
+      max-width: 80%;
+    }
+
+    .modal-body {
+      max-height: 70vh;
+      overflow-y: auto;
+    }
+
+    .signature-pad {
+      border: 2px solid #0d6efd;
+    }
+
+    .fixed-submit-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1000;
+    }
+  </style>
+</head>
+<body>
+  <div class="container-scroller">
+    <topnav-component></topnav-component>
+    <div class="container-fluid page-body-wrapper">
+      <sidebar-component data-page="stats"></sidebar-component>
+
+<div class="main-panel">
+    <div class="flex-align second-header px-4 py-2" style="border-bottom: 1px solid #D9D8D8;">
+        <h4 class="m-0 " style="height: 30px;display: flex;align-items: center;">Stats</h4>
+        <!-- <div class="d-flex" style="gap:10px;">
+          <div class="top-search">
+            <input type="" name="" class="hwzthat-input" placeholder="search">
+            <img src="images/search.png">
+          </div>
+          <button class="btn btn-hwztht"><img src="images/rounded-plus.png" style="margin-right: 10px;">Add New</button>
+        </div> -->
+    </div>
+    
+    
+      <div class="content-wrapper">
+          <div class="tabs-to-dropdown">
+         
+            <div class="stats">
+                    <div class="d-flex align-items-center g3" >
+                      <div class="top-select">
+                        <select>
+                          <option>Crickclub</option>
+                          <option>All Club</option>
+                          <option>All Club</option>
+                        </select>
+                      </div>
+                      <h6 class="text-info mb-0">CRC19563</h6>
+                    </div>
+                    <div class="card mt-2">
+                      <ul class="nav nav-pills d-md-flex" id="pills-tab" role="tablist" style="border:none;">
+                        <li class="nav-item" role="presentation">
+                          <a class="nav-link active" id="pills-batting-tab" data-toggle="pill" href="#pills-batting" role="tab" aria-controls="pills-batting" aria-selected="true">Batting</a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                          <a class="nav-link" id="pills-bowling-tab" data-toggle="pill" href="#pills-bowling" role="tab" aria-controls="pills-bowling" aria-selected="false">Bowling</a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                          <a class="nav-link" id="pills-matches-tab" data-toggle="pill" href="#pills-matches" role="tab" aria-controls="pills-matches" aria-selected="true">Matches</a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                          <a class="nav-link" id="pills-videos-tab" data-toggle="pill" href="#pills-videos" role="tab" aria-controls="pills-videos" aria-selected="false">Videos</a>
+                        </li>
+                      </ul>
+                    </div>
+                    <div class="tab-content" id="pills-tabContent">
+                      <div class="tab-pane fade show active" id="pills-batting" role="tabpanel" aria-labelledby="pills-batting-tab">
+                        <div class="card team-table mt-2" style="overflow: auto;">
+                          <table>
+                            <thead>
+                              <tr>
+                                <th>series type</th>
+                                <th>mat</th>
+                                <th>inns</th>
+                                <th>no</th>
+                                <th>runs</th>
+                                <th>balls</th>
+                                <th>ave</th>
+                                <th>sr</th>
+                                <th>hs</th>
+                                <th>100</th>
+                                <th>50</th>
+                                <th>25</th>
+                                <th>0</th>
+                                <th>4</th>
+                                <th>6</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td>T20</td>
+                                <td>23</td>
+                                <td>15</td>
+                                <td>5</td>
+                                <td>120</td>
+                                <td>149</td>
+                                <td>12</td>
+                                <td>80.55</td>
+                                <td>42</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>1</td>
+                                <td>2</td>
+                                <td>3</td>
+                                <td>5</td>
+                              </tr>
+                              <tr>
+                                <td>1 Day</td>
+                                <td>30</td>
+                                <td>52</td>
+                                <td>8</td>
+                                <td>140</td>
+                                <td>209</td>
+                                <td>50</td>
+                                <td>90.55</td>
+                                <td>32</td>
+                                <td>0</td>
+                                <td>2</td>
+                                <td>5</td>
+                                <td>2</td>
+                                <td>3</td>
+                                <td>5</td>
+                              </tr>
+                              <tr>
+                                <td>T10</td>
+                                <td>23</td>
+                                <td>15</td>
+                                <td>5</td>
+                                <td>120</td>
+                                <td>149</td>
+                                <td>12</td>
+                                <td>80.55</td>
+                                <td>42</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>1</td>
+                                <td>2</td>
+                                <td>3</td>
+                                <td>5</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+
+                      </div>
+                      <div class="tab-pane fade" id="pills-bowling" role="tabpanel" aria-labelledby="pills-bowling-tab">
+                        
+                      </div>
+                      <div class="tab-pane fade" id="pills-matches" role="tabpanel" aria-labelledby="pills-matches-tab">
+                        
+                      </div>
+                      <div class="tab-pane fade" id="pills-videos" role="tabpanel" aria-labelledby="pills-videos-tab">
+                        <div class="row mt-2" style="margin-left:-5px;margin-right:-5px;">
+                          <div class="col-md-3 col-sm-4" style="padding:5px;">
+                            <div class="card">
+                              <div class="member-video-card-img">
+                                <img src="images/bg3.png" class="member-videos">
+                                <img src="images/play-icon.png" class="play-icon">
+                              </div>
+                              <div class="member-video-card-content">
+                                <h5>Course Name goes here</h5>
+                                <h6>Lorem ipsum dolor sit amet...</h6>
+                                <h6 class="h6-2">Feb 21, 2022</h6>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-3 col-sm-4" style="padding:5px;">
+                            <div class="card">
+                              <div class="member-video-card-img">
+                                <img src="images/bg4.png" class="member-videos">
+                                <img src="images/play-icon.png" class="play-icon">
+                              </div>
+                              <div class="member-video-card-content">
+                                <h5>Course Name goes here</h5>
+                                <h6>Lorem ipsum dolor sit amet...</h6>
+                                <h6 class="h6-2">Feb 21, 2022</h6>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-3 col-sm-4" style="padding:5px;">
+                            <div class="card">
+                              <div class="member-video-card-img">
+                                <img src="images/bg5.png" class="member-videos">
+                                <img src="images/play-icon.png" class="play-icon">
+                              </div>
+                              <div class="member-video-card-content">
+                                <h5>Course Name goes here</h5>
+                                <h6>Lorem ipsum dolor sit amet...</h6>
+                                <h6 class="h6-2">Feb 21, 2022</h6>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-3 col-sm-4" style="padding:5px;">
+                            <div class="card">
+                              <div class="member-video-card-img">
+                                <img src="images/bg6.png" class="member-videos">
+                                <img src="images/play-icon.png" class="play-icon">
+                              </div>
+                              <div class="member-video-card-content">
+                                <h5>Course Name goes here</h5>
+                                <h6>Lorem ipsum dolor sit amet...</h6>
+                                <h6 class="h6-2">Feb 21, 2022</h6>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-3 col-sm-4" style="padding:5px;">
+                            <div class="card">
+                              <div class="member-video-card-img">
+                                <img src="images/bg7.png" class="member-videos">
+                                <img src="images/play-icon.png" class="play-icon">
+                              </div>
+                              <div class="member-video-card-content">
+                                <h5>Course Name goes here</h5>
+                                <h6>Lorem ipsum dolor sit amet...</h6>
+                                <h6 class="h6-2">Feb 21, 2022</h6>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-3 col-sm-4"  style="padding:5px;">
+                            <div class="card">
+                              <div class="member-video-card-img">
+                                <img src="images/bg3.png" class="member-videos">
+                                <img src="images/play-icon.png" class="play-icon">
+                              </div>
+                              <div class="member-video-card-content">
+                                <h5>Course Name goes here</h5>
+                                <h6>Lorem ipsum dolor sit amet...</h6>
+                                <h6 class="h6-2">Feb 21, 2022</h6>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        
+                      </div>
+                    </div>
+                  </div>
+          </div>
+      </div>  
+    </div>
+  </div>
+  
+</div> 
+
+</div>
+
+<script src="vendors/js/vendor.bundle.base.js"></script>
+<script src="js/off-canvas.js"></script>
+<script src="js/template.js"></script>
+
+</body>
+
+</html>
+

@@ -1,6 +1,7 @@
 class topnav extends HTMLElement {
   constructor() {
     super();
+    //this.socket = io();  // Initialize socket connection
   }
 
   connectedCallback() {
@@ -57,6 +58,11 @@ class topnav extends HTMLElement {
     document.getElementById('logoutButton').addEventListener('click', () => {
       this.logout();
     });
+
+    // Listen for incoming notifications via socket
+    this.socket.on('notification', (notification) => {
+      this.handleNotification(notification);
+    });
   }
 
   fetchOrganizationLogo() {
@@ -111,6 +117,16 @@ class topnav extends HTMLElement {
         mailNotificationElement.style.display = unreadCount > 0 ? 'block' : 'none';
     })
     .catch(error => console.error('Error fetching unread notifications:', error));
+  }
+
+  handleNotification(notification) {
+    // Update mail icon for unread notifications
+    const mailNotificationElement = document.getElementById('mail-notification');
+    mailNotificationElement.style.backgroundColor = '#FF862F';
+    mailNotificationElement.style.display = 'block';
+
+    // Optionally show a toast or alert
+    alert(`New ${notification.type} notification: ${notification.message}`);
   }
 
   checkOrganizations() {

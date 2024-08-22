@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Chat Application</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="shortcut icon" href="images/favicon.png" />
+    <script src="components/sidebar.js" type="text/javascript" defer></script>
+    <script src="components/topnav.js" type="text/javascript" defer></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        .container-scroller {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .container-fluid.page-body-wrapper {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .main-panel {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content-wrapper {
+            flex: 1;
+            display: flex;
+            padding: 0;
+            overflow: hidden;
+            background-color: #f9f9f9;
+        }
+
+        .chat-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #292b2c;
+            color: white;
+            border-right: 1px solid #ddd;
+            padding: 10px;
+            overflow-y: auto;
+        }
+
+        .user-category {
+            margin-bottom: 20px;
+        }
+
+        .user-category h4 {
+            margin: 10px 0;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #ddd;
+            color: #ff9800;
+        }
+
+        .user-list div {
+            padding: 10px;
+            cursor: pointer;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            background-color: #3a3b3c;
+            color: white;
+            transition: background-color 0.3s;
+        }
+
+        .user-list div:hover {
+            background-color: #4b4c4d;
+        }
+
+        .user-list div.selected {
+            background-color: #ff9800;
+            color: black;
+        }
+
+        .user-list img {
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+        }
+
+        .chat-window {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+            position: relative;
+            background-color: #ffffff;
+            overflow-y: auto;
+        }
+
+        .message-list {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 10px;
+        }
+
+        .message-list div {
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 10px;
+            color: white;
+        }
+
+        .message-list .sent {
+            text-align: right;
+            background-color: #007bff;
+            align-self: flex-end;
+        }
+
+        .message-list .received {
+            text-align: left;
+            background-color: #ff9800;
+            align-self: flex-start;
+        }
+
+        .message-input {
+            display: flex;
+            align-items: center;
+        }
+
+        .message-input input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            margin-right: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .message-input input[type="file"] {
+            display: none;
+        }
+
+        .message-input label {
+            cursor: pointer;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            margin-right: 5px;
+        }
+
+        .message-input button {
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .message-input button:hover, .message-input label:hover {
+            background-color: #0056b3;
+        }
+
+        #notifications {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 5px 10px;
+            background-color: #ff9800;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #notifications.unread {
+            background-color: #e91e63;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 60px;
+                padding: 5px;
+            }
+
+            .chat-window {
+                width: calc(100% - 60px);
+            }
+
+            .user-list div {
+                justify-content: center;
+            }
+
+            .user-list img {
+                margin-right: 0;
+            }
+
+            .user-category h4 {
+                font-size: 14px;
+                padding-bottom: 3px;
+                margin: 5px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-scroller">
+        <topnav-component></topnav-component>
+        <div class="container-fluid page-body-wrapper">
+            <sidebar-component data-page="chat"></sidebar-component>
+            <div class="main-panel">
+                <div class="content-wrapper">
+                    <div class="chat-container">
+                        <!-- Sidebar for user categories and groups -->
+                        <div class="sidebar">
+                            <div class="user-category">
+                                <h4>Groups</h4>
+                                <div class="user-list" id="group-list"></div>
+                                <button id="create-group">Create Group</button>
+                            </div>
+                            <div class="user-category">
+                                <h4>Admin</h4>
+                                <div class="user-list" id="admin-list"></div>
+                            </div>
+                            <div class="user-category">
+                                <h4>Coaches</h4>
+                                <div class="user-list" id="coach-list"></div>
+                            </div>
+                            <div class="user-category">
+                                <h4>Students</h4>
+                                <div class="user-list" id="student-list"></div>
+                            </div>
+                        </div>
+
+                        <!-- Chat Window -->
+                        <div class="chat-window">
+                            <div id="notifications">No new messages</div>
+                            <div class="message-list" id="message-list">
+                                <!-- Messages will be populated here -->
+                            </div>
+                            <div class="message-input">
+                                <input type="text" id="message" placeholder="Type a message...">
+                                <label for="file-upload">📎</label>
+                                <input type="file" id="file-upload" accept="image/*">
+                                <button id="send">Send</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const socket = io('http://localhost:5000');
+        let selectedUserOrGroup = null;
+        const userId = localStorage.getItem('userId');
+        const organizationId = localStorage.getItem('organizationId');
+        let usersMap = {}; // To map user IDs to user names
+        let groupsMap = {}; // To map group IDs to group names
+
+        socket.on('receiveMessage', (message) => {
+            displayMessage(message);
+            if (message.senderId !== userId && !message.isGroup) {
+                const senderName = usersMap[message.senderId] || 'Unknown';
+                document.getElementById('notifications').textContent = `New message from ${senderName}`;
+                document.getElementById('notifications').classList.add('unread');
+                selectedUserOrGroup = message.senderId; // Automatically select the user for replying
+            } else if (message.isGroup) {
+                const groupName = groupsMap[message.receiverId] || 'Unknown Group';
+                document.getElementById('notifications').textContent = `New message in ${groupName}`;
+                document.getElementById('notifications').classList.add('unread');
+                selectedUserOrGroup = message.receiverId; // Automatically select the group for replying
+            }
+        });
+
+        document.getElementById('send').addEventListener('click', () => {
+            sendMessage();
+        });
+
+        document.getElementById('file-upload').addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file && selectedUserOrGroup) {
+                const formData = new FormData();
+                formData.append('file', file);
+
+                // Upload the file to the server
+                fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.url) {
+                        socket.emit('sendMessage', { senderId: userId, receiverId: selectedUserOrGroup, message: data.url, isImage: true });
+                    }
+                })
+                .catch(error => console.error('Error uploading image:', error));
+            }
+        });
+
+        document.getElementById('notifications').addEventListener('click', () => {
+            // Clear notifications and focus on the user/group who sent the message
+            document.getElementById('notifications').textContent = 'No new messages';
+            document.getElementById('notifications').classList.remove('unread');
+            if (selectedUserOrGroup) {
+                loadChat({ _id: selectedUserOrGroup });
+            }
+        });
+
+        function sendMessage() {
+            const messageInput = document.getElementById('message');
+            if (messageInput.value && selectedUserOrGroup) {
+                const message = messageInput.value;
+                const isGroup = groupsMap[selectedUserOrGroup] ? true : false;
+                socket.emit('sendMessage', { senderId: userId, receiverId: selectedUserOrGroup, message, isGroup });
+                messageInput.value = '';
+            }
+        }
+
+        function displayMessage(message) {
+            const messageList = document.getElementById('message-list');
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add(message.senderId === userId ? 'sent' : 'received');
+            if (message.isImage) {
+                const img = document.createElement('img');
+                img.src = message.message;
+                img.style.maxWidth = '200px';
+                messageDiv.appendChild(img);
+            } else {
+                messageDiv.textContent = message.message;
+            }
+            messageList.appendChild(messageDiv);
+            messageList.scrollTop = messageList.scrollHeight;
+        }
+
+        function loadChat(userOrGroup) {
+            selectedUserOrGroup = userOrGroup._id;
+            document.querySelectorAll('.user-list div').forEach(div => div.classList.remove('selected'));
+            document.querySelector(`[data-user-id="${userOrGroup._id}"]`).classList.add('selected');
+            document.getElementById('message-list').innerHTML = '';
+            fetch(`/chat/${userId}/${selectedUserOrGroup}`)
+                .then(response => response.json())
+                .then(messages => {
+                    messages.forEach(displayMessage);
+                });
+        }
+
+        document.getElementById('create-group').addEventListener('click', () => {
+            const groupName = prompt("Enter Group Name:");
+            if (groupName) {
+                fetch('/create-group', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ groupName, userId })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.groupId) {
+                        const groupDiv = document.createElement('div');
+                        groupDiv.textContent = groupName;
+                        groupDiv.dataset.userId = data.groupId;
+                        groupsMap[data.groupId] = groupName;
+                        groupDiv.addEventListener('click', () => loadChat({ _id: data.groupId }));
+                        document.getElementById('group-list').appendChild(groupDiv);
+                    }
+                });
+            }
+        });
+
+        // Fetch user lists and groups, then categorize them
+        fetch(`/api/user/${organizationId}`)
+            .then(response => response.json())
+            .then(users => {
+                users.forEach(user => {
+                    usersMap[user._id] = `${user.firstName} ${user.lastName}`; // Map user ID to name
+                    const userDiv = document.createElement('div');
+                    userDiv.textContent = `${user.firstName} ${user.lastName}`;
+                    userDiv.dataset.userId = user._id;
+                    userDiv.innerHTML = `<img src="${user.profilePhoto || 'images/default-user.png'}" alt="User Image">${userDiv.textContent}`;
+                    userDiv.addEventListener('click', () => loadChat(user));
+                    if (user.role === 'corp_admin' || user.role === 'org_admin') {
+                        document.getElementById('admin-list').appendChild(userDiv);
+                    } else if (user.role === 'coach' || user.role === 'freelance_coach') {
+                        document.getElementById('coach-list').appendChild(userDiv);
+                    } else if (user.role === 'student' || user.role === 'parent') {
+                        document.getElementById('student-list').appendChild(userDiv);
+                    }
+                });
+            });
+
+        // Fetch groups and display them
+        fetch(`/api/groups/${organizationId}`)
+            .then(response => response.json())
+            .then(groups => {
+                groups.forEach(group => {
+                    groupsMap[group._id] = group.name;
+                    const groupDiv = document.createElement('div');
+                    groupDiv.textContent = group.name;
+                    groupDiv.dataset.userId = group._id;
+                    groupDiv.addEventListener('click', () => loadChat({ _id: group._id }));
+                    document.getElementById('group-list').appendChild(groupDiv);
+                });
+            });
+
+        // History feature - load the chat history when clicking on a user or group
+        function loadChatHistory(userId, receiverId) {
+            fetch(`/chat/history/${userId}/${receiverId}`)
+                .then(response => response.json())
+                .then(messages => {
+                    messages.forEach(displayMessage);
+                });
+        }
+    </script>
+</body>
+</html>

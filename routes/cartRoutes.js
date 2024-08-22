@@ -18,4 +18,6 @@ router.post('/:userId/update-quantity', cartController.updateItemQuantity);
 // Remove item from cart
 router.post('/:userId/remove-item', cartController.removeItemFromCart);
 
+router.post('/remove-item', cartController.removeItemFromCart);
+
 module.exports = router;

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Coaches</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="shortcut icon" href="images/favicon.png" />
+  <script src="components/sidebar.js" type="text/javascript" defer></script>
+  <script src="components/topnav.js" type="text/javascript" defer></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+  <style>
+    .row {
+      display: flex;
+    }
+
+    .coach-list-item {
+      cursor: pointer;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid #ddd;
+    }
+    .coach-list-item img {
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      margin-right: 10px;
+    }
+    .coach-list-item.active {
+      background-color: #f0f0f0;
+    }
+
+    .coach-details {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      border-left: 1px solid #ddd;
+    }
+
+    .coach-details img {
+      border-radius: 50%;
+      width: 100px;
+      height: 100px;
+      margin-bottom: 15px;
+    }
+
+    .coach-details h4, .coach-details h5, .coach-details p {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .connect-btn {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    .connect-btn:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="container-scroller">
+    <topnav-component></topnav-component>
+    <div class="container-fluid page-body-wrapper">
+      <sidebar-component data-page="coaches"></sidebar-component>
+      <div class="main-panel">
+        <div class="content-wrapper pt-1">
+          <div class="flex-align second-header py-2">
+            <div style="display: flex; align-items: center; gap:10px;">
+              <a href="coaches.html" style="color:gray;">Coach</a>
+              <img src="images/arrow-left.png" style="width: 16px;">
+              <span id="coach-name-header">Coach name</span>
+            </div>
+          </div>
+
+          <div class="row m-0 pt-1">
+            <!-- Left Side: List of Coaches -->
+            <div class="col-md-4">
+              <div class="mb-3">
+                <h4 class="m-0" style="font-weight: 600;">Coaches</h4>
+              </div>
+              <div class="top-search mb-3">
+                <input type="text" id="coach-search" class="hwzthat-input w-100 pl-5" placeholder="Search coaches">
+              </div>
+              <div id="coach-list"></div>
+            </div>
+
+            <!-- Right Side: Coach Details -->
+            <div class="col-md-8">
+              <div class="coach-details">
+                <img id="coach-profile-pic" src="images/default-coach.png" alt="Profile Picture">
+                <h4 id="coach-fullname" class="mb-2">Coach Name</h4>
+                <h5 id="coach-email" style="opacity: .8; font-weight: 300;">Coach email</h5>
+                <p id="coach-about">Lorem ipsum dolor sit amet...</p>
+                <button id="connect-now-btn" class="connect-btn">Connect Now</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.ckeditor.com/ckeditor5/34.1.0/classic/ckeditor.js"></script>
+  <script src="js/off-canvas.js"></script>
+  <script src="js/template.js"></script>
+  <script>
+    const organizationId = localStorage.getItem('organizationId');
+    let coaches = [];
+    let selectedCoachId = null;
+
+    // Fetch coaches from API
+    async function fetchCoaches() {
+      try {
+        const response = await fetch(`/api/user/organization/${organizationId}/coaches`, {
+          headers: {
+            'Content-Type': 'application/json',
+            'organizationId': organizationId
+          }
+        });
+        coaches = await response.json();
+        displayCoachList(coaches);
+      } catch (error) {
+        console.error('Error fetching coaches:', error);
+      }
+    }
+
+    // Display coach list
+    function displayCoachList(coaches) {
+      const coachList = document.getElementById('coach-list');
+      coachList.innerHTML = '';
+      coaches.forEach(coach => {
+        const coachItem = document.createElement('div');
+        coachItem.classList.add('coach-list-item');
+        coachItem.dataset.coachId = coach._id;
+        coachItem.innerHTML = `
+          <img src="${coach.profilePhoto || 'images/default-coach.png'}" alt="Profile Picture">
+          <span>${coach.firstName} ${coach.lastName}</span>
+        `;
+        coachItem.addEventListener('click', () => loadCoachDetails(coach._id));
+        coachList.appendChild(coachItem);
+      });
+    }
+
+    // Load coach details
+    function loadCoachDetails(coachId) {
+      const coach = coaches.find(c => c._id === coachId);
+      if (coach) {
+        document.getElementById('coach-name-header').textContent = `${coach.firstName} ${coach.lastName}`;
+        document.getElementById('coach-fullname').textContent = `${coach.firstName} ${coach.lastName}`;
+        document.getElementById('coach-email').textContent = coach.email;
+        document.getElementById('coach-about').textContent = coach.about || 'No details available';
+        document.getElementById('coach-profile-pic').src = coach.profilePhoto || 'images/default-coach.png';
+        selectedCoachId = coachId;
+      }
+      highlightSelectedCoach(coachId);
+    }
+
+    // Highlight selected coach in list
+    function highlightSelectedCoach(coachId) {
+      document.querySelectorAll('.coach-list-item').forEach(item => {
+        item.classList.remove('active');
+        if (item.dataset.coachId === coachId) {
+          item.classList.add('active');
+        }
+      });
+    }
+
+    // Search functionality
+    document.getElementById('coach-search').addEventListener('input', function() {
+      const searchQuery = this.value.toLowerCase();
+      const filteredCoaches = coaches.filter(coach =>
+        `${coach.firstName} ${coach.lastName}`.toLowerCase().includes(searchQuery)
+      );
+      displayCoachList(filteredCoaches);
+    });
+
+    // Connect Now button click event
+    document.getElementById('connect-now-btn').addEventListener('click', function() {
+      if (selectedCoachId) {
+        // Open chat window or redirect to chat page
+        window.location.href = `/chat?coachId=${selectedCoachId}&studentId=${localStorage.getItem('userId')}`;
+      } else {
+        alert('Please select a coach to connect.');
+      }
+    });
+
+    // Initial fetch of coaches
+    fetchCoaches();
+  </script>
+</body>
+</html>

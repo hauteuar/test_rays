@@ -2,15 +2,23 @@ const mongoose = require('mongoose');
 const Task = require('../models/Task');
 const User = require('../models/Users');
 const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 
-// Configure multer storage
-const storage = multer.memoryStorage(); // Store files in memory for simplicity
-const upload = multer({ storage: storage,
-    limits: { fileSize: 50 * 1024 * 1024 } 
- });
+// Configure multer storage to save files in the uploads folder
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/');
+    },
+    filename: function (req, file, cb) {
+        cb(null, `${Date.now()}-${file.originalname}`);
+    }
+});
+
+const upload = multer({ storage: storage });
 
 // Middleware to handle file uploads
-const uploadMiddleware = upload.any(); // Use .any() to accept all file types
+const uploadMiddleware = upload.array('mediaFiles', 10); // Accept up to 10 files
 
 // Create a new task
 exports.createTask = async (req, res) => {
@@ -387,6 +395,66 @@ exports.getSubmissionByStudent = async (req, res) => {
         res.status(200).json(submission);
     } catch (error) {
         console.error('Error fetching submission:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+
+// Upload new media and update task
+exports.uploadNewMedia = async (req, res) => {
+    uploadMiddleware(req, res, async function (err) {
+        if (err) {
+            return res.status(500).json({ error: 'File upload error' });
+        }
+
+        try {
+            const { taskId } = req.body;
+
+            // Find the task by ID
+            const task = await Task.findById(taskId);
+            if (!task) {
+                return res.status(404).json({ error: 'Task not found' });
+            }
+
+            // Process and add media file paths to the task
+            if (req.files && req.files.length > 0) {
+                req.files.forEach((file, index) => {
+                    const mediaKey = `media${index}`;
+                    const mediaPath = `/uploads/${file.filename}`;
+                    task.media.set(mediaKey, mediaPath);
+                });
+            }
+
+            task.updatedAt = Date.now();
+            await task.save();
+
+            res.status(200).json({ message: 'Media uploaded successfully', task });
+        } catch (error) {
+            console.error('Error uploading media:', error);
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    });
+};
+
+// Fetch historical media for a specific task
+exports.getTaskMedia = async (req, res) => {
+    try {
+        const { taskId } = req.params;
+
+        // Validate the taskId as ObjectId
+        if (!mongoose.Types.ObjectId.isValid(taskId)) {
+            return res.status(400).json({ error: 'Invalid taskId' });
+        }
+
+        // Find the task by taskId
+        const task = await Task.findById(taskId);
+        if (!task) {
+            return res.status(404).json({ error: 'Task not found' });
+        }
+
+        res.status(200).json(task.media);
+    } catch (error) {
+        console.error('Error fetching task media:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 };

@@ -37,11 +37,9 @@ const taskSchema = new mongoose.Schema({
     courseId: { type: mongoose.Schema.Types.ObjectId, ref: 'Course', required: true },
     batchId: { type: mongoose.Schema.Types.ObjectId, ref: 'Batch', required: true },
     assignedTo: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }], // List of students assigned
-    media: {
-        type: Map,
-        of: String, // Could be file paths, URLs, or base64 strings
-    },
-    submissions: [submissionSchema], // Use the updated submission schema
+    media: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Media' }], // Reference to media files
+    submissions: [submissionSchema], 
+    
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
 });

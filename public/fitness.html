@@ -1,0 +1,1278 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Assignments</title>
+  <link rel="stylesheet" href="css/style-coach.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/mobile.css">
+  <link rel="stylesheet" href="css/tab.css">
+  <link rel="shortcut icon" href="images/favicon.png" />
+  <link rel="stylesheet" href="vendors/ti-icons/css/themify-icons.css">
+  <script src="components/sidebar.js" type="text/javascript" defer></script>
+  <script src="components/topnav.js" type="text/javascript" defer></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+
+<body>
+  <div class="container-scroller">
+    <topnav-component></topnav-component>
+    <div class="container-fluid page-body-wrapper">
+      <sidebar-component data-page="fitness"></sidebar-component>
+
+
+<div class="main-panel">
+    <div class="flex-align second-header px-4 py-2" style="border-bottom: 1px solid #D9D8D8;">
+        <h4 class="m-0 " style="height: 40px;display: flex;align-items: center;">Fitness testing</h4>
+        <!-- <div class="d-flex" style="gap:10px;">
+          <div class="top-search">
+            <input type="" name="" class="hwzthat-input" placeholder="search">
+            <img src="images/search.png">
+          </div>
+          <button class="btn btn-hwztht"><img src="images/rounded-plus.png" style="margin-right: 10px;">Add New</button>
+        </div> -->
+        <button id="filter_btn" class="btn btn-hwztht" style="background: white;border: 1px solid #98A2A9;display: none;"><img src="images/filter.png" style="margin-right: 7px;">Filter</button>
+    </div>
+    
+    <div class="content-wrapper fitness-container pt-1">
+      <div class="hwzthat-tabs">
+          <div class="tabs-to-dropdown ">
+            <div class="nav-wrapper d-flex align-items-center justify-content-between border-bottom mb-2">
+              <ul class="nav nav-pills d-md-flex" id="pills-tab" role="tablist" style="border:none;">
+                <li class="nav-item" role="presentation" onclick="showFilter(false)">
+                  <a class="nav-link active" id="pills-test-tab" data-toggle="pill" href="#pills-test" role="tab" aria-controls="pills-test" aria-selected="true">Take a Test</a>
+                </li>
+                <li class="nav-item" role="presentation" onclick="showFilter(false)">
+                  <a class="nav-link" id="pills-comparison-tab" data-toggle="pill" href="#pills-comparison" role="tab" aria-controls="pills-comparison" aria-selected="false">Comparison</a>
+                </li>
+                <li class="nav-item" role="presentation" onclick="showFilter(true)">
+                  <a class="nav-link" id="pills-report-tab" data-toggle="pill" href="#pills-report" role="tab" aria-controls="pills-report" aria-selected="false">Test report</a>
+                </li>
+                <li class="nav-item" role="presentation" onclick="showFilter(true)">
+                  <a class="nav-link" id="pills-scheduled-tab" data-toggle="pill" href="#pills-scheduled" role="tab" aria-controls="pills-scheduled" aria-selected="false">Scheduled List</a>
+                </li>
+              </ul>
+              <a href="fitness-testing-schedule.html">
+                <button class="site-btn-success hoverbtn px-2" style="white-space: nowrap;font-size: 12px;height: 34px;"><img src="images/add-success.png" width="15" class="mr-2">Schedule a test</button>
+              </a>
+            </div>
+            <div class="tab-content" id="pills-tabContent">
+              <div class="tab-pane fade show active" id="pills-test" role="tabpanel" aria-labelledby="pills-test-tab">
+                <div class="row m-0 test-second-tab">
+                  <div class="card">
+                      <ul class="tab-2 nav nav-pills d-md-flex" id="pills-tab" role="tablist" style="border:none;">
+                        <li class="nav-item" role="presentation">
+                          <a class="nav-link active" id="pills-speed-tab" data-toggle="pill" href="#pills-speed" role="tab" aria-controls="pills-speed" aria-selected="true">Speed Endurance</a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                          <a class="nav-link" id="pills-endurance-tab" data-toggle="pill" href="#pills-endurance" role="tab" aria-controls="pills-endurance" aria-selected="false">Endurance</a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                          <a class="nav-link" id="pills-agility-tab" data-toggle="pill" href="#pills-agility" role="tab" aria-controls="pills-agility" aria-selected="true">Agility test</a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                          <a class="nav-link" id="pills-gym-tab" data-toggle="pill" href="#pills-gym" role="tab" aria-controls="pills-gym" aria-selected="false">Gym</a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                          <a class="nav-link" id="pills-practice-tab" data-toggle="pill" href="#pills-practice" role="tab" aria-controls="pills-practice" aria-selected="false">Practice session</a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                          <a class="nav-link" id="pills-match-tab" data-toggle="pill" href="#pills-match" role="tab" aria-controls="pills-match" aria-selected="false">Match session</a>
+                        </li>
+                      </ul>
+                    </div>
+                    <div class="row fitness-row w-100" style="margin-left:-6px;margin-right: -6px;">
+                      <div class="col-md-3" style="padding: 12px 6px;">
+                        <div class="tab-content h-100" id="pills-tabContent">
+                          <div class="tab-pane h-100 fade show active" id="pills-speed" role="tabpanel" aria-labelledby="pills-speed-tab">
+                            <div class="card">
+                              <div class="message-list-child flex-align">
+                                <h5 class="text-success m-0">Shuttle run</h5>
+                                <img src="images/right-arrow-green.png">
+                              </div>
+                              <div class="message-list-child flex-align">
+                                <h5 class="m-0">20 meter run</h5>
+                                <img src="images/right-arrow-green.png">
+                              </div>
+                              <div class="message-list-child flex-align">
+                                <h5 class="m-0">40 meter run</h5>
+                                <img src="images/right-arrow-green.png">
+                              </div>
+                              <div class="message-list-child flex-align">
+                                <h5 class="m-0">60 meter run</h5>
+                                <img src="images/right-arrow-green.png">
+                              </div>
+                              <div class="message-list-child flex-align">
+                                <h5 class="m-0">80 meter run</h5>
+                                <img src="images/right-arrow-green.png">
+                              </div>
+                              <div class="message-list-child flex-align">
+                                <h5 class="m-0">100 meter run</h5>
+                                <img src="images/right-arrow-green.png">
+                              </div>
+                              <div class="message-list-child flex-align">
+                                <h5 class="m-0">200 meter run</h5>
+                                <img src="images/right-arrow-green.png">
+                              </div>
+                              
+                            </div>
+                          </div>
+                          <div class="tab-pane h-100 fade" id="pills-endurance" role="tabpanel" aria-labelledby="pills-endurance-tab">
+                            <div class="card">
+                              <div class="message-list-child flex-align">
+                                <h5 class="text-success m-0">Yo-Yo test</h5>
+                                <img src="images/right-arrow-green.png">
+                              </div>
+                              <div class="message-list-child flex-align">
+                                <h5 class="m-0">2 km</h5>
+                                <img src="images/right-arrow-green.png">
+                              </div>
+                              <div class="message-list-child flex-align">
+                                <h5 class="m-0">5km</h5>
+                                <img src="images/right-arrow-green.png">
+                              </div>
+                              <div class="message-list-child flex-align">
+                                <h5 class="m-0">20 min jogging</h5>
+                                <img src="images/right-arrow-green.png">
+                              </div>
+                              <div class="message-list-child flex-align">
+                                <h5 class="m-0">30 min joggin</h5>
+                                <img src="images/right-arrow-green.png">
+                              </div>
+                            </div>
+                          </div>
+                          <div class="tab-pane h-100 fade" id="pills-agility" role="tabpanel" aria-labelledby="pills-agility-tab">
+                            <div class="card">
+                            </div>
+                          </div>
+                          <div class="tab-pane h-100 fade" id="pills-gym" role="tabpanel" aria-labelledby="pills-gym-tab">
+                            <div class="card">
+                            </div>
+                          </div>
+                          <div class="tab-pane h-100 fade" id="pills-practice" role="tabpanel" aria-labelledby="pills-practice-tab">
+                            <div class="card">
+                            </div>
+                          </div>
+                          <div class="tab-pane h-100 fade" id="pills-match" role="tabpanel" aria-labelledby="pills-match-tab">
+                            <div class="card">
+                            </div>
+                          </div>
+                        </div>
+                        
+                      </div>
+                      <div class="col-md-3" style="padding: 12px 6px;">
+                        <div class="card">
+                          <h6 class="px-3 pt-3 mb-0 pb-0">Select Players</h6>
+                          <div class="message-card-header" style="border-bottom:none;">
+                            <div class="search-message">
+                              <input placeholder="Search players" type="text">
+                              <img src="images/search.png">
+                            </div>
+                          </div>
+                          <div class="px-3 pb-2">
+                            <div class="flex-align mb-2">
+                              <h5 class="text-success m-0"  onclick="checkAll()" style="cursor: pointer;" value="CHECK ALL">Select All</h5>
+                              <h5 class="reset text-success m-0" onclick="uncheckAll()" style="cursor: pointer;" value="UNCHECK ALL">Reset</h5>
+                            </div>
+                            <h6 class="m-0" id="result" style="font-size: 12px;color: gray;visibility: hidden;"></h6>
+                          </div>
+                          <div class="message-card-body " style="height:auto;">
+                            
+
+
+                            <div class="message-list-child" >
+                              <label class="w-100" for="player1">
+                              <div class="dp-name" >
+                                <img src="images/user3.png">
+                                <div>
+                                  <h5>Alexander</h5>
+                                  <h6>Batting</h6>
+                                </div>
+                              </div>
+                              </label>
+                              <div class="check-box" >
+
+                                <input type="checkbox" class="check" id="player1" name="player" value="Player">
+                                <span class="custom-check"></span>
+
+                              </div>
+                            </div>
+                            <div class="message-list-child" >
+                              <label class="w-100" for="player2">
+                              <div class="dp-name" >
+                                <img src="images/user4.png">
+                                <div>
+                                  <h5>Alexander</h5>
+                                  <h6>Batting</h6>
+                                </div>
+                              </div>
+                              </label>
+                              <div class="check-box" >
+                                <input type="checkbox" class="check" id="player2" name="player" value="Player">
+                                <span class="custom-check"></span>
+                              </div>
+                            </div>
+                            <div class="message-list-child" >
+                              <label class="w-100" for="player3">
+                              <div class="dp-name" >
+                                <img src="images/user3.png">
+                                <div>
+                                  <h5>Alexander</h5>
+                                  <h6>Batting</h6>
+                                </div>
+                              </div>
+                              </label>
+                              <div class="check-box" >
+                                <input type="checkbox" class="check" id="player3" name="player" value="Player">
+                                <span class="custom-check"></span>
+                              </div>
+                            </div>
+                            <div class="message-list-child" >
+                              <label class="w-100" for="player4">
+                              <div class="dp-name" >
+                                <img src="images/user4.png">
+                                <div>
+                                  <h5>Alexander</h5>
+                                  <h6>Batting</h6>
+                                </div>
+                              </div>
+                              </label>
+                              <div class="check-box" >
+                                <input type="checkbox" class="check" id="player4" name="player" value="Player">
+                                <span class="custom-check"></span>
+                              </div>
+                            </div>
+                            <div class="message-list-child" >
+                              <label class="w-100" for="player5">
+                              <div class="dp-name" >
+                                <img src="images/user3.png">
+                                <div>
+                                  <h5>Alexander</h5>
+                                  <h6>Batting</h6>
+                                </div>
+                              </div>
+                              </label>
+                              <div class="check-box" >
+                                <input type="checkbox" class="check" id="player5" name="player" value="Player">
+                                <span class="custom-check"></span>
+                              </div>
+                            </div>
+                            <div class="message-list-child" >
+                              <label class="w-100" for="player6">
+                              <div class="dp-name" >
+                                <img src="images/user4.png">
+                                <div>
+                                  <h5>Alexander</h5>
+                                  <h6>Batting</h6>
+                                </div>
+                              </div>
+                              </label>
+                              <div class="check-box" >
+                                <input type="checkbox" class="check" id="player6" name="player" value="Player">
+                                <span class="custom-check"></span>
+                              </div>
+                            </div>
+                           
+                          </div>
+                          
+                        </div>
+                      </div>
+
+                      <div class="col-md-6" style="padding: 12px 6px;">
+                        <div class="card p-4">
+                          <div class="nav-wrapper d-flex align-items-center justify-content-between mb-2">
+                            <ul class="nav nav-pills tab3 d-md-flex" id="pills-tab" role="tablist">
+                              <li class="nav-item" role="presentation">
+                                <a class="nav-link " id="pills-timer-tab" data-toggle="pill" href="#pills-timer" role="tab" aria-controls="pills-timer" aria-selected="true">Timer</a>
+                              </li>
+                              <li class="nav-item" role="presentation">
+                                <a class="nav-link active" id="pills-stopwatch-tab" data-toggle="pill" href="#pills-stopwatch" role="tab" aria-controls="pills-stopwatch" aria-selected="false">Stopwatch</a>
+                              </li>
+                             
+                            </ul>
+                          </div>
+                          <div class="tab-content" id="pills-tabContent">
+                            <div class="tab-pane fade " id="pills-timer" role="tabpanel" aria-labelledby="pills-timer-tab">
+                              <div class="timer">
+                                <div>
+                                  <h6>hr</h6>
+                                  <div class="timer-time">00</div>
+                                </div>
+                                <div>
+                                  <h6>min</h6>
+                                  <div class="timer-time">08</div>
+                                </div>
+                                <div>
+                                  <h6>sec</h6>
+                                  <div class="timer-time">00</div>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            <div class="tab-pane fade show active" id="pills-stopwatch" role="tabpanel" aria-labelledby="pills-stopwatch-tab">
+                              <div class="stopwatch">
+                                <img src="images/stopwatch.png">
+                                <h6>00:00:00</h6>
+                              </div>
+                              <button id="start" class="start-btn btn site-btn-success hoverbtn px-4" style="min-width: 140px;margin: 0 auto;display:none;"><img src="images/start.png" style="margin-right: 7px;">Start</button>
+                              <div style="text-align: center;display: none;" class="after_start">
+                                <h6>Test has been completed</h6>
+                                <div style="display:flex;gap:10px;justify-content: center;">
+                                  <button  class="btn site-btn-success hoverbtn px-4" style="min-width: 140px;" data-toggle="modal" data-target="#view_result">View Result</button>
+                                  <button  class="btn site-btn-success hoverbtn px-4" style="min-width: 140px;"><img src="images/start.png" style="margin-right: 7px;">Restart test</button>
+                                </div>
+                              </div>
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      
+                    </div>
+                    <div class="tab-content" id="pills-tabContent">
+                      <div class="tab-pane fade show active" id="pills-batting" role="tabpanel" aria-labelledby="pills-batting-tab">
+                        
+
+                      </div>
+                      <div class="tab-pane fade" id="pills-bowling" role="tabpanel" aria-labelledby="pills-bowling-tab">
+                        
+                      </div>
+                      <div class="tab-pane fade" id="pills-matches" role="tabpanel" aria-labelledby="pills-matches-tab">
+                        
+                      </div>
+                      <div class="tab-pane fade" id="pills-videos" role="tabpanel" aria-labelledby="pills-videos-tab">
+                        
+                        
+                      </div>
+                    </div>
+                  
+                </div>
+                
+              </div>
+              <div class="tab-pane fade" id="pills-comparison" role="tabpanel" aria-labelledby="pills-comparison-tab">
+                <div class="row fitness-row w-100" style="margin-left:-6px;margin-right: -6px;">
+                      
+                      <div class="col-md-3" style="padding: 0px 6px;">
+                        <div class="card h-100">
+                          <div class="message-card-header pt-1" style="border-bottom:none;">
+                            <div class="search-message">
+                              <input placeholder="Search players" type="text">
+                              <img src="images/search.png">
+                            </div>
+                          </div>
+                          <div class="px-3 pb-2 pt-1">
+                            <h5  class="player_comparison text-success m-0"  style="cursor: pointer;" >Player comparison</h5>
+                            <div class="flex-align select-cancel-tab" style="display: none;">
+                              <h5 class="text-success m-0"  onclick="checkAll()" style="cursor: pointer;" value="CHECK ALL">Select All</h5>
+                              <h5 class="reset text-success m-0" onclick="uncheckAll()" style="cursor: pointer;" value="UNCHECK ALL">Cancel</h5>
+                            </div>
+                            
+                          </div>
+                          <div class="message-card-body " style="height:auto;">
+                           
+                            <div class="message-list-child"style="gap: 20px;" >
+                              <div class="check-box comparison-checkbox" >
+                                <input type="checkbox" class="check" id="player8" name="player" value="Player">
+                                <span class="custom-check"></span>
+                              </div>
+                              <label class="w-100" for="player8">
+                              <div class="dp-name" >
+                                <img src="images/user3.png">
+                                <div>
+                                  <h5>Alexander</h5>
+                                  <h6>Batting</h6>
+                                </div>
+                              </div>
+                              </label>
+                            </div>
+                            <div class="message-list-child"style="gap: 20px;" >
+                              <div class="check-box comparison-checkbox" >
+                                <input type="checkbox" class="check" id="player9" name="player" value="Player">
+                                <span class="custom-check"></span>
+                              </div>
+                              <label class="w-100" for="player9">
+                              <div class="dp-name" >
+                                <img src="images/user3.png">
+                                <div>
+                                  <h5>Alexander</h5>
+                                  <h6>Batting</h6>
+                                </div>
+                              </div>
+                              </label>
+                            </div>
+                            <div class="message-list-child"style="gap: 20px;" >
+                              <div class="check-box comparison-checkbox" >
+                                <input type="checkbox" class="check" id="player10" name="player" value="Player">
+                                <span class="custom-check"></span>
+                              </div>
+                              <label class="w-100" for="player10">
+                              <div class="dp-name" >
+                                <img src="images/user3.png">
+                                <div>
+                                  <h5>Alexander</h5>
+                                  <h6>Batting</h6>
+                                </div>
+                              </div>
+                              </label>
+                            </div>
+                            <div class="message-list-child"style="gap: 20px;" >
+                              <div class="check-box comparison-checkbox" >
+                                <input type="checkbox" class="check" id="player11" name="player" value="Player">
+                                <span class="custom-check"></span>
+                              </div>
+                              <label class="w-100" for="player11">
+                              <div class="dp-name" >
+                                <img src="images/user3.png">
+                                <div>
+                                  <h5>Alexander</h5>
+                                  <h6>Batting</h6>
+                                </div>
+                              </div>
+                              </label>
+                            </div>
+                            <div class="message-list-child"style="gap: 20px;" >
+                              <div class="check-box comparison-checkbox" >
+                                <input type="checkbox" class="check" id="player12" name="player" value="Player">
+                                <span class="custom-check"></span>
+                              </div>
+                              <label class="w-100" for="player12">
+                              <div class="dp-name" >
+                                <img src="images/user3.png">
+                                <div>
+                                  <h5>Alexander</h5>
+                                  <h6>Batting</h6>
+                                </div>
+                              </div>
+                              </label>
+                            </div>
+                            <style type="text/css">
+                              .comparison-checkbox{
+                                display: none;
+                              }
+                            </style>
+                            <div class="message-list-child"style="gap: 20px;" >
+                              <div class="check-box comparison-checkbox" >
+                                <input type="checkbox" class="check" id="player13" name="player" value="Player">
+                                <span class="custom-check"></span>
+                              </div>
+                              <label class="w-100" for="player13">
+                              <div class="dp-name" >
+                                <img src="images/user3.png">
+                                <div>
+                                  <h5>Alexander</h5>
+                                  <h6>Batting</h6>
+                                </div>
+                              </div>
+                              </label>
+                            </div>
+                            
+                           
+                          </div>
+                          
+                        </div>
+                      </div>
+
+                      <div class="col-md-9" style="padding: 0px 6px;">
+                        <div class="row" style="margin-left:-6px;margin-right:-6px;"> 
+                            <div class="col-md-7 dropdown dropdown-lg" style="padding:0 6px;">
+                              <label class="mb-1" style="font-size:14px;">Test Item</label>
+                                <button class="btn dropdown-toggle w-100 hwzthat-dropdown" type="button" id="dropdownMenuDate2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                  Speed Endurance
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownCourse">
+                                  <a class="dropdown-item" href="#">Endurance</a>
+                                  <a class="dropdown-item" href="#">Agility test</a>
+                                  <a class="dropdown-item" href="#">Gym</a>
+                                  <a class="dropdown-item" href="#">Practice session</a>
+                                  <a class="dropdown-item" href="#">Match session</a>
+
+                                </div>
+                            </div>
+                            <div class="col-md-5 dropdown dropdown-lg" style="padding:0 6px;">
+                              <label class="mb-1" style="font-size:14px;">Test Category</label>
+                                <button class="btn dropdown-toggle w-100 hwzthat-dropdown" type="button" id="dropdownMenuDate2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                  Shuttle run
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownCourse">
+                                  <a class="dropdown-item" href="#">Shuttle run</a>
+                                  <a class="dropdown-item" href="#">20 meter run</a>
+                                  <a class="dropdown-item" href="#">40 meter run</a>
+                                  <a class="dropdown-item" href="#">60 meter run</a>
+                                  <a class="dropdown-item" href="#">80 meter run</a>
+                                  <a class="dropdown-item" href="#">100 meter run</a>
+                                  <a class="dropdown-item" href="#">200 meter run</a>
+
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <h6 class="my-2" style="color: gray;font-size: 12px;">Results</h6>
+                        <div class="card" style="min-height: 320px;">
+                          <div class="m-0 row">
+                            <div class="col-md-12 p-0">
+                              <div class="table-responsive hwzthat-table">
+                                <table  class="display" style="width:100%">
+                                  <thead>
+                                    <tr >
+                                      <th></th>
+                                      <th>Date</th>
+                                      <th>Test Duration</th>
+                                      <th>Distance (m)</th>
+                                      <th>Time</th>
+                                      <th>Speed (km/h)</th>
+
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    
+                                    <tr>
+                                      <td style="padding: 5px 12px;">
+                                        <div class="check-box" >
+                                            <input type="checkbox" class="check2" id="player20" name="td" value="Player">
+                                            <span class="custom-check"></span>
+                                        </div>
+                                      </td>
+                                      <td >08-May-2023   |   09:45 am</td>
+                                      <td >15 min</td>
+                                      <td >110</td>
+                                      <td >6 min</td>
+                                      <td >10</td>
+                                    </tr>
+                                    <tr>
+                                      <td style="padding: 5px 12px;">
+                                        <div class="check-box" >
+                                            <input type="checkbox" class="check2" id="player21" name="td" value="Player">
+                                            <span class="custom-check"></span>
+                                        </div>
+                                      </td>
+                                      <td >08-May-2023   |   09:45 am</td>
+                                      <td >15 min</td>
+                                      <td >110</td>
+                                      <td >6 min</td>
+                                      <td >10</td>
+                                    </tr>
+                                    <tr>
+                                      <td style="padding: 5px 12px;">
+                                        <div class="check-box" >
+                                            <input type="checkbox" class="check2" id="player22" name="td" value="Player">
+                                            <span class="custom-check"></span>
+                                        </div>
+                                      </td>
+                                      <td >08-May-2023   |   09:45 am</td>
+                                      <td >15 min</td>
+                                      <td >110</td>
+                                      <td >6 min</td>
+                                      <td >10</td>
+                                    </tr>
+                                    <tr>
+                                      <td style="padding: 5px 12px;">
+                                        <div class="check-box" >
+                                            <input type="checkbox" class="check2" id="player23" name="td" value="Player">
+                                            <span class="custom-check"></span>
+                                        </div>
+                                      </td>
+                                      <td >08-May-2023   |   09:45 am</td>
+                                      <td >15 min</td>
+                                      <td >110</td>
+                                      <td >6 min</td>
+                                      <td >10</td>
+                                    </tr>
+                                    
+                                    
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                            
+                          </div>
+                          
+                        </div>
+                        <div class="d-flex align-items-center mt-3" style="gap:10px;justify-content: flex-end;">
+                          <button class="site-btn-success hoverbtn px-5" data-toggle="modal" data-target="#compare_modal">Compare</button>
+                          </div>
+                      </div>
+
+                      
+                    </div>
+              </div>
+
+              <div class="tab-pane fade" id="pills-report" role="tabpanel" aria-labelledby="pills-report-tab">
+                <div class="m-0 row">
+                            <div class="col-md-12 p-0">
+                              <div class="table-responsive hwzthat-table">
+                                <table  class="display" style="width:100%">
+                                  <thead>
+                                    <tr >
+                                      <th>Date</th>
+                                      <th>Test Category</th>
+                                      <th>Test</th>
+                                      <th>Players</th>
+                                      <th>Test Duration</th>
+                                      <th></th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr data-toggle="modal" data-target="#view_result3">
+                                      <td >06-May-2023   |   11:30 am</td>
+                                      <td >Speed Endurance</td>
+                                      <td >Shuttle run</td>
+                                      <td >4</td>
+                                      <td >
+                                        <div class="d-flex g4 align-items-center">
+                                          <span class="text-danger">2 Pending</span>
+                                          <badge class="badge" style="background: #19af7917;color: #19AF79;border: 1px solid #19AF79;border-radius: 6px;font-size: 10px;padding: 3px 5px;">Send reminder</badge>
+                                        </div>
+
+                                      </td>
+                                      <td><img src="images/download-green.png"></td>
+                                    </tr>
+                                    <tr data-toggle="modal" data-target="#view_result2">
+                                      <td >02-May-2023   |   10:30 am</td>
+                                      <td >Agility test</td>
+                                      <td >Illinois egality test</td>
+                                      <td >14</td>
+                                      <td >30 min</td>
+                                      <td><img src="images/download-green.png"></td>
+                                    </tr>
+                                    <tr data-toggle="modal" data-target="#view_result2">
+                                      <td >29-Apr-2023   |   02:00 pm</td>
+                                      <td >Endurance</td>
+                                      <td >30minuts jog</td>
+                                      <td >5</td>
+                                      <td >30 min</td>
+                                      <td><img src="images/download-green.png"></td>
+                                    </tr>
+                                    <tr data-toggle="modal" data-target="#view_result2">
+                                      <td >26-Apr-2023   |   04:00 pm</td>
+                                      <td >Agility test</td>
+                                      <td >6 rack run</td>
+                                      <td >7</td>
+                                      <td >25 min</td>
+                                      <td><img src="images/download-green.png"></td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                            
+                          </div>
+                
+              </div>
+
+              <div class="tab-pane fade" id="pills-scheduled" role="tabpanel" aria-labelledby="pills-scheduled-tab">
+                <div class="m-0 row">
+                            <div class="col-md-12 p-0">
+                              <div class="table-responsive hwzthat-table">
+                                <div id="example" class="display" style="width:100%">
+                                  <div class="col-tr" style="background: initial;">
+                                    <div class="col-th" style="width:20%;">Start date & Time</div>
+                                    <div class="col-th" style="width:20%;">End date & Time</div>
+                                    <div class="col-th" style="width:20%;">Test Category</div>
+                                    <div class="col-th" style="width:20%;">Test</div>
+                                    <div class="col-th" style="width:20%;">Players</div>
+                                    <div class="col-th" style="width:20%;">Status </div>
+                                  </div>
+                                  <div class="">
+                                      <a class="col-tr " href="fitness-testing-test.html">
+                                        <div class="col-td" style="width:20%;">06-May-2023   |   11:30 am</div>
+                                        <div class="col-td" style="width:20%;">06-May-2023   |   12:30 pm</div>
+                                        <div class="col-td" style="width:20%;">Speed Endurance</div>
+                                        <div class="col-td" style="width:20%;">Shuttle run</div>
+                                        <div class="col-td" style="width:20%;">4</div>
+
+                                        <div class="col-td text-success" style="width:20%;">Inprogress</div>
+                                      </a>
+                                      <a class="col-tr " href="fitness-testing-test.html">
+                                        <div class="col-td" style="width:20%;">02-May-2023   |   11:30 am</div>
+                                        <div class="col-td" style="width:20%;">02-May-2023   |   12:30 pm</div>
+                                        <div class="col-td" style="width:20%;">Agility test</div>
+                                        <div class="col-td" style="width:20%;">Illinois egality test</div>
+                                        <div class="col-td" style="width:20%;">22</div>
+
+                                        <div class="col-td text-success" style="width:20%;">Inprogress</div>
+                                      </a>
+                                      <a class="col-tr " href="fitness-testing-test.html">
+                                        <div class="col-td" style="width:20%;">29-May-2023   |   11:30 am</div>
+                                        <div class="col-td" style="width:20%;">29-May-2023   |   12:30 pm</div>
+                                        <div class="col-td" style="width:20%;">Endurance</div>
+                                        <div class="col-td" style="width:20%;">30minuts jog</div>
+                                        <div class="col-td" style="width:20%;">14</div>
+
+                                        <div class="col-td" style="width:20%;color:gray;">Completed</div>
+                                      </a>
+                                      <a class="col-tr " href="fitness-testing-test.html">
+                                        <div class="col-td" style="width:20%;">26-May-2023   |   11:30 am</div>
+                                        <div class="col-td" style="width:20%;">30-May-2023   |   12:30 pm</div>
+                                        <div class="col-td" style="width:20%;">Agility test</div>
+                                        <div class="col-td" style="width:20%;">6 rack run</div>
+                                        <div class="col-td" style="width:20%;">40</div>
+
+                                        <div class="col-td" style="width:20%;color:gray;">Completed</div>
+                                      </a>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            
+                </div>
+                
+              </div>
+            </div>
+            <div class="modal fade" id="view_result" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog coaches-modal-dilogue" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header border-bottom ">
+                      <div class="flex-align w-100 g2">
+                        <div>
+                          <h5 class="mb-2 mt-0" style="font-size: 14px;">Test Result</h5>
+                          <h6 class="mb-1 text-success" style="font-size:10px;font-weight: 400;">Speed Endurance</h6>
+                          <h6 class="mb-0" style="font-size:10px;font-weight: 400;">Shuttle run <span class="pl-3" style="color:gray;">20 meters</span></h6>
+
+                        </div>
+                        <div style="text-align: right;">
+                          <h6 class="mb-1" style="font-size:10px;font-weight: 400;">06-May-2023</h6>
+                          <h6 class="mb-1" style="font-size:10px;font-weight: 400;">11:30am</h6>
+                          <h6 class="btn btn-light pl-2 py-1 pr-3" style="font-size:12px;border-radius: 6px;background: #D9D8D866;font-style: 12px;">
+                            <img src="images/download2.png" class="mr-2">
+                            Download result
+                          </h6>
+                        </div>
+                        
+                      </div>
+                      
+                    </div>
+                    <div class="modal-body coaches-modal-body">
+                      <div class="result-body w-100">
+                        <table class="w-100">
+                          <thead>
+                            <tr>
+                              <th></th>
+                              <th>
+                                <div style="text-align: center;">
+                                    <img src="images/user6.png" width="35" class="coaches-img mx-auto">
+                                    <h5 class="mb-1 mt-1 text-success" style="font-size: 12px;">Rank 1</h5>
+                                    <h6 class="mb-0" style="font-size:10px;color:gray;">Benjamin</h6>
+                                </div>
+                              </th>
+                              <th>
+                                <div style="text-align: center;">
+                                    <img src="images/user6.png" width="35" class="coaches-img mx-auto">
+                                    <h5 class="mb-1 mt-1 text-success" style="font-size: 12px;">Rank 2</h5>
+                                    <h6 class="mb-0" style="font-size:10px;color:gray;">Benjamin</h6>
+                                </div>
+                              </th>
+                              <th>
+                                <div style="text-align: center;">
+                                    <img src="images/user6.png" width="35" class="coaches-img mx-auto">
+                                    <h5 class="mb-1 mt-1 text-success" style="font-size: 12px;">Rank 3</h5>
+                                    <h6 class="mb-0" style="font-size:10px;color:gray;">Benjamin</h6>
+                                </div>
+                              </th>
+                              <th>
+                                <div style="text-align: center;">
+                                    <img src="images/user6.png" width="35" class="coaches-img mx-auto">
+                                    <h5 class="mb-1 mt-1 text-success" style="font-size: 12px;">Rank 4</h5>
+                                    <h6 class="mb-0" style="font-size:10px;color:gray;">Benjamin</h6>
+                                </div>
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <th>Speed (km/h)</th>
+                              <td>10.5</td>
+                              <td>8.5</td>
+                              <td>8.3</td>
+                              <td>7.00</td>
+                            </tr>
+                            <tr>
+                              <th>Lap time (s)</th>
+                              <td>2</td>
+                              <td>2</td>
+                              <td>1</td>
+                              <td>1</td>
+                            </tr>
+                            <tr>
+                              <th>Distance (m)</th>
+                              <td>105</td>
+                              <td>135</td>
+                              <td>120</td>
+                              <td>120</td>
+                            </tr>
+                            <tr>
+                              <th>Time (mm:ss)</th>
+                              <td>10.5</td>
+                              <td>8.5</td>
+                              <td>8.3</td>
+                              <td>7.00</td>
+                            </tr>
+                            <tr>
+                              <th>Pulse (bpm)</th>
+                              <td>120</td>
+                              <td>120</td>
+                              <td>120</td>
+                              <td>120</td>
+                            </tr> 
+                            <tr>
+                              <th>Blood Pressure (bpm)</th>
+                              <td>2.5</td>
+                              <td>8.5</td>
+                              <td>8.3</td>
+                              <td>7.00</td>
+                            </tr> 
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                    <div class="d-flex align-items-center p-4 mt-2" style="gap:10px;justify-content: center;">
+                      <button class="site-btn-success hoverbtn px-5" style="background: white;color: #19AF79;" data-dismiss="modal" aria-label="Close">Close</button>
+                    </div>
+                   
+                  </div>
+                </div>
+            </div>
+            <div class="modal fade" id="view_result2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog coaches-modal-dilogue" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header border-bottom ">
+                      <div class="flex-align w-100 g2" style="align-items: flex-end;">
+                        <div>
+                          <h5 class="mb-2 mt-0" style="font-size: 14px;">Test Result</h5>
+                          <h6 class="mb-1 text-success" style="font-size:10px;font-weight: 400;">Speed Endurance</h6>
+                          <h6 class="mb-0" style="font-size:10px;font-weight: 400;">Shuttle run <span class="pl-3" style="color:gray;">20 meters</span></h6>
+
+                        </div>
+                        <div style="text-align: right;">
+                          <h6 class="mb-1" style="font-size:10px;font-weight: 400;">06-May-2023</h6>
+                          <h6 class="mb-1" style="font-size:10px;font-weight: 400;">11:30am</h6>
+                          <!-- <h6 class="btn btn-light pl-2 py-1 pr-3" style="font-size:12px;border-radius: 6px;background: #D9D8D866;font-style: 12px;">
+                            <img src="images/download2.png" class="mr-2">
+                            Download result
+                          </h6> -->
+                        </div>
+                        
+                      </div>
+                      
+                    </div>
+                    <div class="modal-body coaches-modal-body">
+                      <div class="result-body w-100">
+                        <table class="w-100">
+                          <thead>
+                            <tr>
+                              <th></th>
+                              <th>
+                                <div style="text-align: center;">
+                                    <img src="images/user6.png" width="35" class="coaches-img mx-auto">
+                                    <h5 class="mb-1 mt-1 text-success" style="font-size: 12px;">Rank 1</h5>
+                                    <h6 class="mb-0" style="font-size:10px;color:gray;">Benjamin</h6>
+                                </div>
+                              </th>
+                              <th>
+                                <div style="text-align: center;">
+                                    <img src="images/user6.png" width="35" class="coaches-img mx-auto">
+                                    <h5 class="mb-1 mt-1 text-success" style="font-size: 12px;">Rank 2</h5>
+                                    <h6 class="mb-0" style="font-size:10px;color:gray;">Benjamin</h6>
+                                </div>
+                              </th>
+                              <th>
+                                <div style="text-align: center;">
+                                    <img src="images/user6.png" width="35" class="coaches-img mx-auto">
+                                    <h5 class="mb-1 mt-1 text-success" style="font-size: 12px;">Rank 3</h5>
+                                    <h6 class="mb-0" style="font-size:10px;color:gray;">Benjamin</h6>
+                                </div>
+                              </th>
+                              <th>
+                                <div style="text-align: center;">
+                                    <img src="images/user6.png" width="35" class="coaches-img mx-auto">
+                                    <h5 class="mb-1 mt-1 text-success" style="font-size: 12px;">Rank 4</h5>
+                                    <h6 class="mb-0" style="font-size:10px;color:gray;">Benjamin</h6>
+                                </div>
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <th>Speed (km/h)</th>
+                              <td>10.5</td>
+                              <td>8.5</td>
+                              <td>8.3</td>
+                              <td>7.00</td>
+                            </tr>
+                            <tr>
+                              <th>Lap time (s)</th>
+                              <td>2</td>
+                              <td>2</td>
+                              <td>1</td>
+                              <td>1</td>
+                            </tr>
+                            <tr>
+                              <th>Distance (m)</th>
+                              <td>105</td>
+                              <td>135</td>
+                              <td>120</td>
+                              <td>120</td>
+                            </tr>
+                            <tr>
+                              <th>Time (mm:ss)</th>
+                              <td>10.5</td>
+                              <td>8.5</td>
+                              <td>8.3</td>
+                              <td>7.00</td>
+                            </tr>
+                            <tr>
+                              <th>Pulse (bpm)</th>
+                              <td>120</td>
+                              <td>120</td>
+                              <td>120</td>
+                              <td>120</td>
+                            </tr> 
+                            <tr>
+                              <th>Blood Pressure (bpm)</th>
+                              <td>2.5</td>
+                              <td>8.5</td>
+                              <td>8.3</td>
+                              <td>7.00</td>
+                            </tr> 
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                    <div class="d-flex align-items-center p-4 mt-2" style="gap:10px;justify-content: center;">
+                      <button class="site-btn-success hoverbtn px-5" style="background: white;color: #19AF79;" data-dismiss="modal" aria-label="Close">Close</button>
+                    </div>
+                   
+                  </div>
+                </div>
+            </div>
+            <div class="modal fade" id="view_result3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog coaches-modal-dilogue" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header border-bottom ">
+                      <div class="flex-align w-100 g2" style="align-items: flex-end;">
+                        <div>
+                          <h5 class="mb-2 mt-0" style="font-size: 14px;">Test Result</h5>
+                          <h6 class="mb-1 text-success" style="font-size:10px;font-weight: 400;">Speed Endurance</h6>
+                          <h6 class="mb-0" style="font-size:10px;font-weight: 400;">Shuttle run <span class="pl-3" style="color:gray;">20 meters</span></h6>
+
+                        </div>
+                        <div style="text-align: right;">
+                          <h6 class="mb-1" style="font-size:10px;font-weight: 400;">06-May-2023</h6>
+                          <h6 class="mb-1" style="font-size:10px;font-weight: 400;">11:30am</h6>
+                          <!-- <h6 class="btn btn-light pl-2 py-1 pr-3" style="font-size:12px;border-radius: 6px;background: #D9D8D866;font-style: 12px;">
+                            <img src="images/download2.png" class="mr-2">
+                            Download result
+                          </h6> -->
+                        </div>
+                        
+                      </div>
+                      
+                    </div>
+                    <div class="modal-body coaches-modal-body">
+                      <div class="result-body w-100">
+                        <table class="w-100">
+                          <thead>
+                            <tr>
+                              <th></th>
+                              <th>
+                                <div style="text-align: center;">
+                                    <img src="images/user6.png" width="35" class="coaches-img mx-auto">
+                                    <h5 class="mb-1 mt-1 text-success" style="font-size: 12px;">Rank 1</h5>
+                                    <h6 class="mb-0" style="font-size:10px;color:gray;">Benjamin</h6>
+                                </div>
+                              </th>
+                              <th>
+                                <div style="text-align: center;">
+                                    <img src="images/user6.png" width="35" class="coaches-img mx-auto">
+                                    <h5 class="mb-1 mt-1 text-success" style="font-size: 12px;">Rank 2</h5>
+                                    <h6 class="mb-0" style="font-size:10px;color:gray;">Benjamin</h6>
+                                </div>
+                              </th>
+                              <th>
+                                <div style="text-align: center;padding-top: 30px;">
+                                    <img src="images/user6.png" width="35" class="coaches-img mx-auto">
+                                    <h6 class="mt-1" style="font-size:10px;color:gray;">Benjamin</h6>
+                                    <h5 class="my-1 text-danger" style="font-size: 12px;">Data not synced</h5>
+                                    <badge class="badge" style="background: #19af7917;color: #19AF79;border: 1px solid #19AF79;border-radius: 6px;font-size: 10px;padding: 3px 5px;">Send reminder</badge>
+
+                                </div>
+                              </th>
+                              <th>
+                                <div style="text-align: center;padding-top: 30px;">
+                                    <img src="images/user6.png" width="35" class="coaches-img mx-auto">
+                                    <h6 class="mt-1" style="font-size:10px;color:gray;">Benjamin</h6>
+                                    <h5 class="my-1 text-danger" style="font-size: 12px;">Data not synced</h5>
+                                    <badge class="badge" style="background: #19af7917;color: #19AF79;border: 1px solid #19AF79;border-radius: 6px;font-size: 10px;padding: 3px 5px;">Send reminder</badge>
+                                </div>
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <th>Speed (km/h)</th>
+                              <td>10.5</td>
+                              <td>8.5</td>
+                              <td></td>
+                              <td></td>
+                            </tr>
+                            <tr>
+                              <th>Lap time (s)</th>
+                              <td>2</td>
+                              <td>2</td>
+                              <td></td>
+                              <td></td>
+                            </tr>
+                            <tr>
+                              <th>Distance (m)</th>
+                              <td>105</td>
+                              <td>135</td>
+                              <td></td>
+                              <td></td>
+                            </tr>
+                            <tr>
+                              <th>Time (mm:ss)</th>
+                              <td>10.5</td>
+                              <td>8.5</td>
+                              <td></td>
+                              <td></td>
+                            </tr>
+                            <tr>
+                              <th>Pulse (bpm)</th>
+                              <td>120</td>
+                              <td>120</td>
+                              <td></td>
+                              <td></td>
+                            </tr> 
+                            <tr>
+                              <th>Blood Pressure (bpm)</th>
+                              <td>2.5</td>
+                              <td>8.5</td>
+                              <td></td>
+                              <td></td>
+                            </tr> 
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                    <div class="d-flex align-items-center p-4 mt-2" style="gap:10px;justify-content: center;">
+                      <button class="site-btn-success hoverbtn px-5" style="background: white;color: #19AF79;" data-dismiss="modal" aria-label="Close">Close</button>
+                    </div>
+                   
+                  </div>
+                </div>
+            </div>
+            <div class="modal fade" id="compare_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog coaches-modal-dilogue" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header border-bottom ">
+                      <div class="flex-align w-100 g2">
+                        <div>
+                          <h5 class="mb-2 mt-0" style="font-size: 14px;">Test Comparison</h5>
+                          <h6 class="mb-1 text-success" style="font-size:10px;font-weight: 400;">Speed Endurance</h6>
+                          <h6 class="mb-0" style="font-size:10px;font-weight: 400;">Shuttle run <span class="pl-3" style="color:gray;">20 meters</span></h6>
+
+                        </div>
+                        <div style="text-align: right;">
+                          <h6 class="mb-1" style="font-size:10px;font-weight: 400;">06-May-2023</h6>
+                          <h6 class="mb-1" style="font-size:10px;font-weight: 400;">11:30am</h6>
+                          <h6 class="btn btn-light pl-2 py-1 pr-3" style="font-size:12px;border-radius: 6px;background: #D9D8D866;font-style: 12px;">
+                            <img src="images/download2.png" class="mr-2">
+                            Download comparison
+                          </h6>
+                        </div>
+                        
+                      </div>
+                      
+                    </div>
+                    <div class="modal-body">
+                      <div class="comparison-body w-100">
+                        <div class="comparison-child">
+                          <img src="images/user6.png" width="35" class="coaches-img mx-auto">
+                          <h6 class="mb-0" style="font-size:10px;color:gray;">10-May-2023   |   10:00 am</h6>
+                          <button class="btn" style="background: #D9577D;">
+                            Alexander
+                          </button>
+                        </div>
+                        <div class="comparison-child">
+                          <img src="images/user3.png" width="35" class="coaches-img mx-auto">
+                          <h6 class="mb-0" style="font-size:10px;color:gray;">10-May-2023   |   10:00 am</h6>
+                          <button class="btn" style="background: #6F5FA8;">
+                            Benjamin
+                          </button>
+                        </div>
+                        
+                      </div>
+                      <div class="comparison-status">
+                        <div class="comparison-status-child">
+                          <div class="comparison-bar">
+                            <div style="background: #D9577D;width: 120px;justify-content: end;">12</div> 
+                          </div>
+                          <div class="comparison-name">Speed (km/h)</div>
+                          <div class="comparison-bar">
+                            <div style="background: #6F5FA8;width: 85px;">8.5</div>
+                          </div>
+                        </div>
+                        <div class="comparison-status-child">
+                          <div class="comparison-bar">
+                            <div style="background: #D9577D;width: 30px;justify-content: end;">2</div> 
+                          </div>
+                          <div class="comparison-name">Lap time (s)</div>
+                          <div class="comparison-bar">
+                            <div style="background: #6F5FA8;width: 30px;">2</div>
+                          </div>
+                        </div>
+                        <div class="comparison-status-child">
+                          <div class="comparison-bar">
+                            <div style="background: #D9577D;width: 140px;justify-content: end;">140</div> 
+                          </div>
+                          <div class="comparison-name">Distance (m)</div>
+                          <div class="comparison-bar">
+                            <div style="background: #6F5FA8;width: 135px;">135</div>
+                          </div>
+                        </div>
+                        <div class="comparison-status-child">
+                          <div class="comparison-bar">
+                            <div style="background: #D9577D;width: 35px;justify-content: end;">2.20</div> 
+                          </div>
+                          <div class="comparison-name">Time (mm:ss)</div>
+                          <div class="comparison-bar">
+                            <div style="background: #6F5FA8;width: 45px;">3</div>
+                          </div>
+                        </div>
+                        <div class="comparison-status-child">
+                          <div class="comparison-bar">
+                            <div style="background: #D9577D;width: 120px;justify-content: end;">120</div> 
+                          </div>
+                          <div class="comparison-name">Blood Pressure (bpm)</div>
+                          <div class="comparison-bar">
+                            <div style="background: #6F5FA8;width: 130px;">130</div>
+                          </div>
+                        </div>
+                       
+                        
+                      </div>
+                    </div>
+                    <div class="d-flex align-items-center p-4 mt-2" style="gap:10px;justify-content: center;">
+                      <button class="site-btn-success hoverbtn px-5" style="background: white;color: #19AF79;" data-dismiss="modal" aria-label="Close">Close</button>
+                      <button class="site-btn-success hoverbtn px-5"  data-dismiss="modal" aria-label="Close">Send</button>
+                    </div>
+                   
+                  </div>
+                </div>
+            </div>
+          </div>
+      </div>  
+    </div>
+  </div>
+  
+</div> 
+
+</div>
+
+<script src="vendors/js/vendor.bundle.base.js"></script>
+<script src="js/off-canvas.js"></script>
+<script src="js/template.js"></script>
+<script type="text/javascript">
+function checkAll() {
+    var inputs = document.querySelectorAll('.check');
+    for (var i = 0; i < inputs.length; i++) {
+        inputs[i].checked = true;
+    }
+}
+window.onload = function () {
+    window.addEventListener('load', checkAll, false);
+}
+function uncheckAll() {
+    var inputs = document.querySelectorAll('.check');
+    for (var i = 0; i < inputs.length; i++) {
+        inputs[i].checked = false;
+    }
+}
+window.onload = function () {
+    window.addEventListener('load', checkAll, true);
+}
+</script>
+<script>
+showChecked();
+function showChecked(){
+document.getElementById("result").textContent = "Selected " + document.querySelectorAll("input:checked").length;
+if(document.querySelectorAll("input:checked").length>0){
+  document.getElementById("start").style.display='block'
+  }else{
+  document.getElementById("start").style.display='none'
+}
+
+
+}
+
+document.querySelectorAll(".check[name=player]").forEach(i=>{
+i.onclick = function(){
+showChecked(document.getElementById("result").style.visibility='visible');
+}
+});
+</script>
+<script type="text/javascript">
+$(".start-btn").on('click', function () {
+$('.start-btn').hide()
+
+var selector = $(".after_start")
+
+if (selector.hasClass('shown_after_start')) {
+    selector.css('display', "none");
+    selector.removeClass('shown_after_start');
+} else {
+    selector.css('display', "block");
+    selector.addClass('shown_after_start');
+}
+});
+</script>
+
+
+<script type="text/javascript">
+$(".player_comparison").on('click', function () {
+$('.player_comparison').hide()
+
+var selector = $(".select-cancel-tab")
+
+if (selector.hasClass('shown_select-cancel-tab')) {
+    selector.css('display', "none");
+    selector.removeClass('shown_after_start');
+} else {
+    selector.css('display', "flex");
+    selector.addClass('shown_select-cancel-tab');
+}
+
+var selector = $(".comparison-checkbox")
+
+if (selector.hasClass('shown_comparison_checkbox')) {
+    selector.css('display', "none");
+    selector.removeClass('shown_after_start');
+} else {
+    selector.css('display', "flex");
+    selector.addClass('shown_comparison_checkbox');
+}
+});
+</script>
+
+<script>
+function showFilter(is_show=true){
+
+if(is_show){
+  document.getElementById('filter_btn').style.display = 'block'
+}else{
+  document.getElementById('filter_btn').style.display = 'none'
+}
+}
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="js/off-canvas.js"></script>
+<script src="js/template.js"></script>
+</body>
+
+</html>
+

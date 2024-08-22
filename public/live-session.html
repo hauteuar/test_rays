@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Session</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h3>Live Session: <span id="roomNameDisplay"></span></h3>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <video id="localVideo" class="video-box" autoplay muted></video>
+            </div>
+            <div class="col-md-6">
+                <video id="remoteVideo" class="video-box" autoplay></video>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/live-session.js"></script>
+    <script src="js/jquery-3.4.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+</body>
+</html>

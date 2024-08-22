@@ -103,3 +103,22 @@ exports.getNotificationHistory = async (req, res) => {
         res.status(500).json({ success: false, message: 'Internal server error' });
     }
 };
+
+exports.sendNotificationByUser = async (req, res) => {
+    const { userId, message, type } = req.body;
+  
+    try {
+      const user = await User.findByIdAndUpdate(userId, {
+        $push: { notifications: { message, type, read: false } }
+      }, { new: true });
+  
+      // Emit notification to the user's socket
+      io.to(user.socketId).emit('notification', { message, type });
+  
+      res.status(200).json({ message: 'Notification sent successfully' });
+    } catch (error) {
+      console.error('Error sending notification:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  };
+  

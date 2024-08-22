@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/mobile.css">
+    <link rel="stylesheet" href="css/tab.css">
+    <link rel="stylesheet" href="css/calendar.css"> 
+    <link rel="shortcut icon" href="images/favicon.png" />
+    <script src="components/sidebar.js" type="text/javascript" defer></script>
+    <script src="components/topnav.js" type="text/javascript" defer></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <style>
+        .media-history-section {
+            margin-top: 20px;
+        }
+
+        .upload-media-section {
+            margin-top: 20px;
+        }
+
+        .media-history-section h5,
+        .upload-media-section h5 {
+            margin-bottom: 20px;
+        }
+
+        #media-history-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        #media-history-list li {
+            margin-bottom: 20px;
+        }
+
+        .media-container {
+            max-width: 300px;
+            max-height: 300px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .media-container img,
+        .media-container video,
+        .media-container audio {
+            width: 100%;
+            height: auto;
+            max-height: 100%;
+        }
+
+        .media-container audio {
+            width: 100%;
+            height: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-scroller">
+        <topnav-component></topnav-component>
+        <div class="container-fluid page-body-wrapper">
+            <sidebar-component data-page="Uploads"></sidebar-component>
+            <div class="main-panel">
+                <div class="main-section main-section2">
+                    <!-- Tabs for Media History and Upload Media -->
+                    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="pills-media-history-tab" data-bs-toggle="pill" data-bs-target="#pills-media-history" type="button" role="tab" aria-controls="pills-media-history" aria-selected="true">Media History</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="pills-upload-media-tab" data-bs-toggle="pill" data-bs-target="#pills-upload-media" type="button" role="tab" aria-controls="pills-upload-media" aria-selected="false">Upload Media</button>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="pills-tabContent">
+                        <!-- Media History Tab -->
+                        <div class="tab-pane fade show active" id="pills-media-history" role="tabpanel" aria-labelledby="pills-media-history-tab">
+                            <div class="media-history-section">
+                                <h5>Media History</h5>
+                                <ul id="media-history-list">
+                                    <!-- Media history will be populated here by JavaScript -->
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Upload Media Tab -->
+                        <div class="tab-pane fade" id="pills-upload-media" role="tabpanel" aria-labelledby="pills-upload-media-tab">
+                            <div class="upload-media-section">
+                                <h5>Upload New Media</h5>
+                                <form id="upload-media-form">
+                                    <div class="mb-3">
+                                        <label for="mediaFiles" class="form-label">Select Files</label>
+                                        <input type="file" id="mediaFiles" name="mediaFiles" class="form-control" multiple accept="video/*,audio/*,image/*">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Upload</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Custom JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const mediaHistoryList = document.getElementById('media-history-list');
+            const uploadMediaForm = document.getElementById('upload-media-form');
+
+            const studentId = localStorage.getItem('userId'); // Replace with actual student ID
+            const organizationId = localStorage.getItem('organizationId');
+
+            // Function to fetch and display historical media
+            function fetchMediaHistory(studentId, organizationId) {
+                fetch(`/api/media/students/${studentId}/organizations/${organizationId}/media`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                        'organizationId': organizationId
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    mediaHistoryList.innerHTML = '';
+                    data.forEach(media => {
+                        const listItem = document.createElement('li');
+                        let mediaContent;
+
+                        switch (media.mediaType) {
+                            case 'image':
+                                mediaContent = `<div class="media-container"><img src="${media.mediaPath}" alt="Image"></div>`;
+                                break;
+                            case 'video':
+                                mediaContent = `<div class="media-container"><video controls><source src="${media.mediaPath}" type="video/mp4">Your browser does not support the video tag.</video></div>`;
+                                break;
+                            case 'audio':
+                                mediaContent = `<div class="media-container"><audio controls><source src="${media.mediaPath}" type="audio/mpeg">Your browser does not support the audio tag.</audio></div>`;
+                                break;
+                            default:
+                                mediaContent = `<a href="${media.mediaPath}" target="_blank">Download ${media.mediaType.toUpperCase()}</a>`;
+                        }
+
+                        listItem.innerHTML = `${mediaContent}<p>${media.mediaType.toUpperCase()} - ${new Date(media.createdAt).toLocaleString()}</p>`;
+                        mediaHistoryList.appendChild(listItem);
+                    });
+                })
+                .catch(error => console.error('Error fetching media history:', error));
+            }
+
+            // Handle media upload form submission
+            uploadMediaForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+
+                const formData = new FormData();
+                const mediaFiles = document.getElementById('mediaFiles').files;
+
+                formData.append('studentId', studentId);
+                formData.append('organizationId', organizationId);
+                for (let i = 0; i < mediaFiles.length; i++) {
+                    formData.append('mediaFiles', mediaFiles[i]);
+                }
+
+                fetch('/api/media/students/upload-media', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message) {
+                        alert(data.message);
+                        fetchMediaHistory(studentId, organizationId); // Refresh the media history list
+                    }
+                })
+                .catch(error => console.error('Error uploading media:', error));
+            });
+
+            // Initial fetch to populate the media history list
+            fetchMediaHistory(studentId, organizationId);
+        });
+    </script>
+</body>
+</html>

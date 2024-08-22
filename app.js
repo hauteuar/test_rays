@@ -1,3 +1,6 @@
+
+const http = require('http');
+const socketIo = require('socket.io');
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
@@ -15,10 +18,24 @@ const Booking = require('./models/Booking');
 const session = require('express-session');
 const Cart = require('./models/Cart');
 const multer = require('multer');
+//const http = require('http');
+//const socketIo = require('socket.io');
 
-
-
+// Create the Express app and HTTP server
 const app = express();
+
+const server = http.createServer(app);
+const io = socketIo(server);
+
+// Socket.io logic
+io.on('connection', (socket) => {
+  console.log('New client connected');
+
+  socket.on('disconnect', () => {
+    console.log('Client disconnected');
+  });
+});
+
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(cookieParser());
@@ -28,7 +45,7 @@ app.set('view engine', 'ejs');
 // MongoDB connection
 mongoose.connect(config.mongodb.url, {
   useNewUrlParser: true,
-  useUnifiedTopology: true
+  useUnifiedTopology: true,
 });
 
 const db = mongoose.connection;
@@ -44,14 +61,14 @@ app.use(session({
   cookie: { secure: false } // Set secure: true in production with HTTPS
 }));
 
-
 const storage = multer.memoryStorage();
-const uploadMiddleware = multer({ 
-    storage: storage,
-    limits: { fileSize: 50 * 1024 * 1024 } // 50 MB limit for example
+const uploadMiddleware = multer({
+  storage: storage,
+  limits: { fileSize: 50 * 1024 * 1024 } // 50 MB limit for example
 }).any(); // .any() allows any file type
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 // Routes
 const authRoutes = require('./routes/authRoutes');
 const organizationRoutes = require('./routes/organizationRoutes');
@@ -70,6 +87,7 @@ const orgRoutes = require('./routes/orgRoutes');
 const waiverRoutes = require('./routes/waiverRoutes');
 const itemRoutes = require('./routes/itemRoutes');
 const sponsorRoutes = require('./routes/sponsorRoutes');
+const mediaRoutes = require('./routes/mediaRoutes');
 
 app.use('/auth', authRoutes);
 app.use('/api/organizations', organizationRoutes);
@@ -88,10 +106,86 @@ app.use('/api/org', orgRoutes);
 app.use('/api/waivers', waiverRoutes);
 app.use('/api/items', itemRoutes);
 app.use('/api/sponsors', sponsorRoutes);
+app.use('/api/media', mediaRoutes);
+
+// Chat Schema
+const messageSchema = new mongoose.Schema({
+  senderId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  receiverId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  message: { type: String, required: true },
+  timestamp: { type: Date, default: Date.now },
+});
+
+const Message = mongoose.model('Message', messageSchema);
+
+// Socket.IO connection
+io.on('connection', (socket) => {
+  console.log('New client connected');
+
+  socket.on('sendMessage', async ({ senderId, receiverId, message }) => {
+    const newMessage = new Message({ senderId, receiverId, message });
+    await newMessage.save();
+    io.emit('receiveMessage', newMessage);
+  });
+
+  socket.on('disconnect', () => {
+    console.log('Client disconnected');
+  });
+});
+
+// Endpoint to get chat messages for a user
+app.get('/chat/:userId', async (req, res) => {
+  const userId = req.params.userId;
+  const messages = await Message.find({ $or: [{ senderId: userId }, { receiverId: userId }] }).sort({ timestamp: 1 });
+  res.json(messages);
+});
+
+app.get('/chat/history/:userId/:receiverId', async (req, res) => {
+  const { userId, receiverId } = req.params;
+  try {
+    const messages = await Message.find({
+      $or: [
+        { senderId: userId, receiverId },
+        { senderId: receiverId, receiverId: userId }
+      ]
+    }).sort({ createdAt: 1 });
+
+    res.json(messages);
+  } catch (error) {
+    console.error('Error fetching chat history:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.get('/notifications/unread-count/:userId', async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const user = await User.findById(userId);
+    const unreadCount = user.notifications.filter(n => !n.read).length;
+    res.json({ unreadCount });
+  } catch (error) {
+    console.error('Error fetching unread notifications:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.post('/send-notification', async (req, res) => {
+  const { userId, message } = req.body;
+  try {
+    await User.findByIdAndUpdate(userId, {
+      $push: { notifications: { message, read: false } }
+    });
+    res.status(200).json({ message: 'Notification sent successfully' });
+  } catch (error) {
+    console.error('Error sending notification:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
 app.get('/', (req, res) => {
   res.redirect('/auth/login');
 });
+
 // Handle success route
 app.get('/success', async (req, res) => {
   try {
@@ -150,30 +244,13 @@ app.get('/success', async (req, res) => {
   }
 });
 
-function removeItemFromCart(req, transactionId) {
-  let cart = req.session.cart || { items: [], totalAmount: 0 };
-  
-  // Find the index of the item with the given transactionId
-  const index = cart.items.findIndex(item => item.transactionId === transactionId);
-  
-  if (index !== -1) {
-    const item = cart.items[index];
-    cart.totalAmount -= item.price * item.quantity; // Deduct the amount of the removed item
-    cart.items.splice(index, 1); // Remove the item from the cart
-    
-    req.session.cart = cart; // Save the updated cart back to the session
-    const cartCount = cart.items.length;
-  $('#cart-icon').text(cartCount); 
-
-  }
-}
-
 // Function to update the cart icon based on the number of items in the cart
 function updateCartIcon() {
   const cart = JSON.parse(localStorage.getItem('cart')) || { items: [] };
   const cartCount = cart.items.length;
   $('#cart-icon').text(cartCount); // Assuming there's a cart icon with ID 'cart-icon'
 }
+
 app.get('/cancel', async (req, res) => {
   const { transactionId } = req.query;
 
@@ -211,9 +288,51 @@ app.get('/corp_admin/dashboard', authMiddleware, async (req, res) => {
   }
 });
 
-//app.get('/org_admin/dashboard', authMiddleware, (req, res) => {
-//  res.redirect('/booking_management.html');
-//});
+// Handle socket connections
+io.on('connection', (socket) => {
+    console.log('A user connected:', socket.id);
+
+    // Handle room creation
+    socket.on('createRoom', ({ roomName, coachId }) => {
+        socket.join(roomName);
+        io.to(roomName).emit('roomCreated', { roomName, coachId });
+        console.log(`${coachId} created and joined room: ${roomName}`);
+    });
+
+    // Handle joining room
+    socket.on('joinRoom', ({ roomName, userId }) => {
+        socket.join(roomName);
+        io.to(roomName).emit('userJoined', { userId, roomName });
+        console.log(`${userId} joined room: ${roomName}`);
+    });
+
+    // Handle muting/unmuting rooms
+    socket.on('muteRoom', ({ roomName }) => {
+        io.to(roomName).emit('muted', { roomName });
+        console.log(`Room ${roomName} has been muted`);
+    });
+
+    socket.on('unmuteRoom', ({ roomName }) => {
+        io.to(roomName).emit('unmuted', { roomName });
+        console.log(`Room ${roomName} has been unmuted`);
+    });
+
+    // Handle signaling data for WebRTC
+    socket.on('signal', (data) => {
+        io.to(data.roomName).emit('signal', data);
+    });
+
+    // Handle disconnection
+    socket.on('disconnect', () => {
+        console.log('User disconnected:', socket.id);
+    });
+    // Handle student notifications
+socket.on('notifyStudent', ({ studentId, roomName }) => {
+  io.to(studentId).emit('newNotification', { roomName, senderName: socket.id }); // Assuming you have a way to get sender's name
+});
+
+});
+
 
 app.get('/coach/dashboard', authMiddleware, (req, res) => {
   res.render('coachDashboard');
@@ -223,8 +342,9 @@ app.get('/user/dashboard', authMiddleware, (req, res) => {
   res.render('userDashboard');
 });
 
+// Start the server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
 

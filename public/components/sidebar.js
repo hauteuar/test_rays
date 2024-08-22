@@ -239,18 +239,18 @@ applyThemeColor(themeColor) {
               </div>
             </li>
           </a>
-          <a href="live_practice.html">
-            <li class="nav-item ${page == 'live_practice' ? 'active' : ''}">
+          <a href="connect-live.html">
+            <li class="nav-item ${page == 'connect-live' ? 'active' : ''}">
               <div class="nav-link">
                 <img src="images/live-practice.png">
                 <span class="menu-title">Connect Live</span>
               </div>
             </li>
           </a>
-          <a href="live_chat.html">
-            <li class="nav-item ${page == 'live_chat' ? 'active' : ''}">
+          <a href="chat.html">
+            <li class="nav-item ${page == 'chat' ? 'active' : ''}">
               <div class="nav-link">
-                <img src="images/live-chat.png">
+                <img src="images/chat1.png">
                 <span class="menu-title">Live Chat</span>
               </div>
             </li>
@@ -258,7 +258,7 @@ applyThemeColor(themeColor) {
           <a href="my_team.html">
             <li class="nav-item ${page == 'my_team' ? 'active' : ''}">
               <div class="nav-link">
-                <img src="images/team.png">
+                <img src="images/my-team.png">
                 <span class="menu-title">My Team</span>
               </div>
             </li>
@@ -266,21 +266,21 @@ applyThemeColor(themeColor) {
           <a href="courses.html">
             <li class="nav-item ${page == 'courses' ? 'active' : ''}">
               <div class="nav-link">
-                <img src="images/courses.png">
+                <img src="images/course.png">
                 <span class="menu-title">Courses</span>
               </div>
             </li>
           </a>
-          <a href="player_stats.html">
-            <li class="nav-item ${page == 'player_stats' ? 'active' : ''}">
+          <a href=" stats.html">
+            <li class="nav-item ${page == 'stats' ? 'active' : ''}">
               <div class="nav-link">
                 <img src="images/stats-match.png">
                 <span class="menu-title">Player Stats</span>
               </div>
             </li>
           </a>
-          <a href="fitness_testing.html">
-            <li class="nav-item ${page == 'fitness_testing' ? 'active' : ''}">
+          <a href="fitness.html">
+            <li class="nav-item ${page == 'fitness' ? 'active' : ''}">
               <div class="nav-link">
                 <img src="images/fitness.png">
                 <span class="menu-title">Fitness Testing</span>
@@ -295,29 +295,29 @@ applyThemeColor(themeColor) {
               </div>
             </li>
           </a>
-          <a href="logout.html">
-            <li class="nav-item ${page == 'logout' ? 'active' : ''}">
+          <a href="billing.html">
+            <li class="nav-item ${page == 'billing' ? 'active' : ''}">
               <div class="nav-link">
-                <img src="images/logout.png">
-                <span class="menu-title">Logout</span>
+                <img src="images/billings.png">
+                <span class="menu-title">Payments</span>
               </div>
             </li>
           </a>
         `;
       case 'student':
         return `
-          <a href="live_practice.html">
-            <li class="nav-item ${page == 'live_practice' ? 'active' : ''}">
+          <a href="connect-live.html">
+            <li class="nav-item ${page == 'connect-live' ? 'active' : ''}">
               <div class="nav-link">
-                <img src="images/live-practice.png">
+                <img src="images/Meetings.png">
                 <span class="menu-title">Connect Live</span>
               </div>  
             </li>
           </a>
           <a href="student_tasks.html">
-            <li class="nav-item ${page == 'my_task' ? 'active' : ''}">
+            <li class="nav-item ${page == 'student_task' ? 'active' : ''}">
               <div class="nav-link">
-                <img src="images/assesments.png">
+                <img src="images/registration.png">
                 <span class="menu-title">My Task</span>
               </div>
             </li>
@@ -325,67 +325,60 @@ applyThemeColor(themeColor) {
           <a href="uploads.html">
             <li class="nav-item ${page == 'uploads' ? 'active' : ''}">
               <div class="nav-link">
-                <img src="images/uploads.png">
+                <img src="images/upload.png">
                 <span class="menu-title">Uploads</span>
               </div>
             </li>
           </a>
           <a href="student_course_list.html">
-            <li class="nav-item ${page == 'coaches' ? 'active' : ''}">
+            <li class="nav-item ${page == 'courses' ? 'active' : ''}">
               <div class="nav-link">
                 <img src="images/course.png">
                 <span class="menu-title">Courses</span>
               </div>
             </li>
           </a>
-          <a href="coaches.html">
+          <a href="student-coach.html">
             <li class="nav-item ${page == 'coaches' ? 'active' : ''}">
               <div class="nav-link">
-                <img src="images/coaches.png">
+                <img src="images/coache.png">
                 <span class="menu-title">Coaches</span>
               </div>
             </li>
           </a>
-          <a href="live_chat.html">
-            <li class="nav-item ${page == 'live_chat' ? 'active' : ''}">
+          <a href="chat.html">
+            <li class="nav-item ${page == 'chat' ? 'active' : ''}">
               <div class="nav-link">
-                <img src="images/live-chat.png">
+                <img src="images/Chat1.png">
                 <span class="menu-title">Live Chat</span>
               </div>
             </li>
           </a>
-          <a href="my_stats.html">
-            <li class="nav-item ${page == 'my_stats' ? 'active' : ''}">
+          <a href="stats.html">
+            <li class="nav-item ${page == 'stats' ? 'active' : ''}">
               <div class="nav-link">
                 <img src="images/stats-match.png">
                 <span class="menu-title">My Stats</span>
               </div>
             </li>
           </a>
-          <a href="biometrics.html">
-            <li class="nav-item ${page == 'biometrics' ? 'active' : ''}">
+          <a href="notification.html">
+            <li class="nav-item ${page == 'notifications' ? 'active' : ''}">
               <div class="nav-link">
-                <img src="images/biometrics.png">
-                <span class="menu-title">Biometrics</span>
+                <img src="images/notifications.png">
+                <span class="menu-title">Notifications</span>
               </div>
             </li>
           </a>
-          <a href="my_fitness_training.html">
-            <li class="nav-item ${page == 'my_fitness_training' ? 'active' : ''}">
+          <a href="billing.html">
+            <li class="nav-item ${page == 'billing' ? 'active' : ''}">
               <div class="nav-link">
-                <img src="images/fitness.png">
-                <span class="menu-title">My Fitness Training</span>
+                <img src="images/billings.png">
+                <span class="menu-title">Payments</span>
               </div>
             </li>
           </a>
-          <a href="logout.html">
-            <li class="nav-item ${page == 'logout' ? 'active' : ''}">
-              <div class="nav-link">
-                <img src="images/logout.png">
-                <span class="menu-title">Logout</span>
-              </div>
-            </li>
-          </a>
+          
         `;
       case 'parent':
         return `
