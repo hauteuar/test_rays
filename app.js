@@ -68,6 +68,8 @@ const uploadMiddleware = multer({
 }).any(); // .any() allows any file type
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/images', express.static(path.join(__dirname, 'public/images')));
+
 
 // Routes
 const authRoutes = require('./routes/authRoutes');
@@ -88,7 +90,13 @@ const waiverRoutes = require('./routes/waiverRoutes');
 const itemRoutes = require('./routes/itemRoutes');
 const sponsorRoutes = require('./routes/sponsorRoutes');
 const mediaRoutes = require('./routes/mediaRoutes');
+const meetingSessionRoutes = require('./routes/meetingSessionRoutes');
+const scheduledMeetingRoutes = require('./routes/scheduledMeetingRoutes');
 
+
+
+app.use('/api/meeting-sessions', meetingSessionRoutes);
+app.use('/api/scheduled-meetings', scheduledMeetingRoutes);
 app.use('/auth', authRoutes);
 app.use('/api/organizations', organizationRoutes);
 app.use('/api/user', userRoutes);
@@ -330,6 +338,25 @@ io.on('connection', (socket) => {
 socket.on('notifyStudent', ({ studentId, roomName }) => {
   io.to(studentId).emit('newNotification', { roomName, senderName: socket.id }); // Assuming you have a way to get sender's name
 });
+// Server-side: Handling endAllSessions
+
+socket.on('endAllSessions', async ({ meetingId }) => {
+  try {
+      // Fetch all sessions related to the meetingId
+      const sessions = await MeetingSession.find({ meetingId });
+      
+      // End each session and notify clients
+      for (let session of sessions) {
+          session.endedAt = new Date();
+          await session.save();
+          
+          socket.broadcast.to(session._id.toString()).emit('sessionEnded', { sessionId: session._id });
+      }
+  } catch (error) {
+      console.error('Error ending all sessions:', error);
+  }
+});
+
 
 });
 

@@ -69,7 +69,7 @@
 <body>
     <div class="container-scroller">
         <div class="container-fluid page-body-wrapper">
-            <sidebar-component data-page="billing"></sidebar-component>
+            <sidebar-component data-page="payments"></sidebar-component>
             <topnav-component></topnav-component>
             <div class="course-main billing">
                 <div class="row justify-content-between">
@@ -83,15 +83,15 @@
                         <a class="nav-link active" id="student-tab" data-toggle="pill" href="#student" role="tab"
                             aria-controls="student" aria-selected="true">Student</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" id="coach-tab-container">
                         <a class="nav-link" id="coach-tab" data-toggle="pill" href="#coach" role="tab"
                             aria-controls="coach" aria-selected="false">Coach</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" id="invoice-tab-container">
                         <a class="nav-link" id="invoice-tab" data-toggle="pill" href="#invoice" role="tab"
                             aria-controls="invoice" aria-selected="false">Invoice</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" id="tax-tab-container">
                         <a class="nav-link" id="tax-tab" data-toggle="pill" href="#tax" role="tab"
                             aria-controls="tax" aria-selected="false">Tax</a>
                     </li>
@@ -100,7 +100,7 @@
                     <!-- Student Tab -->
                     <div class="tab-pane fade show active" id="student" role="tabpanel" aria-labelledby="student-tab">
                         <div class="row">
-                            <div class="col-4 mt-3" style="border-radius: 40px; overflow: hidden;">
+                            <div class="col-4 mt-3" style="border-radius: 40px; overflow: hidden;" id="student-list-container">
                                 <ul id="student-list" class="nav nav-pills side-tab-pills mt-2 inner-tab"></ul>
                             </div>
                             <div class="col-8 mt-4" style="background-color: #fff; border-radius: 8px;">
@@ -157,19 +157,33 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const organizationId = localStorage.getItem('organizationId');
+            const userId = localStorage.getItem('userId');
+            const userRole = localStorage.getItem('role');
             const studentListElement = document.getElementById('student-list');
+            const studentListContainer = document.getElementById('student-list-container');
+            console.log(userRole);
+            if (userRole === 'student') {
+                // Hide the tabs for Coach, Invoice, and Tax
+                document.getElementById('coach-tab-container').style.display = 'none';
+                document.getElementById('invoice-tab-container').style.display = 'none';
+                document.getElementById('tax-tab-container').style.display = 'none';
 
-            // Load Students
-            fetch(`/api/user/organization/${organizationId}/students`, {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
-                    'organizationId': organizationId
-                }
-            })
+                // Hide the student list container for students since they only need to see their own details
+                studentListContainer.style.display = 'none';
+
+                // Load the logged-in student's payment details
+                loadStudentDetails({ _id: userId, firstName: 'Your', lastName: 'Account' }); // Use placeholder name
+            } else {
+                // Load Students for non-student roles
+                fetch(`/api/user/organization/${organizationId}/students`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                        'organizationId': organizationId
+                    }
+                })
                 .then(response => response.json())
                 .then(students => {
-                    console.log(students);
                     Promise.all(students.map(student => loadStudentPaymentStatus(student)))
                         .then(studentElements => {
                             // Sort student elements by payment status
@@ -184,6 +198,7 @@
                             });
                         });
                 });
+            }
 
             function loadStudentPaymentStatus(student) {
                 return fetch(`/api/payments/user/${student._id}`)

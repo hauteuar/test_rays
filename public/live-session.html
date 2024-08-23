@@ -7,6 +7,27 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <script src="/socket.io/socket.io.js"></script>
+    <style>
+    .video-box {
+        width: 100%;
+        height: auto;
+        max-width: 400px;
+        max-height: 300px;
+        border: 1px solid #ddd;
+        margin: 5px;
+    }
+    
+    #videoContainer {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+    }
+    
+    .assigned {
+        color: #aaa; /* Gray out the assigned students */
+        cursor: not-allowed;
+    }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -15,12 +36,22 @@
                 <h3>Live Session: <span id="roomNameDisplay"></span></h3>
             </div>
         </div>
+        
+        <!-- Video Containers -->
+        <div id="videoContainer" class="row mt-4"></div>
+
         <div class="row mt-4">
-            <div class="col-md-6">
-                <video id="localVideo" class="video-box" autoplay muted></video>
+            <div class="col-md-12">
+                <button id="muteButton" class="btn btn-warning">Mute</button>
+                <button id="cameraButton" class="btn btn-secondary">Turn Off Camera</button>
+                <button id="recordSessionButton" class="btn btn-danger">Record Session</button>
+                <button id="endMeetingButton" class="btn btn-danger">End Meeting</button>
             </div>
-            <div class="col-md-6">
-                <video id="remoteVideo" class="video-box" autoplay></video>
+        </div>
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <h4>Participants</h4>
+                <ul id="participantsList" class="list-group"></ul>
             </div>
         </div>
     </div>

@@ -62,6 +62,7 @@ async function editOrganization(orgId) {
                     document.getElementById('orgName').value = organization.name || '';
                     document.getElementById('orgDomain').value = organization.domain || '';
                     document.getElementById('orgThemeColor').value = organization.theme_color || '';
+                    document.getElementById('orgLogo').value = organization.logo || '';
 
                     // Show the edit organization modal
                     showModal('editOrganizationModal');
@@ -104,15 +105,14 @@ document.getElementById('editOrgForm').addEventListener('submit', async function
     const name = document.getElementById('orgName').value;
     const domain = document.getElementById('orgDomain').value;
     const theme_color = document.getElementById('orgThemeColor').value;
-    const logo = document.getElementById('orgLogo').files[0]; // Assuming there's an input with id="orgLogo" for the file
-
+    const logo = document.getElementById('logoOrg').files[0]; // Assuming there's an input with id="orgLogo" for the file
+    console.log(logo);
     // Creating a FormData object to handle file uploads
     const formData = new FormData();
     formData.append('name', name);
     formData.append('domain', domain);
     formData.append('theme_color', theme_color);
-    
-
+   // formData.append('logo', logo);
     if (logo) {
         formData.append('logo', logo);
     }
@@ -124,10 +124,9 @@ document.getElementById('editOrgForm').addEventListener('submit', async function
     if (logo) {
         console.log('Logo:', logo);
     }
-    const data = Object.fromEntries(formData.entries());
+
     try {
         const response = await fetch(`/api/organizations/test/edit/${orgId}`, {
-            'Content-Type': 'application/json',
             method: 'POST',
             body: formData // FormData handles both text fields and files
         });

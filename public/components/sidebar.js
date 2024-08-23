@@ -256,7 +256,7 @@ applyThemeColor(themeColor) {
             </li>
           </a>
           <a href="my_team.html">
-            <li class="nav-item ${page == 'my_team' ? 'active' : ''}">
+            <li class="nav-item ${page == 'my-team' ? 'active' : ''}">
               <div class="nav-link">
                 <img src="images/my-team.png">
                 <span class="menu-title">My Team</span>
@@ -295,8 +295,8 @@ applyThemeColor(themeColor) {
               </div>
             </li>
           </a>
-          <a href="billing.html">
-            <li class="nav-item ${page == 'billing' ? 'active' : ''}">
+          <a href="payments-student.html">
+            <li class="nav-item ${page == 'payments' ? 'active' : ''}">
               <div class="nav-link">
                 <img src="images/billings.png">
                 <span class="menu-title">Payments</span>
@@ -370,8 +370,8 @@ applyThemeColor(themeColor) {
               </div>
             </li>
           </a>
-          <a href="billing.html">
-            <li class="nav-item ${page == 'billing' ? 'active' : ''}">
+          <a href="payments-student.html">
+            <li class="nav-item ${page == 'payments' ? 'active' : ''}">
               <div class="nav-link">
                 <img src="images/billings.png">
                 <span class="menu-title">Payments</span>

@@ -13,6 +13,10 @@
             <label for="orgThemeColor">Theme Color:</label>
             <input type="color" id="orgThemeColor" name="theme_color" value="<%= selectedOrg ? selectedOrg.theme_color : '' %>">
         </div>
+        <div>
+            <label for="orgLogo">Organization Logo (optional):</label>
+            <input type="file" id="orgLogo" name="logo">
+        </div>
         <button type="submit">Save Changes</button>
     </form>
 </div>

@@ -1,52 +1,26 @@
 const socket = io();
 
 // DOM Elements
-const localVideo = document.getElementById('localVideo');
-const remoteVideo = document.getElementById('remoteVideo');
+const meetingNameInput = document.getElementById('meetingName');
 const roomNameInput = document.getElementById('roomName');
+const createMeetingButton = document.getElementById('createMeeting');
 const createRoomButton = document.getElementById('createRoom');
-const joinRoomButton = document.getElementById('joinRoom');
-const muteRoomButton = document.getElementById('muteRoom');
-const unmuteRoomButton = document.getElementById('unmuteRoom');
-const recordSessionButton = document.getElementById('recordSession');
-const endMeetingButton = document.getElementById('endMeeting');
 const roomList = document.getElementById('roomList');
 const studentList = document.getElementById('studentList');
-const scheduleMeetingButton = document.getElementById('scheduleMeeting');
-const scheduleModal = $('#scheduleModal');
-const scheduleForm = document.getElementById('scheduleForm');
-const inviteStudentsSelect = document.getElementById('inviteStudents');
+const meetingList = document.getElementById('meetingList');
 
-let localStream;
-let peerConnection;
-let selectedStudents = []; // Array to keep track of selected students
-let isRecording = false;
-let mediaRecorder;
-let recordedChunks = [];
-let availableStudents = []; // To track students who haven't been added to a room yet
+let selectedStudents = []; // Array to keep track of selected students for rooms
+let availableStudents = []; // To track all students
+let assignedStudents = []; // To track students already in rooms
+let currentMeetingId = null; // Track the current meeting
 
-const configuration = {
-    iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
-};
-
-// Get user media
-async function getLocalStream() {
-    try {
-        localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-        localVideo.srcObject = localStream;
-    } catch (error) {
-        console.error('Error accessing media devices.', error);
-    }
-}
-
-// Fetch students and populate the list
+// Fetch students initially
 async function fetchStudents() {
     try {
         const response = await fetch(`/api/user/${localStorage.getItem('organizationId')}`);
         if (response.ok) {
-            const users = await response.json();
-            availableStudents = users.filter(user => user.role === 'student');
-            renderStudentList();
+            availableStudents = await response.json();
+            renderStudentList(); // Initial render with no disabled students
         } else {
             console.error('Failed to fetch students:', response.statusText);
         }
@@ -55,62 +29,146 @@ async function fetchStudents() {
     }
 }
 
+// Fetch rooms and disable assigned students
+async function fetchRoomsAndDisableStudents() {
+    try {
+        if (!currentMeetingId) return;
+
+        const response = await fetch(`/api/meeting-sessions/${currentMeetingId}/rooms`);
+        if (response.ok) {
+            const rooms = await response.json();
+            assignedStudents = rooms.flatMap(room => room.participants.map(p => p.studentId));
+            renderStudentList(); // Re-render with disabled students
+        } else {
+            console.error('Failed to fetch rooms:', response.statusText);
+        }
+    } catch (error) {
+        console.error('Error fetching rooms:', error);
+    }
+}
+
+// Render student list with appropriate disabled students
 function renderStudentList() {
     studentList.innerHTML = '';
-    inviteStudentsSelect.innerHTML = '';
     availableStudents.forEach(user => {
         const listItem = document.createElement('li');
         listItem.textContent = `${user.firstName} ${user.lastName}`;
         listItem.classList.add('list-group-item');
         listItem.dataset.userId = user._id;
 
-        listItem.addEventListener('click', () => {
-            if (listItem.classList.contains('selected')) {
-                listItem.classList.remove('selected');
-                selectedStudents = selectedStudents.filter(id => id !== user._id);
-            } else {
-                listItem.classList.add('selected');
+        // Disable students who are already in a room
+        const isStudentAssigned = assignedStudents.includes(user._id);
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.disabled = isStudentAssigned;
+        checkbox.checked = isStudentAssigned;
+        if (isStudentAssigned) {
+            listItem.classList.add('assigned'); // Add assigned class for styling
+            listItem.textContent += ` (Already in a Room)`;
+        }
+        checkbox.addEventListener('change', (event) => {
+            if (event.target.checked) {
                 selectedStudents.push(user._id);
+            } else {
+                selectedStudents = selectedStudents.filter(id => id !== user._id);
             }
-            listItem.classList.toggle('selected'); // Toggle highlight
+            listItem.classList.toggle('selected', event.target.checked); // Toggle highlight
         });
-        studentList.appendChild(listItem);
 
-        // Also populate the inviteStudents select
-        const option = document.createElement('option');
-        option.value = user._id;
-        option.textContent = `${user.firstName} ${user.lastName}`;
-        inviteStudentsSelect.appendChild(option);
+        listItem.insertBefore(checkbox, listItem.firstChild);
+        studentList.appendChild(listItem);
     });
 }
 
-// Create room
-createRoomButton.addEventListener('click', () => {
+// Apply CSS to disabled checkboxes
+document.addEventListener('DOMContentLoaded', () => {
+    const style = document.createElement('style');
+    style.innerHTML = `
+        .assigned {
+            color: #aaa; /* Gray out the assigned students */
+            cursor: not-allowed;
+        }
+    `;
+    document.head.appendChild(style);
+});
+
+// Create a new meeting
+createMeetingButton.addEventListener('click', async () => {
+    const meetingName = meetingNameInput.value;
+    if (meetingName) {
+        try {
+            const response = await fetch('/api/meeting-sessions/meetings/create', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    meetingName,
+                    coachId: localStorage.getItem('userId')
+                })
+            });
+            if (response.ok) {
+                const meeting = await response.json();
+                currentMeetingId = meeting._id;
+                addMeetingToList(meeting);
+                meetingNameInput.value = '';
+                createRoomButton.disabled = false; // Enable the Create Room button after creating a meeting
+                fetchRoomsAndDisableStudents(); // Fetch rooms and disable assigned students
+            } else {
+                console.error('Failed to create meeting');
+            }
+        } catch (error) {
+            console.error('Error creating meeting:', error);
+        }
+    } else {
+        alert('Please enter a meeting name.');
+    }
+});
+
+// Create room within the current meeting
+createRoomButton.addEventListener('click', async () => {
     const roomName = roomNameInput.value;
-    if (roomName && selectedStudents.length > 0) {
-        socket.emit('createRoom', { roomName, coachId: localStorage.getItem('userId'), students: selectedStudents });
+    if (roomName && selectedStudents.length > 0 && currentMeetingId) {
+        try {
+            const response = await fetch('/api/meeting-sessions/rooms/create', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    roomName,
+                    meetingId: currentMeetingId,
+                    coachId: localStorage.getItem('userId'),
+                    participants: selectedStudents
+                })
+            });
+            if (response.ok) {
+                const session = await response.json();
+                addRoomToList(session);
+                selectedStudents = []; // Clear the selected students array
+                roomNameInput.value = ''; // Clear room name input field
+                fetchRoomsAndDisableStudents(); // Re-fetch rooms and update student list
+                alert(`Room ${roomName} created successfully`);
+            } else {
+                console.error('Failed to start session');
+            }
+        } catch (error) {
+            console.error('Error starting session:', error);
+        }
     } else {
         alert('Please enter a room name and select students.');
     }
 });
 
-// Join room
-joinRoomButton.addEventListener('click', () => {
-    const roomName = roomNameInput.value;
-    if (roomName) {
-        window.open(`/live-session.html?roomName=${roomName}`, '_blank');
-    } else {
-        alert('Please enter a room name.');
-    }
-});
+function addMeetingToList(meeting) {
+    const meetingItem = document.createElement('li');
+    meetingItem.textContent = `${meeting.meetingName}`;
+    meetingItem.classList.add('list-group-item');
+    meetingList.appendChild(meetingItem);
+}
 
-// Handle room creation
-socket.on('roomCreated', ({ roomName, students }) => {
-    if (!students) return; // Ensure students array is defined
+function addRoomToList(session) {
+    const { roomName, participants } = session;
 
     const roomItem = document.createElement('li');
-    roomItem.innerHTML = `<strong>${roomName}</strong> - Students: ${students.map(id => {
-        const student = availableStudents.find(s => s._id === id);
+    roomItem.innerHTML = `<strong>${roomName}</strong> - Students: ${participants.map(p => {
+        const student = availableStudents.find(s => s._id === p.studentId);
         return student ? `${student.firstName} ${student.lastName}` : 'Unknown';
     }).join(', ')}`;
     roomItem.classList.add('list-group-item');
@@ -119,153 +177,61 @@ socket.on('roomCreated', ({ roomName, students }) => {
     connectButton.textContent = 'Connect Now';
     connectButton.classList.add('btn', 'btn-primary', 'ml-2');
     connectButton.addEventListener('click', () => {
-        window.open(`/live-session.html?roomName=${roomName}`, '_blank');
+        window.open(`/live-session.html?roomName=${roomName}&sessionId=${session._id}`, '_blank');
     });
 
     const endMeetingButton = document.createElement('button');
     endMeetingButton.textContent = 'End Meeting';
     endMeetingButton.classList.add('btn', 'btn-danger', 'ml-2');
-    endMeetingButton.addEventListener('click', () => {
-        socket.emit('endRoom', { roomName });
+    endMeetingButton.addEventListener('click', async () => {
+        try {
+            const response = await fetch(`/api/meeting-sessions/end`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ sessionId: session._id })
+            });
+            if (response.ok) {
+                roomItem.remove();
+                // Close all associated sessions for this meeting
+                socket.emit('endAllSessions', { meetingId: currentMeetingId });
+                fetchRoomsAndDisableStudents(); // Re-fetch rooms and update student list
+            } else {
+                console.error('Failed to end session');
+            }
+        } catch (error) {
+            console.error('Error ending session:', error);
+        }
     });
     
     roomItem.appendChild(connectButton);
     roomItem.appendChild(endMeetingButton);
     roomList.appendChild(roomItem);
-
-    // Remove selected students from available list
-    selectedStudents.forEach(studentId => {
-        availableStudents = availableStudents.filter(student => student._id !== studentId);
-    });
-
-    selectedStudents = []; // Clear selected students
-    renderStudentList(); // Re-render the student list
-});
-
-// Schedule meeting
-scheduleMeetingButton.addEventListener('click', () => {
-    scheduleModal.modal('show');
-});
-
-// Handle schedule form submission
-scheduleForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-
-    const title = document.getElementById('meetingTitle').value;
-    const date = document.getElementById('meetingDate').value;
-    const time = document.getElementById('meetingTime').value;
-    const roomName = document.getElementById('meetingRoom').value;
-    const invitedStudents = Array.from(inviteStudentsSelect.selectedOptions).map(option => option.value);
-
-    if (title && date && time && roomName && invitedStudents.length > 0) {
-        socket.emit('scheduleMeeting', {
-            title,
-            date,
-            time,
-            roomName,
-            invitedStudents,
-            coachId: localStorage.getItem('userId')
-        });
-        scheduleModal.modal('hide');
-        alert('Meeting scheduled successfully.');
-    } else {
-        alert('Please fill out all fields.');
-    }
-});
-
-// Mute/unmute room
-muteRoomButton.addEventListener('click', () => {
-    const roomName = prompt('Enter room name to mute:');
-    if (roomName) {
-        socket.emit('muteRoom', { roomName });
-    }
-});
-
-unmuteRoomButton.addEventListener('click', () => {
-    const roomName = prompt('Enter room name to unmute:');
-    if (roomName) {
-        socket.emit('unmuteRoom', { roomName });
-    }
-});
-
-// Handle recording
-recordSessionButton.addEventListener('click', () => {
-    if (isRecording) {
-        mediaRecorder.stop();
-        recordSessionButton.textContent = 'Record Session';
-        isRecording = false;
-    } else {
-        startRecording();
-        recordSessionButton.textContent = 'Stop Recording';
-        isRecording = true;
-    }
-});
-
-function startRecording() {
-    if (localStream) {
-        const options = { mimeType: 'video/webm; codecs=vp9' };
-        mediaRecorder = new MediaRecorder(localStream, options);
-        
-        mediaRecorder.ondataavailable = handleDataAvailable;
-        mediaRecorder.onstop = handleRecordingStop;
-
-        mediaRecorder.start();
-    } else {
-        console.error('No local stream available to record.');
-    }
 }
-
-// Function to handle data availability during recording
-function handleDataAvailable(event) {
-    if (event.data.size > 0) {
-        recordedChunks.push(event.data);
-    }
-}
-
-// Function to handle when recording stops
-function handleRecordingStop() {
-    const blob = new Blob(recordedChunks, { type: 'video/webm' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.style.display = 'none';
-    a.href = url;
-    a.download = `${roomNameInput.value}-recording.webm`;
-    document.body.appendChild(a);
-    a.click();
-    window.URL.revokeObjectURL(url);
-    recordedChunks = []; // Clear the recorded chunks after saving
-}
-
-// Close rooms/sessions when the page is closed or when there's inactivity
-window.addEventListener('beforeunload', () => {
-    socket.emit('closeRoom', { roomName: roomNameInput.value, userId: localStorage.getItem('userId') });
-});
-
-// Timeout if no users are present for 2 minutes
-let timeout;
-socket.on('userLeft', () => {
-    if (timeout) clearTimeout(timeout);
-    timeout = setTimeout(() => {
-        socket.emit('closeRoom', { roomName: roomNameInput.value });
-    }, 2 * 60 * 1000); // 2 minutes
-});
-
-// Initialize the stream and fetch students
-getLocalStream();
-fetchStudents();
-
-// Notification handling (Assuming topnav component has an element with id 'notification-icon')
-socket.on('newNotification', ({ roomName, senderName }) => {
-    const notificationIcon = document.getElementById('notification-icon');
-    notificationIcon.classList.add('has-notification');
-    notificationIcon.title = `New room "${roomName}" created by ${senderName}`;
-});
 
 // Restrict creation to coaches only
 document.addEventListener('DOMContentLoaded', () => {
     const role = localStorage.getItem('userRole');
     if (role === 'student') {
         createRoomButton.style.display = 'none';
-        scheduleMeetingButton.style.display = 'none';
+        createMeetingButton.style.display = 'none';
+    } else {
+        createRoomButton.disabled = true; // Disable Create Room button until a meeting is created
     }
 });
+
+// Create a button to join all rooms
+const joinAllRoomsButton = document.createElement('button');
+joinAllRoomsButton.textContent = 'Join All Rooms';
+joinAllRoomsButton.classList.add('btn', 'btn-success', 'mt-4');
+roomList.parentElement.appendChild(joinAllRoomsButton); // Append below the available rooms
+
+joinAllRoomsButton.addEventListener('click', async () => {
+    try {
+        window.open(`/live-session.html?sessionId=${currentMeetingId}`, '_blank'); // Open a new tab for the live session
+    } catch (error) {
+        console.error('Error joining all rooms:', error);
+    }
+});
+
+// Initialize
+fetchStudents();

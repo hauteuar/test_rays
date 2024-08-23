@@ -1,7 +1,7 @@
 class topnav extends HTMLElement {
   constructor() {
     super();
-    //this.socket = io();  // Initialize socket connection
+   // this.socket = io();  // Initialize socket connection
   }
 
   connectedCallback() {

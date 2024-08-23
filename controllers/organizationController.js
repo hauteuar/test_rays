@@ -148,29 +148,33 @@ exports.renderDashboard = async (req, res) => {
 
 exports.editOrganizations = async (req, res) => {
   upload.single('logo')(req, res, async function (err) {
-    if (err) {
-      console.error('Error uploading file:', err);
-      return res.status(500).json({ error: 'Error uploading file.' });
-    }
-
-    try {
-      const { id } = req.params;
-      const { name, domain, theme_color } = req.body;
-      console.log('Received data:', req.body);
-
-      const updateData = { name, domain, theme_color };
-
-      if (req.file) {
-        updateData.logo_url = `/uploads/logos/${req.file.filename}`;
+      if (err) {
+          console.error('Error uploading file:', err);
+          return res.status(500).json({ error: 'Error uploading file.' });
       }
 
-      const organization = await Organization.findByIdAndUpdate(id, updateData, { new: true });
-      console.log('Updated organization:', organization);
-      res.json(organization);
-    } catch (error) {
-      console.error('Error updating organization:', error);
-      res.status(500).json({ error: 'Server error' });
-    }
+      try {
+          const { id } = req.params;
+          const { name, domain, theme_color } = req.body;
+
+          const updateData = { name, domain, theme_color };
+
+          // Only update the logo if a new file was uploaded
+          if (req.file) {
+              updateData.logo_url = `/images/${req.file.filename}`;
+          }
+
+          const organization = await Organization.findByIdAndUpdate(id, updateData, { new: true });
+          if (!organization) {
+              return res.status(404).json({ error: 'Organization not found.' });
+          }
+
+          console.log('Updated organization:', organization);
+          res.json(organization);
+      } catch (error) {
+          console.error('Error updating organization:', error);
+          res.status(500).json({ error: 'Server error' });
+      }
   });
 };
 
