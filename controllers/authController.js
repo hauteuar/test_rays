@@ -38,7 +38,12 @@ exports.login = async (req, res) => {
 
     const organizationIds = user.organizations.map(org => org.org_id._id);
 
-    res.json({ token, role: user.role, organizations: organizationIds });
+    res.json({
+      token,
+      role: user.role,              // For web
+      rollCode: user.role,          // For app, mimicking the old format
+      organizations: organizationIds
+    });
   } catch (error) {
     console.error('Error during login:', error);
     res.status(500).json({ error: 'Internal server error.' });
