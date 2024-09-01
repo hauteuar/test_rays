@@ -11,6 +11,9 @@ const courseSchema = new mongoose.Schema({
   endDate: { type: Date, required: true },
   bannerImage: { type: String, required: true },
   coaches: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }], // Reference to User model for coaches
+  isDefaultPractice: { type: Boolean, default: false }, // To identify default practice courses
+  sessionFee: { type: Number, default: 50 }, // Default fee per session
+  baseCurrency: { type: String, default: 'USD' }, // Currency used for payments
   groundBookings: [{
     sport: { type: String, required: true },
     court: { type: String, required: true },

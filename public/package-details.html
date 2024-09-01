@@ -28,7 +28,9 @@
             <div class="course-main add-course package_details">
                 <div class="row justify-content-between">
                     <div class="mb-3 mt-2 heading">
-                        <h4 class="m-0" style="font-weight: 400; color: rgb(104, 104, 104);"><a href="courses.html" style="color:#5c5c5c;">Package</a></h4>
+                        <h4 class="m-0" style="font-weight: 400; color: rgb(104, 104, 104);">
+                            <a href="courses.html" style="color:#5c5c5c;">Package</a>
+                        </h4>
                         <img src="images/arrow-right-3.png" alt="">
                         <h4 class="m-0" id="packageTitle" style="font-weight: 650;">Package Title</h4>
                     </div>
@@ -75,9 +77,19 @@
                         </div>
                     </div>
                     <div class="col-8 package-details">
-                        <h4 class="subheading" style="font-size: 16px;font-weight: 600;"><span id="courseCountTop">0</span> courses</h4>
+                        <h4 class="subheading" style="font-size: 16px;font-weight: 600;">
+                            <span id="courseCountTop">0</span> courses
+                        </h4>
                         <div class="package-container" id="coursesContainer">
                             <!-- Courses will be dynamically loaded here -->
+                        </div>
+
+                        <!-- New Section for Items -->
+                        <h4 class="subheading" style="font-size: 16px;font-weight: 600;">
+                            Items Included in this Package
+                        </h4>
+                        <div class="package-container" id="itemsContainer">
+                            <!-- Items will be dynamically loaded here -->
                         </div>
                     </div>
                 </div>
@@ -89,96 +101,127 @@
     <script>
         document.addEventListener('DOMContentLoaded', fetchPackageDetails);
 
-        async function fetchPackageDetails() {
-            try {
-                const packageId = new URLSearchParams(window.location.search).get('packageId');
-                const organizationName = localStorage.getItem('organizationName');
+async function fetchPackageDetails() {
+    try {
+        const packageId = new URLSearchParams(window.location.search).get('packageId');
+        const organizationId = localStorage.getItem('organizationId');
 
-                const response = await fetch(`/api/packages/${packageId}`, {
-                    headers: {
-                        'organizationName': organizationName
-                    }
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-
-                const packageData = await response.json();
-                console.log("Fetched package data:", packageData);
-
-                document.getElementById('packageBanner').src = `/images/${packageData.bannerImage || 'summer-camp.jpg'}`;
-                document.getElementById('packageTitle').innerText = packageData.name;
-                document.getElementById('packageTitleBottom').innerText = packageData.name;
-                document.getElementById('packageOriginalPrice').innerText = `$${packageData.fee}`;
-                document.getElementById('packageDiscountedPrice').innerText = `$${packageData.discount}`;
-                document.getElementById('packageStartDate').innerText = new Date(packageData.startDate).toLocaleDateString();
-                document.getElementById('packageEndDate').innerText = new Date(packageData.endDate).toLocaleDateString();
-                document.getElementById('courseCount').innerText = packageData.courses.length;
-                document.getElementById('courseCountTop').innerText = packageData.courses.length;
-
-                populateDescription(packageData.description);
-                populateDiscounts(packageData.discount);
-                displayCourses(packageData.courses);
-            } catch (error) {
-                console.error('Error fetching package details:', error);
+        const response = await fetch(`/api/package/${packageId}`, {
+            headers: {
+                'organizationId': organizationId
             }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
-        function populateDescription(description) {
-            const descriptionElement = document.getElementById('packageDescription');
-            descriptionElement.innerHTML = '';
-            const li = document.createElement('li');
-            li.textContent = description;
-            descriptionElement.appendChild(li);
-        }
+        const packageData = await response.json();
+        console.log("Fetched package data:", packageData);
 
-        function populateDiscounts(discount) {
-            const discountsElement = document.getElementById('packageDiscounts');
-            discountsElement.innerHTML = '';
-            const discountDiv = document.createElement('div');
-            discountDiv.classList.add('discount-text');
-            discountDiv.innerHTML = `
-                <div class="count">${discount}%</div>
-                <h3 class="batch-subheading" style="font-size: 12px;font-weight: 500;">${discount}% discount</h3>
-            `;
-            discountsElement.appendChild(discountDiv);
-        }
+        // Update the page with package data
+        document.getElementById('packageBanner').src = `/images/${packageData.bannerImage || 'summer-camp.jpg'}`;
+        document.getElementById('packageTitle').innerText = packageData.name || "No Title";
+        document.getElementById('packageTitleBottom').innerText = packageData.name || "No Title";
+        document.getElementById('packageOriginalPrice').innerText = `$${packageData.fee || 0}`;
+        document.getElementById('packageDiscountedPrice').innerText = `$${packageData.discount || 0}`;
+        document.getElementById('packageStartDate').innerText = packageData.startDate ? new Date(packageData.startDate).toLocaleDateString() : "No Start Date";
+        document.getElementById('packageEndDate').innerText = packageData.endDate ? new Date(packageData.endDate).toLocaleDateString() : "No End Date";
 
-        function displayCourses(courses) {
-            const coursesContainer = document.getElementById('coursesContainer');
-            coursesContainer.innerHTML = '';
-            courses.forEach(course => {
-                const courseElement = document.createElement('a');
-                courseElement.href = `course-details.html?courseId=${course._id}`;
-                courseElement.innerHTML = `
-                    <div class="package">
-                        <div class="package-image">
-                            <img src="/images/${course.bannerImage || 'summer-camp.jpg'}" alt="">
-                            <div class="status-ribbon" style="background-image: url('images/${course.status}.png');">
-                                <h4>${course.status}</h4>
-                            </div>
-                        </div>
-                        <div class="bottom">
-                            <div class="text">
-                                <h4>${course.title}</h4>
-                            </div>
-                            <div class="course-details">
-                                <h4><span>Duration: </span>${course.duration}</h4>
-                                <span>|</span>
-                                <h4><span>Batches: </span>${course.batches.length}</h4>
-                            </div>
-                            <div class="ribbon">
-                                <h4>$${course.price}</h4>
-                            </div>
-                        </div>
+        // Safely access courses array and length
+        const courses = packageData.courses || [];
+        document.getElementById('courseCount').innerText = courses.length;
+        document.getElementById('courseCountTop').innerText = courses.length;
+
+        populateDescription(packageData.description || "No description available");
+        populateDiscounts(packageData.discount || 0);
+        displayCourses(courses);
+        displayItems(packageData.items || []);
+    } catch (error) {
+        console.error('Error fetching package details:', error);
+    }
+}
+
+function populateDescription(description) {
+    const descriptionElement = document.getElementById('packageDescription');
+    descriptionElement.innerHTML = '';
+    const li = document.createElement('li');
+    li.textContent = description;
+    descriptionElement.appendChild(li);
+}
+
+function populateDiscounts(discount) {
+    const discountsElement = document.getElementById('packageDiscounts');
+    discountsElement.innerHTML = '';
+    const discountDiv = document.createElement('div');
+    discountDiv.classList.add('discount-text');
+    discountDiv.innerHTML = `
+        <div class="count">${discount}%</div>
+        <h3 class="batch-subheading" style="font-size: 12px;font-weight: 500;">${discount}% discount</h3>
+    `;
+    discountsElement.appendChild(discountDiv);
+}
+
+function displayCourses(courses) {
+    const coursesContainer = document.getElementById('coursesContainer');
+    coursesContainer.innerHTML = '';
+    courses.forEach(course => {
+        const courseElement = document.createElement('a');
+        courseElement.href = `course-details.html?courseId=${course._id}`;
+        courseElement.innerHTML = `
+            <div class="package">
+                <div class="package-image">
+                    <img src="/images/${course.bannerImage || 'summer-camp.jpg'}" alt="">
+                    <div class="status-ribbon" style="background-image: url('images/${course.status}.png');">
+                        <h4>${course.status}</h4>
                     </div>
-                `;
-                coursesContainer.appendChild(courseElement);
-            });
-        }
+                </div>
+                <div class="bottom">
+                    <div class="text">
+                        <h4>${course.title}</h4>
+                    </div>
+                    <div class="course-details">
+                        <h4><span>Duration: </span>${course.duration}</h4>
+                        <span>|</span>
+                        <h4><span>Batches: </span>${course.batches.length}</h4>
+                    </div>
+                    <div class="ribbon">
+                        <h4>$${course.price}</h4>
+                    </div>
+                </div>
+            </div>
+        `;
+        coursesContainer.appendChild(courseElement);
+    });
+}
+
+function displayItems(items) {
+    const itemsContainer = document.getElementById('itemsContainer');
+    itemsContainer.innerHTML = '';
+    items.forEach(item => {
+        const itemElement = document.createElement('div');
+        itemElement.classList.add('package');
+        itemElement.innerHTML = `
+            <div class="package-image">
+                <img src="/images/${item.imageUrl || 'default-item.jpg'}" alt="${item.name}">
+            </div>
+            <div class="bottom">
+                <div class="text">
+                    <h4>${item.name}</h4>
+                </div>
+                <div class="course-details mt-1">
+                    <h4><span>Price: </span>$${item.price}</h4>
+                </div>
+            </div>
+        `;
+        itemsContainer.appendChild(itemElement);
+    });
+}
     </script>
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+      <script src="js/off-canvas.js"></script>
+      <script src="js/template.js"></script>
 </body>
 
 </html>
- 

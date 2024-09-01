@@ -2,7 +2,11 @@ const express = require('express');
 const router = express.Router();
 const taskController = require('../controllers/taskController');
 const authMiddleware = require('../middleware/authMiddleware');
+const multer = require('multer');
 
+// Set up storage and file filter if needed
+const storage = multer.memoryStorage(); // Store files in memory for processing
+const upload = multer({ storage: storage });
 // Routes for tasks
 
 
@@ -19,7 +23,7 @@ router.post('/submit', authMiddleware, taskController.submitTask);
 router.put('/progress', authMiddleware,  taskController.updateTaskProgress);
 router.put('/tasks/:taskId', authMiddleware, taskController.updateTask);
 
-router.post('/student/submit-task', authMiddleware, taskController.submitTaskByStudent);
+router.post('/student/submit-task', authMiddleware, upload.array('file'), taskController.submitTaskByStudent);
 router.get('/return', taskController.returnTask);
 router.get('/complete', taskController.completeTask);
 router.get('/:taskId/submission/:studentId', taskController.getSubmissionByStudent);

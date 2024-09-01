@@ -4,20 +4,20 @@ const submissionSchema = new mongoose.Schema({
     studentId: { 
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'User',
-        required: true // Ensure studentId is required
+        required: true 
     },
     submissionType: { 
         type: String, 
         enum: ['video', 'audio', 'image', 'text'], 
-        required: true // Ensure submissionType is required
+        required: true 
     },
     submissionContent: { 
         type: String, 
-        required: true // Ensure submissionContent is required
-    }, // URL or base64 string
+        required: true 
+    }, 
     media: {
         type: Map,
-        of: String, // Could be file paths, URLs, or base64 strings for media files
+        of: String, 
     },
     progressNotes: { type: String },
     status: { 
@@ -32,14 +32,18 @@ const submissionSchema = new mongoose.Schema({
 const taskSchema = new mongoose.Schema({
     title: { type: String, required: true },
     description: { type: String },
-    organizationId: { type: mongoose.Schema.Types.ObjectId, ref: 'Organization', required: true }, // Organization ID
-    assignedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }, // Coach who assigned the task
-    courseId: { type: mongoose.Schema.Types.ObjectId, ref: 'Course', required: true },
-    batchId: { type: mongoose.Schema.Types.ObjectId, ref: 'Batch', required: true },
+    organizationId: { type: mongoose.Schema.Types.ObjectId, ref: 'Organization', required: true },
+    assignedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }, 
+    courseId: { type: mongoose.Schema.Types.ObjectId, ref: 'Course' }, // Optional, can be null for individual tasks
+    batchId: { type: mongoose.Schema.Types.ObjectId, ref: 'Batch' }, // Optional, can be null for individual tasks
     assignedTo: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }], // List of students assigned
     media: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Media' }], // Reference to media files
     submissions: [submissionSchema], 
-    
+    taskType: { 
+        type: String, 
+        enum: ['coach-initiated', 'student-initiated'], 
+        default: 'coach-initiated' 
+    }, // New field to define the task type
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
 });

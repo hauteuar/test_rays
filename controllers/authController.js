@@ -1,37 +1,41 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/Users');
-const Organization = require('../models/Organizations'); // Assuming you have an Organization model
+const Organization = require('../models/Organizations'); 
+const Course = require('../models/Course');  // Correctly import the Course model
+const Batch = require('../models/Batch');    
+const Payment = require('../models/Payment'); 
+const Cart = require('../models/Cart');
 const axios = require('axios');
 
-
 exports.login = async (req, res) => {
-  const { email, password } = req.body;
+  // Check for both `email` and `username` in the request body
+  const emailOrUsername = req.body.email || req.body.username;
+  const password = req.body.password;
 
   try {
-    const user = await User.findOne({ email }).populate('organizations.org_id').exec();
+    // Find the user by email or username
+    const user = await User.findOne({ email: emailOrUsername }).populate('organizations.org_id').exec();
     if (!user) {
       console.log('User not found');
-      return res.status(401).json({ error: 'Invalid email or password.' });
+      return res.status(401).json({ error: 'Invalid email/username or password.' });
     }
 
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!passwordMatch) {
       console.log('Password mismatch');
-      return res.status(401).json({ error: 'Invalid email or password.' });
+      return res.status(401).json({ error: 'Invalid email/username or password.' });
     }
 
     const token = jwt.sign({ _id: user._id, role: user.role }, 'your_jwt_secret');
     user.tokens = user.tokens.concat({ token });
     await user.save();
 
-    // Set token as HttpOnly cookie
     res.cookie('auth_token', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production' // Ensure this is true in production
+      secure: process.env.NODE_ENV === 'production'
     });
 
-    // Map the organizations array to get all the organization IDs
     const organizationIds = user.organizations.map(org => org.org_id._id);
 
     res.json({ token, role: user.role, organizations: organizationIds });
@@ -114,30 +118,12 @@ exports.register = async (req, res) => {
 };
 
 exports.registerChild = async (req, res) => {
-  const { firstName, lastName, dob, gender, email, contactNumber, emergencyContactNumber, streetAddress, apartmentNumber, city, state, postalCode, country, password, organizationId } = req.body;
+  const { firstName, lastName, dob, gender, email, contactNumber, emergencyContactNumber, streetAddress, apartmentNumber, city, state, postalCode, country, password, organizationId, batchDays, batchTiming, subscriptionPlan } = req.body;
 
   try {
-    console.log('Received organizationId:', organizationId);
-
     if (!organizationId) {
       return res.status(400).json({ error: 'Organization ID is required.' });
     }
-
-    // If organizationId is a string, convert it to an array to maintain consistency
-    const organizationIds = Array.isArray(organizationId) ? organizationId : [organizationId];
-    console.log('Organization IDs:', organizationIds);
-
-    // Convert each organizationId to ObjectId with error handling
-    const validOrganizationIds = organizationIds.map(id => {
-      try {
-        return id;
-      } catch (err) {
-        console.error('Invalid ObjectId:', id, err);
-        throw new Error(`Invalid Organization ID: ${id}`);
-      }
-    });
-
-    console.log('Valid Organization IDs:', validOrganizationIds);
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = new User({
@@ -158,38 +144,81 @@ exports.registerChild = async (req, res) => {
       },
       password: hashedPassword,
       role: 'student',
-      organizations: validOrganizationIds.map(orgId => ({ org_id: orgId, courses: [] }))
+      organizations: [{ org_id: organizationId }]
     });
 
-    // Save the user in the database first
     await user.save();
-    console.log('User saved successfully');
 
-    for (let orgId of validOrganizationIds) {
-      const organization = await Organization.findById(orgId);
-      console.log('Organization found:', organization);
-
-      if (organization) {
-        // Call the payment API to create a customer ID
-        const paymentResponse = await axios.post('https://api-payments.rayssportsnetwork.com/create-customer', {
-          name: `${firstName} ${lastName}`,
-          email: email,
-          clientId: `HWZTHAT202401` // Unique clientId for each organization
-        });
-        console.log('Payment Response:', paymentResponse.data);
-        const paymentCustomerId = paymentResponse.data.customerId;
-
-        // Update the user with the payment customer ID for the specific organization
-        user.organizations.push({
-          org_id: orgId,
-          paymentCustomerId: paymentCustomerId
-        });
-      }
+    // Find the default practice course for the organization
+    const defaultCourse = await Course.findOne({ organization: organizationId, isDefaultPractice: true });
+    if (!defaultCourse) {
+      return res.status(404).json({ error: 'Default course not found for this organization.' });
     }
 
-    await user.save();
 
-    res.status(201).json({ message: 'Child registered successfully as a student.', user });
+    // Create the batch with the provided batch days and timing
+const batch = new Batch({
+  name: `${defaultCourse.title} - Batch`,
+  startDate: new Date(),
+  endDate: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
+  timeSlot: batchTiming,
+  days: batchDays,
+  repeatInterval: 'Weekly',
+  course: defaultCourse._id,
+  students: [user._id],
+  coaches: defaultCourse.coaches
+});
+
+await batch.save();
+
+// Update course with the new batch
+defaultCourse.batches.push(batch._id);
+await defaultCourse.save();
+
+    // Calculate the price based on the subscription plan
+    const price = 300;
+    const discount = subscriptionPlan === 'annual' ? 0.1 : 0;
+    const totalAmount = subscriptionPlan === 'annual'
+      ? price * 12 * (1 - discount)
+      : subscriptionPlan === 'quarterly'
+        ? price * 3
+        : price;
+
+    // Create a payment record with status 'pending'
+    const payment = new Payment({
+      transactionId: `trans_${Date.now()}`,
+      userId: user._id,
+      organizationId: organizationId,
+      itemType: 'course',
+      itemId: defaultCourse._id,
+      amount: totalAmount,
+      paymentMethod: 'Card', // Placeholder, should be dynamic based on actual method used
+      paymentStatus: 'pending'
+    });
+
+    await payment.save();
+
+    // Add the payment to the cart
+    const cart = await Cart.findOne({ userId: user._id }) || new Cart({ userId: user._id, items: [] });
+    cart.items.push({
+      userId: user._id,
+      paymentId: payment._id,
+      organizationId: organizationId,
+      itemType: 'course',
+      itemId: defaultCourse._id,
+      price: totalAmount,
+      status: 'pending',
+      subscriptionPlan: subscriptionPlan, // e.g., "monthly", "quarterly", "annual"
+      recurringIntervalType: getRecurringIntervalType(subscriptionPlan), // "month", "quarter", "year"
+      recurringIntervalCount: getRecurringIntervalCount(subscriptionPlan) // 1 for month/year, 3 for quarterly
+    });
+    
+    cart.items.push(cartItem);
+    
+
+    await cart.save();
+
+    res.status(201).json({ message: 'Child registered successfully as a student and added to default course.', user });
   } catch (error) {
     console.error('Error during registration:', error);
     if (error.name === 'ValidationError') {
@@ -198,3 +227,29 @@ exports.registerChild = async (req, res) => {
     res.status(500).json({ error: 'Internal server error.', details: error });
   }
 };
+
+function getRecurringIntervalType(subscriptionPlan) {
+  switch (subscriptionPlan) {
+    case 'monthly':
+      return 'month';
+    case 'quarterly':
+      return 'month';
+    case 'annual':
+      return 'year';
+    default:
+      return 'month';
+  }
+}
+
+function getRecurringIntervalCount(subscriptionPlan) {
+  switch (subscriptionPlan) {
+    case 'monthly':
+      return 1;
+    case 'quarterly':
+      return 3;
+    case 'annual':
+      return 1;
+    default:
+      return 1;
+  }
+}

@@ -182,7 +182,7 @@ applyThemeColor(themeColor) {
           <a href="registration-form.html">
             <li class="nav-item ${page == 'registration-form' ? 'active' : ''}">
               <div class="nav-link">
-                <img src="images/sheet.png">
+                <img src="images/registration.png">
                 <span class="menu-title">Registration Form</span>
               </div>
             </li>
@@ -223,7 +223,7 @@ applyThemeColor(themeColor) {
             <li class="nav-item ${page == 'org_onboard' ? 'active' : ''}">
               <div class="nav-link">
                 <img src="images/management.png">
-                <span class="menu-title">User Access Management</span>
+                <span class="menu-title">Org_Payment_Onbaording</span>
               </div>
             </li>
           </a>

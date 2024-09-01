@@ -92,6 +92,7 @@ const sponsorRoutes = require('./routes/sponsorRoutes');
 const mediaRoutes = require('./routes/mediaRoutes');
 const meetingSessionRoutes = require('./routes/meetingSessionRoutes');
 const scheduledMeetingRoutes = require('./routes/scheduledMeetingRoutes');
+const packageRoutes = require('./routes/packageRoutes');
 
 
 
@@ -115,6 +116,7 @@ app.use('/api/waivers', waiverRoutes);
 app.use('/api/items', itemRoutes);
 app.use('/api/sponsors', sponsorRoutes);
 app.use('/api/media', mediaRoutes);
+app.use('/api/package', packageRoutes);
 
 // Chat Schema
 const messageSchema = new mongoose.Schema({

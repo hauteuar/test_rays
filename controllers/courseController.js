@@ -2,7 +2,11 @@ const mongoose = require('mongoose');
 const Course = require('../models/Course');
 const Organization = require('../models/Organizations'); 
 const User = require('../models/Users');
-const Batch = require('../models/Batch');
+
+
+const Batch = require('../models/Batch');    // Add this line
+const Payment = require('../models/Payment'); // Add this line
+const Cart = require('../models/Cart');
 
 exports.createCourse = async (req, res) => {
   const { title, description, duration, price, location, mode, startDate, endDate, bannerImage, coaches, groundBookings, discounts } = req.body;

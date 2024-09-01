@@ -1,4 +1,4 @@
-$(document).ready(function () {
+document.addEventListener('DOMContentLoaded', function () {
   let view = 'daily'; // Initialize the view variable
   let filteredSportId = null; // Initialize a variable to store the filtered sport ID
   let organizationId = localStorage.getItem('organizationId'); // Retrieve organizationId from local storage
@@ -28,29 +28,31 @@ $(document).ready(function () {
 
   $('#pills-tab2 a').on('shown.bs.tab', function (event) {
     toggleVisibility();
+    const selectedDate = new Date($('#current-date').data('selectedDate'));
     loadBookings(() => {
-      initializeCalendar(view); // Re-initialize calendar after loading bookings
-    });
+      initializeCalendar(view, selectedDate); // Re-initialize calendar after loading bookings
+    }, selectedDate);
   });
 
   function formatDate(date) {
     var options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
     return date.toLocaleDateString('en-US', options);
   }
+
   function parseDate(dateString) {
     const parts = dateString.split('-');
     const year = parseInt(parts[0], 10);
     const month = parseInt(parts[1], 10) - 1; // Months are 0-based in JavaScript
     const day = parseInt(parts[2], 10);
-    return new Date(Date.UTC(year, month, day));
-}
+    return new Date(year, month, day);
+  }
 
   // Initialize the datepicker and handle date selection
   $('#calendar-icon').click(function () {
     $('<input type="text" id="datepicker">').appendTo('body').datepicker({
       onSelect: function (dateText) {
         var selectedDate = parseDate(dateText);
-        $('#current-date').text(formatDate(selectedDate)); // Update the current date display
+        $('#current-date').text(formatDate(selectedDate)).data('selectedDate', selectedDate); // Update the current date display and store the selected date
         $(this).datepicker('destroy').remove(); // Destroy and remove the datepicker input
         loadBookings(() => {
           initializeCalendar(view, selectedDate); // Re-initialize calendar after loading bookings
@@ -60,7 +62,7 @@ $(document).ready(function () {
     }).datepicker('show');
   });
 
-  // Correct the loadBookings function to use the selected date
+  // Load bookings for the selected date
   function loadBookings(callback, selectedDate) {
     const dateToLoad = selectedDate || new Date(); // Default to current date if none selected
     $.ajax({
@@ -79,86 +81,12 @@ $(document).ready(function () {
     });
   }
 
-  // Correct the initializeCalendar function to accept selectedDate
-  function initializeCalendar(view, selectedDate) {
-    console.log('Initializing Calendar for date:', selectedDate);
-    const timeSlots = ['8 am', '9 am', '10 am', '11 am', '12 pm', '1 pm', '2 pm', '3 pm', '4 pm', '5 pm', '6 pm', '7 pm', '8 pm'];
-    const calendarBody = $('.calendar tbody');
-    const calendarHead = $('.calendar thead tr');
-    calendarBody.empty();
-    calendarHead.empty();
-
-    if (view === 'daily') {
-      $('#current-date-day').show();
-      $('#current-date-week').hide();
-      calendarHead.append('<th>Time</th>');
-      allCourts.forEach(court => {
-        const sport = sports.find(s => String(s._id) === String(court.sportId));
-        if (sport) {
-          calendarHead.append(`<th>${sport.name}<br>${court.name}</th>`);
-        }
-      });
-
-      timeSlots.forEach(time => {
-        const row = $('<tr></tr>');
-        row.append(`<td>${time}</td>`);
-        allCourts.forEach(() => {
-          row.append('<td class="open-slot" style="cursor: url(\'images/plus-sign.png\'), pointer;"> </td>');
-        });
-        calendarBody.append(row);
-      });
-
-      bookings.forEach(function (booking) {
-        console.log('Processing booking:', booking);
-
-        const bookingCourtId = String(booking.courtId._id);
-        const courtIndex = allCourts.findIndex(court => String(court._id) === bookingCourtId);
-
-        if (courtIndex === -1) {
-          console.log('Court not found for booking:', bookingCourtId);
-          return;
-        }
-
-        const startTime = new Date(booking.startTime);
-        const endTime = new Date(booking.endTime);
-        const startHour = startTime.getUTCHours(); // Use UTC to avoid timezone issues
-        const endHour = endTime.getUTCHours(); // Use UTC to avoid timezone issues
-        const duration = endHour - startHour;
-
-        const timeRowIndex = timeSlots.findIndex(slot => {
-          const slotHour = parseInt(slot.split(' ')[0]) + (slot.includes('pm') && slot !== '12 pm' ? 12 : 0);
-          return slotHour === startHour;
-        });
-
-        if (timeRowIndex === -1) {
-          console.log('Time slot not found for booking:', startHour);
-          return;
-        }
-
-        for (let i = 0; i < duration; i++) {
-          const currentRow = calendarBody.find('tr').eq(timeRowIndex + i);
-          const cell = currentRow.find('td').eq(courtIndex + 1); // +1 to account for the Time column
-          cell.removeClass('open-slot')
-            .addClass('booked')
-            .css('background-color', 'red')
-            .html(`<div class="booking-block" data-booking-id="${booking._id}" style="cursor: pointer;">
-                                ${booking.userId.firstName} ${booking.userId.lastName}<br>${booking.paymentStatus}</div>`);
-        }
-      });
-
-      $(document).on('click', '.booking-block', function () {
-        const bookingId = $(this).data('booking-id');
-        const bookingDetails = bookings.find(booking => booking._id === bookingId);
-        if (bookingDetails) {
-          alert(`Booking Details:\nUser: ${bookingDetails.userId.firstName} ${bookingDetails.userId.lastName}\nPayment: ${bookingDetails.paymentType}\nCourt: ${bookingDetails.courtId.name}\nStart: ${new Date(bookingDetails.startTime).toLocaleTimeString()}\nEnd: ${new Date(bookingDetails.endTime).toLocaleTimeString()}`);
-        }
-      });
-    }
-  }
+  // Initialize the calendar with the selected view and date
 
   // Initialize the calendar for today's date on page load
   function initialize() {
     const currentDate = new Date();
+    $('#current-date').data('selectedDate', currentDate); // Store the current date
     loadBookings(() => {
       initializeCalendar(view, currentDate);
     }, currentDate); // Load bookings for today by default
@@ -166,6 +94,8 @@ $(document).ready(function () {
   }
 
   initialize(); // Run the initialization on page load
+
+
   function fetchUserProfile() {
     const token = localStorage.getItem('token');
     console.log('Token:', token);
@@ -213,6 +143,7 @@ $(document).ready(function () {
     loadUsers();
   }
 
+
   // Function to load bookings and display on the calendar
   function loadBookings(callback) {
     $.ajax({
@@ -231,107 +162,147 @@ $(document).ready(function () {
   }
 
   // Initialize calendar with time slots
-  function initializeCalendar(view) {
-    console.log('Initializing Calendar with Courts:', allCourts);
-    const timeSlots = ['8 am', '9 am', '10 am', '11 am', '12 pm', '1 pm', '2 pm', '3 pm', '4 pm', '5 pm', '6 pm', '7 pm', '8 pm'];
+  function initializeCalendar(view, selectedDate) {
+    selectedDate = selectedDate || new Date();  // Fallback to current date if selectedDate is undefined
+    
+    console.log('Initializing Calendar for date:', selectedDate);
+    const timeSlots = [
+        '12 am', '1 am', '2 am', '3 am', '4 am', '5 am', '6 am', '7 am',
+        '8 am', '9 am', '10 am', '11 am', '12 pm', '1 pm', '2 pm', '3 pm',
+        '4 pm', '5 pm', '6 pm', '7 pm', '8 pm', '9 pm', '10 pm', '11 pm'
+    ];
     const calendarBody = $('.calendar tbody');
     const calendarHead = $('.calendar thead tr');
     calendarBody.empty();
     calendarHead.empty();
 
     if (view === 'daily') {
-      $('#current-date-day').show();
-      $('#current-date-week').hide();
-      calendarHead.append('<th>Time</th>');
-      allCourts.forEach(court => {
-        const sport = sports.find(s => String(s._id) === String(court.sportId));
-        if (sport) {
-          calendarHead.append(`<th>${sport.name}<br>${court.name}</th>`);
-        }
-      });
-
-      timeSlots.forEach(time => {
-        const row = $('<tr></tr>');
-        row.append(`<td>${time}</td>`);
-        allCourts.forEach(() => {
-          row.append('<td class="open-slot" style="cursor: url(\'images/plus-sign.png\'), pointer;"> </td>');
+        $('#current-date-day').show();
+        $('#current-date-week').hide();
+        calendarHead.append('<th>Time</th>');
+        allCourts.forEach(court => {
+            const sport = sports.find(s => String(s._id) === String(court.sportId));
+            if (sport) {
+                calendarHead.append(`<th>${sport.name}<br>${court.name}</th>`);
+            }
         });
-        calendarBody.append(row);
-      });
 
-      bookings.forEach(function (booking) {
-        console.log('Processing booking:', booking);
-      
-        const bookingCourtId = String(booking.courtId._id);
-        const courtIndex = allCourts.findIndex(court => String(court._id) === bookingCourtId);
-      
-        if (courtIndex === -1) {
-          console.log('Court not found for booking:', bookingCourtId);
-          return;
-        }
-      
-        const startTime = new Date(booking.startTime);
-        const endTime = new Date(booking.endTime);
-        const startHour = startTime.getHours();
-        const endHour = endTime.getHours();
-        const duration = endHour - startHour;
-      
-        const timeRowIndex = timeSlots.findIndex(slot => {
-          const slotHour = parseInt(slot.split(' ')[0]) + (slot.includes('pm') && slot !== '12 pm' ? 12 : 0);
-          return slotHour === startHour;
+        timeSlots.forEach(time => {
+            const row = $('<tr></tr>');
+            row.append(`<td>${time}</td>`);
+            allCourts.forEach(() => {
+                row.append('<td class="open-slot" style="cursor: url(\'images/plus-sign.png\'), pointer;"> </td>');
+            });
+            calendarBody.append(row);
         });
-      
-        if (timeRowIndex === -1) {
-          console.log('Time slot not found for booking:', startHour);
-          return;
-        }
-      
-        for (let i = 0; i < duration; i++) {
-          const currentRow = calendarBody.find('tr').eq(timeRowIndex + i);
-          const cell = currentRow.find('td').eq(courtIndex + 1); // +1 to account for the Time column
-          cell.removeClass('open-slot')
-              .addClass('booked')
-              .css('background-color', 'red')
-              .html(`<div class="booking-block" data-booking-id="${booking._id}" style="cursor: pointer;">
-                      ${booking.userId.firstName} ${booking.userId.lastName}<br>${booking.paymentStatus}</div>`);
-        }
-      });
-      
 
-      // Add click event to show booking details
-      $(document).on('click', '.booking-block', function () {
-        const bookingId = $(this).data('booking-id');
-        const bookingDetails = bookings.find(booking => booking._id === bookingId);
-        if (bookingDetails) {
-          // Show booking details in a modal or alert (you can customize this part)
-          alert(`Booking Details:\nUser: ${bookingDetails.userId.firstName} ${bookingDetails.userId.lastName}\nPayment: ${bookingDetails.paymentType}\nCourt: ${bookingDetails.courtId.name}\nStart: ${new Date(bookingDetails.startTime).toLocaleTimeString()}\nEnd: ${new Date(bookingDetails.endTime).toLocaleTimeString()}`);
-        }
-      });
+        bookings.forEach(function (booking) {
+          const bookingDate = new Date(booking.startTime).toDateString();
+          const selectedDateStr = selectedDate.toDateString();
+        
+          // Only process bookings that match the selected date
+          if (bookingDate !== selectedDateStr) return;
+        
+          console.log('Processing booking:', booking);
+        
+          const bookingCourtId = String(booking.courtId._id);
+          const courtIndex = allCourts.findIndex(court => String(court._id) === bookingCourtId);
+        
+          if (courtIndex === -1) {
+            console.log('Court not found for booking:', bookingCourtId);
+            return;
+          }
+        
+          const startTime = new Date(booking.startTime);
+          const endTime = new Date(booking.endTime);
+          const startHour = startTime.getHours();
+          const endHour = endTime.getHours();
+          const duration = endHour - startHour;
+        
+          const timeRowIndex = timeSlots.findIndex(slot => {
+            const slotHour = parseInt(slot.split(' ')[0]) + (slot.includes('pm') && slot !== '12 pm' ? 12 : 0);
+            return slotHour === startHour;
+          });
+        
+          if (timeRowIndex === -1) {
+            console.log('Time slot not found for booking:', startHour);
+            return;
+          }
+        
+          for (let i = 0; i < duration; i++) {
+            const currentRow = calendarBody.find('tr').eq(timeRowIndex + i);
+            const cell = currentRow.find('td').eq(courtIndex + 1); // +1 to account for the Time column
+            const paymentClass = booking.paymentStatus === 'pending' ? 'pending-status' : 'confirmed-status';
+            cell.removeClass('open-slot')
+              .addClass('booked-slot')
+              .html(`
+                <div class="booking-block" data-booking-id="${booking._id}" style="cursor: pointer;">
+                  ${booking.userId.firstName} ${booking.userId.lastName}<br>
+                  <span class="payment-status ${paymentClass}">${booking.paymentStatus}</span>
+                </div>
+              `);
+          }
+        });
+        
+
+        // Add click event to show booking details
+        $(document).off('click', '.booking-block').on('click', '.booking-block', function () {
+            const bookingId = $(this).data('booking-id');
+            const bookingDetails = bookings.find(booking => booking._id === bookingId);
+            if (bookingDetails) {
+                // Show booking details in a modal or alert (you can customize this part)
+                alert(`Booking Details:\nUser: ${bookingDetails.userId.firstName} ${bookingDetails.userId.lastName}\nPayment: ${bookingDetails.paymentType}\nCourt: ${bookingDetails.courtId.name}\nStart: ${new Date(bookingDetails.startTime).toLocaleTimeString()}\nEnd: ${new Date(bookingDetails.endTime).toLocaleTimeString()}`);
+            }
+        });
     } else if (view === 'weekly') {
       $('#current-date-day').hide();
       $('#current-date-week').show();
       calendarHead.append('<th>Date</th>');
       allCourts.forEach(court => {
-        const sport = sports.find(s => String(s._id) === String(court.sportId));
-        if (sport) {
-          calendarHead.append(`<th>${sport.name}<br>${court.name}</th>`);
-        }
+          const sport = sports.find(s => String(s._id) === String(court.sportId));
+          if (sport) {
+              calendarHead.append(`<th>${sport.name}<br>${court.name}</th>`);
+          }
       });
 
       for (let i = 0; i < 7; i++) {
-        const date = new Date();
-        date.setDate(date.getDate() + i);
-        const formattedDate = date.toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+          const date = new Date(selectedDate);
+          date.setDate(date.getDate() + i);
+          const formattedDate = date.toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
-        const row = $('<tr></tr>');
-        row.append(`<td>${formattedDate}</td>`);
-        allCourts.forEach(() => {
-          row.append('<td><div class="time-slot" style="background-color: red; height: 30px; cursor: pointer;"></div></td>');
-        });
-        calendarBody.append(row);
+          const row = $('<tr></tr>');
+          row.append(`<td>${formattedDate}</td>`);
+
+          allCourts.forEach(court => {
+              const cell = $('<td></td>');
+              const courtBookings = bookings.filter(booking => {
+                  if (!booking || !booking.startTime || !booking.courtId) {
+                      return false;
+                  }
+                  const bookingDate = new Date(booking.startTime);
+                  return booking.courtId._id === court._id && bookingDate.toDateString() === date.toDateString();
+              });
+
+              if (courtBookings.length > 0) {
+                  courtBookings.forEach(booking => {
+                      const startTime = new Date(booking.startTime);
+                      const endTime = new Date(booking.endTime);
+                      const timeSlot = `${startTime.getHours()}:${startTime.getMinutes().toString().padStart(2, '0')} - ${endTime.getHours()}:${endTime.getMinutes().toString().padStart(2, '0')}`;
+                      cell.append(`<div class="booked-slot booked" style="cursor: pointer; margin-bottom: 5px;">${timeSlot}</div>`);
+                  });
+              } else {
+                  cell.addClass('open-slot').html('<div class="time-slot"></div>');
+              }
+
+              row.append(cell);
+          });
+
+          calendarBody.append(row);
       }
     }
-  }
+}
+
+
   // Add New Sport
   $('#saveSport').on('click', function () {
     const sportName = $('#sportName').val();
@@ -487,6 +458,7 @@ $(document).ready(function () {
       }
     });
   }
+
   // Load sports and initialize sports dropdown
   function loadSports(callback) {
     $.ajax({

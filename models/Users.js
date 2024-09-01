@@ -67,6 +67,12 @@ const userSchema = new mongoose.Schema({
       ]
     }
   ],
+  subscription: {
+    plan: { type: String, enum: ['monthly', 'quarterly', 'yearly'], default: 'monthly' }, // Subscription plan
+    status: { type: String, enum: ['active', 'inactive', 'past_due'], default: 'active' }, // Payment status
+    dueDate: { type: Date }, // Next payment due date
+  },
+  
   notifications: [
     {
       message: String,

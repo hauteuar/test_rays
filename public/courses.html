@@ -11,6 +11,58 @@
     <link rel="shortcut icon" href="images/1.png" />
     <script src="components/sidebar.js" type="text/javascript" defer></script>
     <script src="components/topnav.js" type="text/javascript" defer></script>
+    <style>
+        #addAddonsBtn {
+            cursor: pointer;
+            background-color: #392487;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .addon-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .addon-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .addon-image {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            margin-right: 10px;
+        }
+
+        .addon-details h4,
+        .addon-details p {
+            margin: 0;
+        }
+
+        .add-addon-btn {
+            margin-left: auto;
+            background-color: #4165ff;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .selected-addon {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 
 <body>
@@ -66,6 +118,8 @@
             </div>
         </div>
     </div>
+
+    <!-- Add Package Modal -->
     <div class="modal fade " id="add-package">
         <div class="modal-dialog modal-md" role="document" style="max-width: 840px;">
             <div class="modal-content">
@@ -112,11 +166,13 @@
                             <div class="col-12" style="padding-left: 0px;">
                                 <h3 class="batch-subheading" style="font-size: 13px;font-weight: 500;">Add ons</h3>
                             </div>
-                            <div class="col-12" style="border-bottom: 1px solid #ddd;padding-left: 0px;flex: 0 0 60%;">
-                                <h3 class="batch-subheading" style="font-size: 13px;font-weight: 500;color:#392487">
-                                    <span style="color: #392487;">+</span>Add add ons
-                                </h3>
+                            <div id="selectedAddons" class="col-12 selected-addons-list" style="margin-bottom: 10px;">
+                                <!-- Selected add-ons will appear here -->
                             </div>
+
+                        </div>
+                        <div class="col-12" style="padding-left: 0px;flex: 0 0 60%;">
+                            <button id="addAddonsBtn" class="btn site-btn-info" type="button">+ Add add ons</button>
                         </div>
                         <div class="col-12" style="margin-top: 70px;">
                             <h6 class="mb-2">Package description</h6>
@@ -140,6 +196,26 @@
         </div>
     </div>
 
+    <!-- Add-ons Modal -->
+    <div class="modal fade" id="addonsModal" tabindex="-1" role="dialog" aria-labelledby="addonsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addonsModalLabel">Add Add-ons</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="addonsContainer">
+                    <!-- Add-ons items will be listed here dynamically -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn site-btn-success" data-dismiss="modal">Done</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
     <script src="js/off-canvas.js"></script>
@@ -152,16 +228,40 @@
         const assignedCourses = document.getElementById('assignedCourses');
         const packageCoursesSelect = document.getElementById('packageCourses');
         const savePackageBtn = document.getElementById('savePackageBtn');
+        const addAddonsBtn = document.getElementById('addAddonsBtn');
+        const selectedAddonsContainer = document.getElementById('selectedAddons');
+        const addonsModal = $('#addonsModal');
+        const addonsContainer = document.getElementById('addonsContainer');
+
+        if (addAddonsBtn) {
+            addAddonsBtn.addEventListener('click', async () => {
+                try {
+                    const organizationId = localStorage.getItem('organizationId');
+                    const response = await fetch(`/api/items/${organizationId}/items`);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    const items = await response.json();
+                    displayItemsAsAddons(items);
+                    addonsModal.modal('show');
+                } catch (error) {
+                    console.error('Error fetching items:', error);
+                }
+            });
+        }
+
+        if (savePackageBtn) {
+            savePackageBtn.addEventListener('click', addPackage);
+        }
 
         const today = new Date();
         const organizationName = localStorage.getItem('organizationName');
         const organizationId = localStorage.getItem('organizationId');
 
         async function fetchCourses() {
-
             try {
                 const response = await fetch('/api/courses', {
-                    headers: {  'organizationId': organizationId }
+                    headers: { 'organizationId': organizationId }
                 });
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
@@ -178,8 +278,8 @@
 
         async function fetchPackages() {
             try {
-                const response = await fetch('/api/packages', {
-                    headers: { 'organizationName': organizationName }
+                const response = await fetch(`/api/package/packages/${organizationId}`, {
+                    headers: { 'organizationId': organizationId }
                 });
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
@@ -236,22 +336,22 @@
             const notAssignedPackages = [];
             const expiredPackages = [];
 
-            packages.forEach(package => {
-                const startDate = new Date(package.startDate);
-                const endDate = new Date(package.endDate);
+            packages.forEach(pkg => {
+                const startDate = new Date(pkg.startDate);
+                const endDate = new Date(pkg.endDate);
 
                 if (startDate <= today && endDate >= today) {
-                    package.status = 'Active';
-                    activePackages.push(package);
+                    pkg.status = 'Active';
+                    activePackages.push(pkg);
                 } else if (startDate > today) {
-                    package.status = 'Not Assigned';
-                    notAssignedPackages.push(package);
+                    pkg.status = 'Not Assigned';
+                    notAssignedPackages.push(pkg);
                 } else if (endDate < today) {
-                    package.status = 'Expired';
-                    expiredPackages.push(package);
+                    pkg.status = 'Expired';
+                    expiredPackages.push(pkg);
                 }
 
-                allPackages.push(package);
+                allPackages.push(pkg);
             });
 
             displayPackages(allPackages, 'all');
@@ -293,29 +393,29 @@
             console.log(`Displaying ${category} packages:`, packages);
 
             container.innerHTML = '';
-            packages.forEach(package => {
-                const imageUrl = package.bannerImage ? `/images/${package.bannerImage}` : 'images/default-package.jpg';
+            packages.forEach(pkg => {
+                const imageUrl = pkg.bannerImage ? `/images/${pkg.bannerImage}` : 'images/default-package.jpg';
                 const packageElement = document.createElement('div');
                 packageElement.classList.add('package');
                 packageElement.innerHTML = `
                     <div class="package-image">
-                        <img src="${imageUrl}" alt="${package.name}" onerror="this.onerror=null; this.src='images/default-package.jpg'">
+                        <img src="${imageUrl}" alt="${pkg.name}" onerror="this.onerror=null; this.src='images/default-package.jpg'">
                         <div class="status-ribbon">
-                            <h4>${package.status}</h4>
+                            <h4>${pkg.status}</h4>
                         </div>
                     </div>
                     <div class="bottom">
                         <div class="text">
-                            <h4>${package.name}</h4>
+                            <h4>${pkg.name}</h4>
                         </div>
                         <div class="course-details">
-                            <h4><span>Courses: </span>${package.courses.length}</h4>
-                            <h4><span>Start Date: </span>${new Date(package.startDate).toLocaleDateString()}</h4>
-                            <h4><span>End Date: </span>${new Date(package.endDate).toLocaleDateString()}</h4>
+                            <h4><span>Courses: </span>${pkg.courses.length}</h4>
+                            <h4><span>Start Date: </span>${new Date(pkg.startDate).toLocaleDateString()}</h4>
+                            <h4><span>End Date: </span>${new Date(pkg.endDate).toLocaleDateString()}</h4>
                         </div>
                     </div>
                 `;
-                packageElement.onclick = () => window.location.href = `package-details.html?packageId=${package._id}`;
+                packageElement.onclick = () => window.location.href = `package-details.html?packageId=${pkg._id}`;
                 container.appendChild(packageElement);
             });
         }
@@ -341,51 +441,101 @@
         document.getElementById('not-assigned').addEventListener('click', () => filterCourses('Not Assigned'));
         document.getElementById('expired').addEventListener('click', () => filterCourses('Expired'));
 
-        savePackageBtn.addEventListener('click', addPackage);
+        function displayItemsAsAddons(items) {
+            addonsContainer.innerHTML = '';
+            items.forEach(item => {
+                const itemElement = document.createElement('div');
+                itemElement.classList.add('addon-item');
+                itemElement.innerHTML = `
+                    <div class="addon-info">
+                        <img src="${item.imageUrl}" alt="${item.name}" class="addon-image">
+                        <div class="addon-details">
+                            <h4>${item.name}</h4>
+                            <p>${item.description}</p>
+                            <h4>$${item.price}</h4>
+                        </div>
+                    </div>
+                    <button class="site-btn-success add-addon-btn" data-item-id="${item._id}">Add Item</button>
+                `;
+                addonsContainer.appendChild(itemElement);
 
-        async function addPackage() {
-            try {
-                const packageName = document.getElementById('packageName').value;
-                const packageCourses = Array.from(packageCoursesSelect.selectedOptions).map(option => option.value);
-                const packageFee = document.getElementById('packageFee').value;
-                const packageDiscount = document.getElementById('packageDiscount').value;
-                const packageDescription = document.getElementById('packageDescription').value;
-                const packageStartDate = document.getElementById('packageStartDate').value;
-                const packageEndDate = document.getElementById('packageEndDate').value;
-                const bannerImageFile = document.getElementById('add-package-file').files[0];
-
-                const formData = new FormData();
-                formData.append('name', packageName);
-                formData.append('courses', JSON.stringify(packageCourses));
-                formData.append('fee', packageFee);
-                formData.append('discount', packageDiscount);
-                formData.append('description', packageDescription);
-                formData.append('startDate', packageStartDate);
-                formData.append('endDate', packageEndDate);
-                if (bannerImageFile) {
-                    formData.append('bannerImage', bannerImageFile);
-                }
-
-                const response = await fetch('/api/add-package', {
-                    method: 'POST',
-                    headers: { 'organizationName': organizationName },
-                    body: formData
+                itemElement.querySelector('.add-addon-btn').addEventListener('click', () => {
+                    addSelectedAddon(item._id, items);
                 });
+            });
+        }
 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-
-                const result = await response.json();
-                console.log('Package added:', result);
-
-                // Close the modal and redirect to the main screen
-                $('#add-package').modal('hide');
-                window.location.href = '/courses.html';
-            } catch (error) {
-                console.error('Error creating package:', error);
+        function addSelectedAddon(itemId, items) {
+            const selectedItem = items.find(item => item._id === itemId);
+            if (selectedItem) {
+                const selectedAddonElement = document.createElement('div');
+                selectedAddonElement.classList.add('selected-addon');
+                selectedAddonElement.setAttribute('data-item-id', selectedItem._id);
+                selectedAddonElement.innerHTML = `
+                    <div class="addon-info">
+                        <img src="${selectedItem.imageUrl}" alt="${selectedItem.name}" class="addon-image">
+                        <div class="addon-details">
+                            <h4>${selectedItem.name}</h4>
+                            <h4>$${selectedItem.price}</h4>
+                        </div>
+                    </div>
+                `;
+                selectedAddonsContainer.appendChild(selectedAddonElement);
             }
         }
+
+        async function addPackage() {
+    try {
+        const packageName = document.getElementById('packageName').value;
+        const packageCourses = Array.from(packageCoursesSelect.selectedOptions).map(option => option.value);
+        console.log(packageCourses); // Verify the courses array
+        const packageFee = document.getElementById('packageFee').value;
+        const packageDiscount = document.getElementById('packageDiscount').value;
+        const packageDescription = document.getElementById('packageDescription').value;
+        const packageStartDate = document.getElementById('packageStartDate').value;
+        const packageEndDate = document.getElementById('packageEndDate').value;
+        const bannerImageFile = document.getElementById('add-package-file').files[0];
+
+        const selectedAddons = Array.from(selectedAddonsContainer.children).map(addon => addon.getAttribute('data-item-id'));
+
+        const formData = new FormData();
+        formData.append('name', packageName);
+        formData.append('courses', JSON.stringify(packageCourses)); // Stringify the array before appending
+        formData.append('items', JSON.stringify(selectedAddons)); // Stringify the array before appending
+        formData.append('fee', packageFee);
+        formData.append('discount', packageDiscount);
+        formData.append('description', packageDescription);
+        formData.append('startDate', packageStartDate);
+        formData.append('endDate', packageEndDate);
+        console.log(...formData); // Log the FormData contents for debugging
+
+        const organizationId = localStorage.getItem('organizationId');
+        if (bannerImageFile) {
+            formData.append('bannerImage', bannerImageFile);
+        }
+
+        const response = await fetch('/api/package/add-package', {
+            method: 'POST',
+            headers: {
+                'organizationId': organizationId
+            },
+            body: formData
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        console.log('Package added:', result);
+
+        // Close the modal and redirect to the main screen
+        $('#add-package').modal('hide');
+        window.location.href = '/courses.html';
+    } catch (error) {
+        console.error('Error creating package:', error);
+    }
+}
 
         fetchCourses();
         fetchPackages();

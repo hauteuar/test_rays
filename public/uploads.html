@@ -1,190 +1,322 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Media Management</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/mobile.css">
-    <link rel="stylesheet" href="css/tab.css">
-    <link rel="stylesheet" href="css/calendar.css"> 
-    <link rel="shortcut icon" href="images/favicon.png" />
-    <script src="components/sidebar.js" type="text/javascript" defer></script>
-    <script src="components/topnav.js" type="text/javascript" defer></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-    <style>
-        .media-history-section {
-            margin-top: 20px;
-        }
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Upload and View Tasks</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/mobile.css">
+  <link rel="stylesheet" href="css/tab.css">
+  <link rel="shortcut icon" href="images/1.png" />
 
-        .upload-media-section {
-            margin-top: 20px;
-        }
+  <!-- Include jQuery and Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-        .media-history-section h5,
-        .upload-media-section h5 {
-            margin-bottom: 20px;
-        }
+  <script src="components/sidebar.js" type="text/javascript" defer></script>
+  <script src="components/topnav.js" type="text/javascript" defer></script>
 
-        #media-history-list {
-            list-style-type: none;
-            padding-left: 0;
-        }
+  <style>
+    .tab-container {
+      margin-top: 20px;
+    }
 
-        #media-history-list li {
-            margin-bottom: 20px;
-        }
+    .nav-tabs {
+      margin-bottom: 20px;
+    }
 
-        .media-container {
-            max-width: 300px;
-            max-height: 300px;
-            overflow: hidden;
-            margin-bottom: 10px;
-        }
+    .upload-form {
+      /*background-color: white; */
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
 
-        .media-container img,
-        .media-container video,
-        .media-container audio {
-            width: 100%;
-            height: auto;
-            max-height: 100%;
-        }
+    .upload-form h5 {
+      margin-bottom: 15px;
+    }
 
-        .media-container audio {
-            width: 100%;
-            height: 30px;
-        }
-    </style>
+    .upload-form label {
+      font-weight: bold;
+    }
+
+    
+    .upload-form select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+
+   /* border: 1px solid #ddd;
+    /*background-color: #ffffff; /* Set background color */
+    color: #333333 !important; /* Set text color */
+    font-size: 16px; /* Optional: adjust font size */
+}
+
+.upload-form select option {
+    color: #333333 !important; /* Ensure option text is also visible */
+    /*background-color: #ffffff; /* Ensure option background matches the select background */
+}
+
+    .upload-form input[type="file"],
+    .upload-form textarea {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+    }
+
+    .upload-form textarea {
+      height: 100px;
+      resize: vertical;
+    }
+   
+    .upload-form button {
+      background-color: #28a745;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .upload-form button:disabled {
+      background-color: #c0c0c0;
+    }
+
+    .task-table {
+      width: 100%;
+      margin-top: 15px;
+      border-collapse: collapse;
+    }
+
+    .task-table th,
+    .task-table td {
+      padding: 10px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+
+    .task-table th {
+      background-color: #f4f4f4;
+    }
+
+    .task-table tbody tr:hover {
+      background-color: #f9f9f9;
+    }
+  </style>
 </head>
+
 <body>
-    <div class="container-scroller">
-        <topnav-component></topnav-component>
-        <div class="container-fluid page-body-wrapper">
-            <sidebar-component data-page="Uploads"></sidebar-component>
-            <div class="main-panel">
-                <div class="main-section main-section2">
-                    <!-- Tabs for Media History and Upload Media -->
-                    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="pills-media-history-tab" data-bs-toggle="pill" data-bs-target="#pills-media-history" type="button" role="tab" aria-controls="pills-media-history" aria-selected="true">Media History</button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="pills-upload-media-tab" data-bs-toggle="pill" data-bs-target="#pills-upload-media" type="button" role="tab" aria-controls="pills-upload-media" aria-selected="false">Upload Media</button>
-                        </li>
-                    </ul>
-                    <div class="tab-content" id="pills-tabContent">
-                        <!-- Media History Tab -->
-                        <div class="tab-pane fade show active" id="pills-media-history" role="tabpanel" aria-labelledby="pills-media-history-tab">
-                            <div class="media-history-section">
-                                <h5>Media History</h5>
-                                <ul id="media-history-list">
-                                    <!-- Media history will be populated here by JavaScript -->
-                                </ul>
-                            </div>
-                        </div>
+  <div class="container-scroller">
+    <div class="container-fluid page-body-wrapper">
+      <sidebar-component data-page="upload-task"></sidebar-component>
+      <topnav-component></topnav-component>
+      <div class="course-main billing">
+        <div class="tab-container">
+          <ul class="nav nav-tabs">
+            <li class="nav-item">
+              <a class="nav-link active" id="upload-tab" data-toggle="tab" href="#upload" role="tab">Submit Task</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="view-tab" data-toggle="tab" href="#view" role="tab">View Submitted Tasks</a>
+            </li>
+          </ul>
+          <div class="tab-content">
+            <!-- Submit Task Tab -->
+            <div class="tab-pane fade show active" id="upload" role="tabpanel">
+              <div class="upload-container">
+                <div class="upload-form">
+                  <h5>Submit Individual Task</h5>
+                  <label for="coach-select">Select Coach</label>
+                  <select id="coach-select" style="color: black;">
+                    <!-- Coach options will be populated by JavaScript -->
+                  </select>
 
-                        <!-- Upload Media Tab -->
-                        <div class="tab-pane fade" id="pills-upload-media" role="tabpanel" aria-labelledby="pills-upload-media-tab">
-                            <div class="upload-media-section">
-                                <h5>Upload New Media</h5>
-                                <form id="upload-media-form">
-                                    <div class="mb-3">
-                                        <label for="mediaFiles" class="form-label">Select Files</label>
-                                        <input type="file" id="mediaFiles" name="mediaFiles" class="form-control" multiple accept="video/*,audio/*,image/*">
-                                    </div>
-                                    <button type="submit" class="btn btn-primary">Upload</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
+                  <label for="upload-type">Upload Type</label>
+                  <select id="upload-type">
+                    <option value="image">Image</option>
+                    <option value="video">Video</option>
+                    <option value="audio">Audio</option>
+                    <option value="text">Text</option>
+                  </select>
+
+                  <label for="upload-file">Upload File</label>
+                  <input type="file" id="upload-file" accept="image/*,video/*,audio/*,.txt">
+
+                  <label for="description">Description</label>
+                  <textarea id="description" placeholder="Enter a description (optional)"></textarea>
+
+                  <button id="submit-task-button">Submit Task</button>
                 </div>
+              </div>
             </div>
+
+            <!-- View Submitted Tasks Tab -->
+            <div class="tab-pane fade" id="view" role="tabpanel">
+              <h5>Submitted Tasks</h5>
+              <table class="task-table">
+                <thead>
+                  <tr>
+                    <th>Task ID</th>
+                    <th>Coach</th>
+                    <th>Upload Type</th>
+                    <th>Status</th>
+                    <th>Description</th>
+                    <th>Submission Date</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="task-list">
+                  <!-- Task rows will be populated by JavaScript -->
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
+
+      </div>
     </div>
+  </div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const userId = localStorage.getItem('userId');
+      const organizationId = localStorage.getItem('organizationId');
+      const coachSelect = document.getElementById('coach-select');
 
-    <!-- Custom JavaScript -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const mediaHistoryList = document.getElementById('media-history-list');
-            const uploadMediaForm = document.getElementById('upload-media-form');
-
-            const studentId = localStorage.getItem('userId'); // Replace with actual student ID
-            const organizationId = localStorage.getItem('organizationId');
-
-            // Function to fetch and display historical media
-            function fetchMediaHistory(studentId, organizationId) {
-                fetch(`/api/media/students/${studentId}/organizations/${organizationId}/media`, {
-                    headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`,
-                        'organizationId': organizationId
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    mediaHistoryList.innerHTML = '';
-                    data.forEach(media => {
-                        const listItem = document.createElement('li');
-                        let mediaContent;
-
-                        switch (media.mediaType) {
-                            case 'image':
-                                mediaContent = `<div class="media-container"><img src="${media.mediaPath}" alt="Image"></div>`;
-                                break;
-                            case 'video':
-                                mediaContent = `<div class="media-container"><video controls><source src="${media.mediaPath}" type="video/mp4">Your browser does not support the video tag.</video></div>`;
-                                break;
-                            case 'audio':
-                                mediaContent = `<div class="media-container"><audio controls><source src="${media.mediaPath}" type="audio/mpeg">Your browser does not support the audio tag.</audio></div>`;
-                                break;
-                            default:
-                                mediaContent = `<a href="${media.mediaPath}" target="_blank">Download ${media.mediaType.toUpperCase()}</a>`;
-                        }
-
-                        listItem.innerHTML = `${mediaContent}<p>${media.mediaType.toUpperCase()} - ${new Date(media.createdAt).toLocaleString()}</p>`;
-                        mediaHistoryList.appendChild(listItem);
-                    });
-                })
-                .catch(error => console.error('Error fetching media history:', error));
+      // Fetch the list of coaches assigned to the student
+      async function fetchCoaches() {
+        try {
+          const response = await fetch(`/api/user/organization/${organizationId}/coaches`, {
+            headers: {
+              'Content-Type': 'application/json',
+              'organizationId': organizationId
             }
+          });
 
-            // Handle media upload form submission
-            uploadMediaForm.addEventListener('submit', function(event) {
-                event.preventDefault();
+          const coaches = await response.json();
+          console.log(coaches);
+          coaches.forEach(coach => {
+            const option = document.createElement('option');
+            option.value = coach._id;
+            option.textContent = coach.name;
+            option.style.color = 'black'; // Set text color to black explicitly
+            coachSelect.appendChild(option);
+          });
+        } catch (error) {
+          console.error('Error fetching coaches:', error);
+        }
+      }
 
-                const formData = new FormData();
-                const mediaFiles = document.getElementById('mediaFiles').files;
+      fetchCoaches();
 
-                formData.append('studentId', studentId);
-                formData.append('organizationId', organizationId);
-                for (let i = 0; i < mediaFiles.length; i++) {
-                    formData.append('mediaFiles', mediaFiles[i]);
-                }
+      // Handle the task submission
+      document.getElementById('submit-task-button').addEventListener('click', async function () {
+    const selectedCoach = document.getElementById('coach-select').value;
+    const uploadType = document.getElementById('upload-type').value;
+    const fileInput = document.getElementById('upload-file');
+    let description = document.getElementById('description').value;
 
-                fetch('/api/media/students/upload-media', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`
-                    },
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.message) {
-                        alert(data.message);
-                        fetchMediaHistory(studentId, organizationId); // Refresh the media history list
-                    }
-                })
-                .catch(error => console.error('Error uploading media:', error));
-            });
+    if (!selectedCoach || !fileInput.files.length) {
+        alert('Please select a coach and upload a file.');
+        return;
+    }
 
-            // Initial fetch to populate the media history list
-            fetchMediaHistory(studentId, organizationId);
+    const formData = new FormData();
+    formData.append('studentId', userId);
+    formData.append('assignedBy', selectedCoach);
+    formData.append('taskType', 'student-initiated');
+    formData.append('submissionType', uploadType);
+    formData.append('submissionContent', description || 'No content'); // Ensure submissionContent is present
+    formData.append('description', description);
+    formData.append('organizationId', organizationId);
+    formData.append('title', userId + 'task');
+    formData.append('assignedTo', userId);
+
+    // Add each selected file to the form data
+    Array.from(fileInput.files).forEach((file, index) => {
+        formData.append('mediaFiles', file);  // Use the key 'mediaFiles' to match with multer middleware
+    });
+
+    try {
+        const response = await fetch('/api/tasks/', {
+            method: 'POST',
+            headers: {
+                'organizationId': organizationId
+            },
+            body: formData
         });
-    </script>
+
+        if (response.ok) {
+            alert('Task submitted successfully.');
+            // Clear the form
+            document.getElementById('upload-file').value = '';
+            document.getElementById('description').value = '';
+        } else {
+            alert('Failed to submit task.');
+        }
+    } catch (error) {
+        console.error('Error submitting task:', error);
+        alert('An error occurred while submitting the task.');
+    }
+});
+
+
+
+      // Fetch and display submitted tasks
+      async function loadTasks() {
+    try {
+        const response = await fetch(`/api/tasks/student/${userId}/${organizationId}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'organizationId': organizationId
+            }
+        });
+
+        if (!response.ok) {
+            console.error('Failed to load tasks');
+            return;
+        }
+
+        const tasks = await response.json();
+        console.log('Tasks:', tasks);  // Log the tasks to inspect the structure
+
+        const taskList = document.getElementById('task-list');
+        taskList.innerHTML = '';
+
+        tasks.forEach(task => {
+            const row = document.createElement('tr');
+
+            row.innerHTML = `
+                <td>${task._id}</td>
+                <td>${task.assignedBy ? task.assignedBy.firstName : 'N/A'}</td>  <!-- Use the correct path for coachName -->
+                <td>${task.submissionType || 'N/A'}</td>  <!-- Use the correct path for submissionType -->
+                <td>${task.status || 'N/A'}</td>
+                <td>${task.description || 'No description'}</td>
+                <td>${new Date(task.createdAt).toLocaleDateString()}</td>
+                <td><a href="${task.media ? task.mediaUrl : '#'}" target="_blank">View</a></td>  <!-- Check if mediaUrl is correct -->
+            `;
+
+            taskList.appendChild(row);
+        });
+    } catch (error) {
+        console.error('Error loading tasks:', error);
+    }
+}
+
+      // Load tasks when the "View Submitted Tasks" tab is clicked
+      document.getElementById('view-tab').addEventListener('click', loadTasks);
+
+      // Initial load of tasks if the tab is already active
+      if (document.getElementById('view-tab').classList.contains('active')) {
+        loadTasks();
+      }
+    });
+  </script>
 </body>
+
 </html>

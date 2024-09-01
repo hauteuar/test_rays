@@ -78,6 +78,13 @@
     .hwzthat-btn:disabled {
       background-color: #c0c0c0;
     }
+
+    .checkout-summary {
+      background-color: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
   </style>
 </head>
 
@@ -105,10 +112,19 @@
             <div class="col-md-4">
               <div class="checkout-summary">
                 <h5>Order Summary</h5>
+                <label for="currency-select">Currency:</label>
+                <select id="currency-select" class="form-control mb-3">
+                  <option value="usd">USD</option>
+                  <option value="eur">EUR</option>
+                  <option value="cad">CAD</option>
+                  <!-- Add more currencies as needed -->
+                </select>
                 <p>Subtotal: $<span id="subtotal-amount">0</span></p>
                 <p>Total Discount: $<span id="discount-amount">0</span></p>
                 <h4>Estimated Total: $<span id="total-amount">0</span></h4>
-                <button id="add-discount-button" class="hwzthat-btn" style="display: none;">Add Discount Code</button>
+                <button id="add-discount-button" class="hwzthat-btn">Add Discount Code</button>
+                <input type="text" id="discount-code" class="form-control mb-3" placeholder="Enter discount code">
+                <button id="apply-discount-button" class="hwzthat-btn">Apply Discount</button>
                 <button id="checkout-button" class="hwzthat-btn">Checkout Now</button>
               </div>
             </div>
@@ -138,14 +154,9 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
   <script src="js/off-canvas.js"></script>
   <script src="js/template.js"></script>
- 
+
   <script src="https://js.stripe.com/v3/"></script>
   <script>
-    let uniqueCode = localStorage.getItem('uniqueCode');
-    if (!uniqueCode) {
-      uniqueCode = "5e2c5922-4311-40cd-875a-9a4d73b47f71"; // Replace with the unique code for the connected account
-    }
-
     let sports = [];
     let allCourts = [];
 
@@ -180,88 +191,112 @@
     }
 
     async function loadCartItems() {
-      const userId = localStorage.getItem('userId');
-      const organizationId = localStorage.getItem('organizationId');
-      const cartItemsContainer = document.getElementById('cart-items');
-      const role = localStorage.getItem('role');
-      cartItemsContainer.innerHTML = '';
+  const userId = localStorage.getItem('userId');
+  const organizationId = localStorage.getItem('organizationId');
+  const cartItemsContainer = document.getElementById('cart-items');
+  const role = localStorage.getItem('role');
+  cartItemsContainer.innerHTML = '';
 
-      let totalAmount = 0;
-      let response;
+  let totalAmount = 0;
+  let response;
 
-      try {
-        if (role === 'org_admin') {
-          response = await fetch(`/api/cart/org/${organizationId}`, {
-            headers: {
-              'Content-Type': 'application/json',
-              'organizationId': organizationId
-            }
-          });
-        } else {
-          response = await fetch(`/api/cart/${userId}`, {
-            headers: {
-              'Content-Type': 'application/json',
-              'organizationId': organizationId
-            }
-          });
+  try {
+    if (role === 'org_admin') {
+      response = await fetch(`/api/cart/org/${organizationId}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'organizationId': organizationId
         }
-
-        if (!response.ok) {
-          console.error('Failed to load cart items');
-          return;
+      });
+    } else {
+      response = await fetch(`/api/cart/${userId}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'organizationId': organizationId
         }
-
-        const cart = await response.json();
-
-        if (!Array.isArray(cart)) {
-          console.error('Unexpected cart data structure:', cart);
-          return;
-        }
-
-        cart.forEach(cartObject => {
-          const cartItems = cartObject.items;
-
-          cartItems.forEach(cartItem => {
-            if (!cartItem || !cartItem.paymentId || !cartItem.paymentId._id) {
-              console.warn('Skipping cart item due to missing data:', cartItem);
-              return;
-            }
-
-            totalAmount += cartItem.price * cartItem.quantity;
-
-            const sport = sports.find(s => String(s._id) === String(cartItem.sportId));
-            const court = allCourts.find(c => String(c._id) === String(cartItem.courtId));
-
-            const itemElement = document.createElement('div');
-            itemElement.classList.add('cart-item');
-            itemElement.innerHTML = `
-              <div class="item-details">
-                <p><strong>${cartItem.itemName || 'Unknown Item'}</strong></p>
-                <p>Batch: ${cartItem.batchTime || 'Unknown Time'}</p>
-                <p>Sport: ${sport ? sport.name : 'Unknown Sport'}, Court: ${court ? court.name : 'Unknown Court'}</p>
-              </div>
-              <div class="item-price">
-                $${cartItem.price}
-                <div class="item-quantity">
-                  <button class="quantity-btn" onclick="updateQuantity('${cartItem.paymentId._id}', -1)">-</button>
-                  <span>${cartItem.quantity}</span>
-                  <button class="quantity-btn" onclick="updateQuantity('${cartItem.paymentId._id}', 1)">+</button>
-                </div>
-                <button class="remove-btn" onclick="removeCartItem('${cartItem.paymentId._id}')">
-                  <img src="images/trash-icon.png" alt="Remove Item">
-                </button>
-              </div>
-            `;
-            cartItemsContainer.appendChild(itemElement);
-          });
-        });
-
-        document.getElementById('subtotal-amount').textContent = totalAmount.toFixed(2);
-
-      } catch (error) {
-        console.error('Error loading cart items:', error);
-      }
+      });
     }
+
+    if (!response.ok) {
+      console.error('Failed to load cart items');
+      return;
+    }
+
+    const cart = await response.json();
+
+    if (!cart || !cart.items || !Array.isArray(cart.items)) {
+      console.error('Unexpected cart data structure:', cart);
+      return;
+    }
+
+    cart.items.forEach(cartItem => {
+      if (!cartItem || !cartItem.paymentId || !cartItem.paymentId._id) {
+        console.warn('Skipping cart item due to missing data:', cartItem);
+        return;
+      }
+
+      totalAmount += cartItem.price * cartItem.quantity;
+
+      const sport = sports.find(s => String(s._id) === String(cartItem.sportId));
+      const court = allCourts.find(c => String(c._id) === String(cartItem.courtId));
+
+      const itemElement = document.createElement('div');
+      itemElement.classList.add('cart-item');
+      itemElement.innerHTML = `
+        <div class="item-details">
+          <p><strong>${cartItem.itemName || 'Unknown Item'}</strong></p>
+          <p>Batch: ${cartItem.batchTime || 'Unknown Time'}</p>
+          <p>Sport: ${sport ? sport.name : 'Unknown Sport'}, Court: ${court ? court.name : 'Unknown Court'}</p>
+          <p>Subscription: ${cartItem.subscriptionPlan || 'No Subscription'}</p>
+        </div>
+        <div class="item-price">
+          $${cartItem.price}
+          <div class="item-quantity">
+            <button class="quantity-btn" onclick="updateQuantity('${cartItem.paymentId._id}', -1)">-</button>
+            <span>${cartItem.quantity}</span>
+            <button class="quantity-btn" onclick="updateQuantity('${cartItem.paymentId._id}', 1)">+</button>
+          </div>
+          <button class="remove-btn" onclick="removeCartItem('${cartItem.paymentId._id}')">
+            <img src="images/trash-icon.png" alt="Remove Item">
+          </button>
+        </div>
+      `;
+      cartItemsContainer.appendChild(itemElement);
+    });
+
+    document.getElementById('subtotal-amount').textContent = totalAmount.toFixed(2);
+    calculateTotal();
+
+  } catch (error) {
+    console.error('Error loading cart items:', error);
+  }
+}
+
+
+    function calculateTotal() {
+      const subtotal = parseFloat(document.getElementById('subtotal-amount').textContent);
+      const discount = parseFloat(document.getElementById('discount-amount').textContent);
+      const total = subtotal - discount;
+      document.getElementById('total-amount').textContent = total.toFixed(2);
+    }
+
+    document.getElementById('apply-discount-button').addEventListener('click', function () {
+      const discountCode = document.getElementById('discount-code').value;
+      let discountAmount = 0;
+
+      // Dummy logic for discount application
+      if (discountCode === 'SAVE10') {
+        discountAmount = 10;
+      } else if (discountCode === 'SAVE20') {
+        discountAmount = 20;
+      } else {
+        alert('Invalid discount code');
+        return;
+      }
+
+      document.getElementById('discount-amount').textContent = discountAmount.toFixed(2);
+      calculateTotal();
+    });
 
     async function updateQuantity(itemId, change) {
       // Logic to update quantity
@@ -288,89 +323,93 @@
     }
 
     document.getElementById('checkout-button').addEventListener('click', async function () {
-      const userId = localStorage.getItem('userId');
-      const organizationId = localStorage.getItem('organizationId');
-      const role = localStorage.getItem('role');
+  const userId = localStorage.getItem('userId');
+  const organizationId = localStorage.getItem('organizationId');
+  const role = localStorage.getItem('role');
+  const currency = document.getElementById('currency-select').value;
 
-      try {
-        let response;
-        if (role === 'org_admin') {
-          response = await fetch(`/api/cart/org/${organizationId}`, {
-            headers: {
-              'Content-Type': 'application/json',
-              'organizationId': organizationId
-            }
-          });
-        } else {
-          response = await fetch(`/api/cart/${userId}`, {
-            headers: {
-              'Content-Type': 'application/json',
-              'organizationId': organizationId
-            }
-          });
+  try {
+    let response;
+    if (role === 'org_admin') {
+      response = await fetch(`/api/cart/org/${organizationId}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'organizationId': organizationId
+        }
+      });
+    } else {
+      response = await fetch(`/api/cart/${userId}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'organizationId': organizationId
+        }
+      });
+    }
+
+    if (!response.ok) {
+      console.error('Failed to retrieve cart');
+      return;
+    }
+
+    const cart = await response.json();
+    let transactionIds = [];
+    let isSubscription = false;
+    let recurringIntervalType = '';
+    let recurringIntervalCount = 1;
+
+    if (cart && Array.isArray(cart.items)) {
+      cart.items.forEach(item => {
+        if (item.paymentId && item.paymentId.transactionId) {
+          transactionIds.push(String(item.paymentId.transactionId));
         }
 
-        if (!response.ok) {
-          console.error('Failed to retrieve cart');
-          return;
+        if (item.subscriptionPlan) {
+          isSubscription = true;
+          recurringIntervalType = item.recurringIntervalType;
+          recurringIntervalCount = item.recurringIntervalCount;
         }
+      });
+    }
 
-        const cart = await response.json();
-        console.log('cart:', cart);
+    const transactionIdsString = transactionIds.join(',');
+    const totalAmount = parseFloat(document.getElementById('total-amount').textContent);
 
-        let transactionIds = [];
+    const paymentDetails = {
+      clientId: "HWZTHAT202401",
+      transactionId: transactionIdsString,
+      uniqueCode: '5e2c5922-4311-40cd-875a-9a4d73b47f71',
+      callbackUrl: "http://localhost:5000/checkout.html",
+      successUrl: `http://localhost:5000/success?transactionIds=${transactionIdsString}`,
+      cancelUrl: `http://localhost:5000/cancel?transactionIds=${transactionIdsString}`,
+      productName: "Combined Purchase",
+      amount: totalAmount,
+      currency: currency,
+      applicationFeePercent: 5,
+      isSubscription: isSubscription,
+      customerId: "cus_Qeh75XVzBvXcPG",
+      recurringIntervalType: recurringIntervalType,
+      recurringIntervalCount: recurringIntervalCount,
+    };
 
-        if (cart && Array.isArray(cart.items)) {
-          cart.items.forEach(item => {
-            if (item.paymentId && item.paymentId.transactionId) {
-              transactionIds.push(String(item.paymentId.transactionId));
-            }
-          });
-        }
-
-        const transactionIdsString = transactionIds.join(',');
-
-        console.log('transactionIds', transactionIdsString);
-        const successUrl = `http://localhost:5000/success?transactionIds=${transactionIdsString}`;
-        const cancelUrl = `http://localhost:5000/cancel?transactionIds=${transactionIdsString}`;
-        const totalAmount = parseFloat(document.getElementById('total-amount').textContent);
-
-        const paymentDetails = {
-          clientId: "HWZTHAT202401",
-          transactionId: transactionIdsString,
-          uniqueCode: uniqueCode,
-          callbackUrl: "http://localhost:5000/checkout.html",
-          successUrl,
-          cancelUrl,
-          productName: "Combined Purchase",
-          amount: totalAmount,
-          currency: "usd",
-          applicationFeePercent: 5,
-          isSubscription: false,
-          customerId: "cus_Qeh75XVzBvXcPG",
-          recurringIntervalType: "day",
-          recurringIntervalCount: 1,
-        };
-
-        const paymentResponse = await fetch('https://api-payments.rayssportsnetwork.com/checkout', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(paymentDetails),
-        });
-
-        const result = await paymentResponse.json();
-        if (result.url) {
-          window.location.href = result.url;
-        } else {
-          alert('Payment initiation failed.');
-        }
-      } catch (error) {
-        console.error('Error processing payment:', error);
-        alert('Failed to initiate payment.');
-      }
+    const paymentResponse = await fetch('https://api-payments.rayssportsnetwork.com/checkout', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(paymentDetails),
     });
+
+    const result = await paymentResponse.json();
+    if (result.url) {
+      window.location.href = result.url;
+    } else {
+      alert('Payment initiation failed.');
+    }
+  } catch (error) {
+    console.error('Error processing payment:', error);
+    alert('Failed to initiate payment.');
+  }
+});
 
     fetchSportsAndCourts();
   </script>

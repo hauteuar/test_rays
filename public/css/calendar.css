@@ -2,12 +2,14 @@
 .booked {
   background-color: #ffcccc; /* Light red background */
   cursor: not-allowed;
+  text-decoration: none;
 }
 .booking-item {
   background-color: #ffcccc; /* Light red background */
   padding: 5px;
   border-radius: 5px;
   margin-bottom: 5px;
+  text-decoration: none;
 }
 
 /* Daily view CSS */
@@ -16,6 +18,7 @@
   position: relative;
   padding: 0;
   height: 60px; /* Adjust as needed */
+  text-decoration: none;
 }
 
 /* Weekly view CSS */

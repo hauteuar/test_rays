@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>Booking Management</title>
   <link rel="stylesheet" href="css/style.css">
- <link rel="stylesheet" href="css/mobile.css">
+  <link rel="stylesheet" href="css/mobile.css">
   <link rel="stylesheet" href="css/tab.css">
   <link rel="stylesheet" href="css/calendar.css"> 
   <link rel="shortcut icon" href="images/favicon.png" />
@@ -13,12 +13,92 @@
   <script src="components/topnav.js" type="text/javascript" defer></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-
   <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<style>
+  .booked-slot {
+    background-color: #007bff !important; /* Blue color for booked slots */
+    border-radius: 15px !important; /* Curved box */
+    color: white !important;
+    padding: 5px;
+    text-align: center;
+    cursor: pointer;
+}
 
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+.booked-slot .booking-block {
+    background-color: transparent; /* Ensure the block inside does not override the background */
+    color: inherit; /* Inherit the color from the parent slot */
+}
+
+.payment-status {
+    border: 2px solid #ffc107; /* Highlight box around payment status */
+    border-radius: 5px;
+    padding: 2px 5px;
+    display: inline-block;
+    font-weight: bold;
+}
+
+.pending-status {
+    background-color: #ffc107; /* Yellow for pending */
+    color: #212529;
+}
+
+.confirmed-status {
+    background-color: #28a745; /* Green for confirmed */
+    color: white;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: red; /* Default color for inactive state */
+  transition: .4s;
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: green; /* Color for active state */
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+.open-slot {
+    cursor: url('images/plus-sign.png'), pointer;
+}
 
 
+</style>
 </head>
 
 <body>
@@ -39,7 +119,6 @@
                     <img src="images/overview.png"> Calendar view
                   </a>
                 </li>
-              
                 <li class="nav-item">
                   <a class="nav-link" id="pills-manage-tab" data-toggle="pill" href="#pills-manage" role="tab" aria-controls="pills-manage" aria-selected="true">
                     <img src="images/settings2.png"> Manage
@@ -60,10 +139,10 @@
                         <a class="" id="pills-week-tab" data-toggle="pill" href="#pills-week" role="tab" aria-controls="pills-week" aria-selected="false">Weekly</a>
                       </li>
                       <li class="" role="presentation">
-                        <a class="" id="pills-month-tab" data-toggle="pill" href="#pills-month" role="tab" aria-controls="pills-month" aria-selected="true">Monthly</a>
+                        <a class="" id="pills-month-tab" data-toggle="pill" href="#pills-month" role="tab" aria-controls="pills-month" aria-selected="false">Monthly</a>
                       </li>
                       <li class="" role="presentation">
-                        <a class="" id="pills-year-tab" data-toggle="pill" href="#pills-year" role="tab" aria-controls="pills-year" aria-selected="true">Yearly</a>
+                        <a class="" id="pills-year-tab" data-toggle="pill" href="#pills-year" role="tab" aria-controls="pills-year" aria-selected="false">Yearly</a>
                       </li>
                     </ul>
                     <div class="flex-align2 g2 cursor-pointer for-day" >
@@ -729,32 +808,10 @@
     </div>
   </div>
 
-  <script src="js/booking.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const toggleCheckboxes = document.querySelectorAll('.toggleCheckbox');
-      const activeGame = document.getElementById('active-game');
-      const notActiveGame = document.getElementById('not-active-game');
+  
 
-      toggleCheckboxes.forEach(function (checkbox) {
-        checkbox.addEventListener('change', function () {
-          if (checkbox.checked) {
-            activeGame.style.display = 'block';
-            notActiveGame.style.display = 'none';
-          } else {
-            activeGame.style.display = 'none';
-            notActiveGame.style.display = 'block';
-          }
-        });
-
-        // Trigger the change event to set the initial state correctly
-        checkbox.dispatchEvent(new Event('change'));
-      });
-    });
-  </script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
   <script src="js/off-canvas.js"></script>
   <script src="js/template.js"></script>
-
+  <script src="js/booking.js"></script>
 </body>
 </html>

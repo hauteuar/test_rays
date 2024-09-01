@@ -17,6 +17,7 @@ const PaymentSchema = new Schema({
     ref: 'Organization', // Reference to the Organization schema
     required: true,
   },
+  currency: { type: String, default: 'USD' }, // Payment currency
   itemType: {
     type: String,
     enum: ['booking', 'course', 'ecom'],

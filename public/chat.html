@@ -16,6 +16,7 @@
             font-family: Arial, sans-serif;
             margin: 0;
             overflow-x: hidden;
+            background-color: #f9f9f9;
         }
 
         .container-scroller {
@@ -41,7 +42,7 @@
             display: flex;
             padding: 0;
             overflow: hidden;
-            background-color: #f9f9f9;
+            background-color: #ffffff;
         }
 
         .chat-container {
@@ -50,165 +51,187 @@
             overflow: hidden;
         }
 
+        /* Sidebar for user list */
         .sidebar {
-            width: 250px;
-            background-color: #292b2c;
-            color: white;
+            width: 300px;
+            background-color: #ffffff;
             border-right: 1px solid #ddd;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar input[type="text"] {
             padding: 10px;
+            margin: 10px;
+            border-radius: 20px;
+            border: 1px solid #ddd;
+            width: calc(100% - 40px);
+        }
+
+        .user-list {
+            flex: 1;
             overflow-y: auto;
-        }
-
-        .user-category {
-            margin-bottom: 20px;
-        }
-
-        .user-category h4 {
-            margin: 10px 0;
-            padding-bottom: 5px;
-            border-bottom: 2px solid #ddd;
-            color: #ff9800;
-        }
-
-        .user-list div {
             padding: 10px;
-            cursor: pointer;
-            border-bottom: 1px solid #ddd;
+        }
+
+        .user-item {
             display: flex;
             align-items: center;
-            background-color: #3a3b3c;
-            color: white;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 5px;
+            cursor: pointer;
             transition: background-color 0.3s;
         }
 
-        .user-list div:hover {
-            background-color: #4b4c4d;
+        .user-item:hover, .user-item.active {
+            background-color: #e8f0fe;
         }
 
-        .user-list div.selected {
-            background-color: #ff9800;
-            color: black;
-        }
-
-        .user-list img {
+        .user-item img {
             border-radius: 50%;
-            width: 30px;
-            height: 30px;
+            width: 40px;
+            height: 40px;
             margin-right: 10px;
         }
 
+        .user-item .user-details {
+            flex: 1;
+        }
+
+        .user-item .user-name {
+            font-weight: bold;
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .user-item .user-last-message {
+            color: #666;
+            font-size: 12px;
+        }
+
+        .user-item .user-time {
+            font-size: 12px;
+            color: #999;
+            text-align: right;
+        }
+
+        /* Chat window */
         .chat-window {
             flex: 1;
             display: flex;
             flex-direction: column;
-            padding: 10px;
-            position: relative;
             background-color: #ffffff;
-            overflow-y: auto;
+        }
+
+        .chat-header {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+            background-color: #ffffff;
+        }
+
+        .chat-header img {
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+        }
+
+        .chat-header .chat-header-info {
+            flex: 1;
+        }
+
+        .chat-header .chat-header-info h5 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .chat-header .chat-header-info p {
+            margin: 0;
+            font-size: 12px;
+            color: #999;
         }
 
         .message-list {
             flex: 1;
             overflow-y: auto;
+            padding: 15px;
+            background-color: #ffffff;
+        }
+
+        .message {
+            display: flex;
+            align-items: flex-end;
             margin-bottom: 10px;
         }
 
-        .message-list div {
+        .message img {
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        .message.sent {
+            justify-content: flex-end;
+        }
+
+        .message.sent img {
+            order: 1;
+            margin-right: 0;
+            margin-left: 10px;
+        }
+
+        .message-text {
+            max-width: 60%;
             padding: 10px;
-            margin: 5px 0;
             border-radius: 10px;
-            color: white;
+            font-size: 14px;
+            line-height: 1.4;
+            background-color: #f1f0f0;
         }
 
-        .message-list .sent {
-            text-align: right;
-            background-color: #007bff;
-            align-self: flex-end;
+        .message.sent .message-text {
+            background-color: #dcf8c6;
         }
 
-        .message-list .received {
-            text-align: left;
-            background-color: #ff9800;
-            align-self: flex-start;
-        }
-
+        /* Message input */
         .message-input {
             display: flex;
             align-items: center;
+            padding: 15px;
+            border-top: 1px solid #ddd;
+            background-color: #ffffff;
         }
 
         .message-input input[type="text"] {
             flex: 1;
             padding: 10px;
-            margin-right: 5px;
+            border-radius: 20px;
             border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-
-        .message-input input[type="file"] {
-            display: none;
+            margin-right: 10px;
         }
 
         .message-input label {
             cursor: pointer;
-            padding: 10px;
-            background-color: #007bff;
-            color: white;
-            border-radius: 5px;
-            margin-right: 5px;
+            margin-right: 10px;
         }
 
         .message-input button {
             padding: 10px;
-            background-color: #007bff;
-            color: white;
             border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .message-input button:hover, .message-input label:hover {
-            background-color: #0056b3;
-        }
-
-        #notifications {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            padding: 5px 10px;
-            background-color: #ff9800;
+            background-color: #25d366;
             color: white;
-            border-radius: 5px;
+            border-radius: 20px;
             cursor: pointer;
+            transition: background-color 0.3s;
         }
 
-        #notifications.unread {
-            background-color: #e91e63;
-        }
-
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 60px;
-                padding: 5px;
-            }
-
-            .chat-window {
-                width: calc(100% - 60px);
-            }
-
-            .user-list div {
-                justify-content: center;
-            }
-
-            .user-list img {
-                margin-right: 0;
-            }
-
-            .user-category h4 {
-                font-size: 14px;
-                padding-bottom: 3px;
-                margin: 5px 0;
-            }
+        .message-input button:hover {
+            background-color: #128c7e;
         }
     </style>
 </head>
@@ -220,37 +243,30 @@
             <div class="main-panel">
                 <div class="content-wrapper">
                     <div class="chat-container">
-                        <!-- Sidebar for user categories and groups -->
+                        <!-- Sidebar for user list -->
                         <div class="sidebar">
-                            <div class="user-category">
-                                <h4>Groups</h4>
-                                <div class="user-list" id="group-list"></div>
-                                <button id="create-group">Create Group</button>
-                            </div>
-                            <div class="user-category">
-                                <h4>Admin</h4>
-                                <div class="user-list" id="admin-list"></div>
-                            </div>
-                            <div class="user-category">
-                                <h4>Coaches</h4>
-                                <div class="user-list" id="coach-list"></div>
-                            </div>
-                            <div class="user-category">
-                                <h4>Students</h4>
-                                <div class="user-list" id="student-list"></div>
+                            <input type="text" placeholder="Search messenger">
+                            <div class="user-list" id="user-list">
+                                <!-- User items will be populated here -->
                             </div>
                         </div>
 
                         <!-- Chat Window -->
                         <div class="chat-window">
-                            <div id="notifications">No new messages</div>
+                            <div class="chat-header">
+                                <img src="images/user1.png" alt="User Image" id="chat-header-img">
+                                <div class="chat-header-info">
+                                    <h5 id="chat-header-name">Select a user to start chatting</h5>
+                                    <p id="chat-header-status">Status will appear here</p>
+                                </div>
+                            </div>
                             <div class="message-list" id="message-list">
                                 <!-- Messages will be populated here -->
                             </div>
                             <div class="message-input">
-                                <input type="text" id="message" placeholder="Type a message...">
                                 <label for="file-upload">📎</label>
                                 <input type="file" id="file-upload" accept="image/*">
+                                <input type="text" id="message" placeholder="Type your message here...">
                                 <button id="send">Send</button>
                             </div>
                         </div>
@@ -272,13 +288,8 @@
             displayMessage(message);
             if (message.senderId !== userId && !message.isGroup) {
                 const senderName = usersMap[message.senderId] || 'Unknown';
-                document.getElementById('notifications').textContent = `New message from ${senderName}`;
-                document.getElementById('notifications').classList.add('unread');
                 selectedUserOrGroup = message.senderId; // Automatically select the user for replying
             } else if (message.isGroup) {
-                const groupName = groupsMap[message.receiverId] || 'Unknown Group';
-                document.getElementById('notifications').textContent = `New message in ${groupName}`;
-                document.getElementById('notifications').classList.add('unread');
                 selectedUserOrGroup = message.receiverId; // Automatically select the group for replying
             }
         });
@@ -308,15 +319,6 @@
             }
         });
 
-        document.getElementById('notifications').addEventListener('click', () => {
-            // Clear notifications and focus on the user/group who sent the message
-            document.getElementById('notifications').textContent = 'No new messages';
-            document.getElementById('notifications').classList.remove('unread');
-            if (selectedUserOrGroup) {
-                loadChat({ _id: selectedUserOrGroup });
-            }
-        });
-
         function sendMessage() {
             const messageInput = document.getElementById('message');
             if (messageInput.value && selectedUserOrGroup) {
@@ -330,14 +332,17 @@
         function displayMessage(message) {
             const messageList = document.getElementById('message-list');
             const messageDiv = document.createElement('div');
-            messageDiv.classList.add(message.senderId === userId ? 'sent' : 'received');
+            messageDiv.classList.add('message', message.senderId === userId ? 'sent' : 'received');
             if (message.isImage) {
                 const img = document.createElement('img');
                 img.src = message.message;
                 img.style.maxWidth = '200px';
                 messageDiv.appendChild(img);
             } else {
-                messageDiv.textContent = message.message;
+                messageDiv.innerHTML = `
+                    <img src="${message.senderProfilePhoto || 'images/default-user.png'}" alt="User Image">
+                    <div class="message-text">${message.message}</div>
+                `;
             }
             messageList.appendChild(messageDiv);
             messageList.scrollTop = messageList.scrollHeight;
@@ -345,8 +350,11 @@
 
         function loadChat(userOrGroup) {
             selectedUserOrGroup = userOrGroup._id;
-            document.querySelectorAll('.user-list div').forEach(div => div.classList.remove('selected'));
-            document.querySelector(`[data-user-id="${userOrGroup._id}"]`).classList.add('selected');
+            document.querySelectorAll('.user-item').forEach(div => div.classList.remove('active'));
+            document.querySelector(`[data-user-id="${userOrGroup._id}"]`).classList.add('active');
+            document.getElementById('chat-header-name').textContent = userOrGroup.firstName + ' ' + userOrGroup.lastName;
+            document.getElementById('chat-header-status').textContent = userOrGroup.email + ' | Active now';
+            document.getElementById('chat-header-img').src = userOrGroup.profilePhoto || 'images/default-user.png';
             document.getElementById('message-list').innerHTML = '';
             fetch(`/chat/${userId}/${selectedUserOrGroup}`)
                 .then(response => response.json())
@@ -355,71 +363,42 @@
                 });
         }
 
-        document.getElementById('create-group').addEventListener('click', () => {
-            const groupName = prompt("Enter Group Name:");
-            if (groupName) {
-                fetch('/create-group', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ groupName, userId })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.groupId) {
-                        const groupDiv = document.createElement('div');
-                        groupDiv.textContent = groupName;
-                        groupDiv.dataset.userId = data.groupId;
-                        groupsMap[data.groupId] = groupName;
-                        groupDiv.addEventListener('click', () => loadChat({ _id: data.groupId }));
-                        document.getElementById('group-list').appendChild(groupDiv);
-                    }
-                });
-            }
-        });
-
         // Fetch user lists and groups, then categorize them
         fetch(`/api/user/${organizationId}`)
             .then(response => response.json())
             .then(users => {
                 users.forEach(user => {
-                    usersMap[user._id] = `${user.firstName} ${user.lastName}`; // Map user ID to name
+                    usersMap[user._id] = `${user.firstName} ${user.lastName}`;
                     const userDiv = document.createElement('div');
-                    userDiv.textContent = `${user.firstName} ${user.lastName}`;
+                    userDiv.classList.add('user-item');
                     userDiv.dataset.userId = user._id;
-                    userDiv.innerHTML = `<img src="${user.profilePhoto || 'images/default-user.png'}" alt="User Image">${userDiv.textContent}`;
+                    userDiv.innerHTML = `
+                        <img src="${user.profilePhoto || 'images/default-user.png'}" alt="User Image">
+                        <div class="user-details">
+                            <p class="user-name">${user.firstName} ${user.lastName}</p>
+                            <p class="user-last-message">Last message...</p>
+                        </div>
+                        <div class="user-time">5d</div>
+                    `;
                     userDiv.addEventListener('click', () => loadChat(user));
-                    if (user.role === 'corp_admin' || user.role === 'org_admin') {
-                        document.getElementById('admin-list').appendChild(userDiv);
-                    } else if (user.role === 'coach' || user.role === 'freelance_coach') {
-                        document.getElementById('coach-list').appendChild(userDiv);
-                    } else if (user.role === 'student' || user.role === 'parent') {
-                        document.getElementById('student-list').appendChild(userDiv);
-                    }
+                    document.getElementById('user-list').appendChild(userDiv);
                 });
             });
 
-        // Fetch groups and display them
         fetch(`/api/groups/${organizationId}`)
             .then(response => response.json())
             .then(groups => {
                 groups.forEach(group => {
                     groupsMap[group._id] = group.name;
                     const groupDiv = document.createElement('div');
-                    groupDiv.textContent = group.name;
+                    groupDiv.classList.add('user-item');
                     groupDiv.dataset.userId = group._id;
+                    groupDiv.textContent = group.name;
                     groupDiv.addEventListener('click', () => loadChat({ _id: group._id }));
-                    document.getElementById('group-list').appendChild(groupDiv);
+                    document.getElementById('user-list').appendChild(groupDiv);
                 });
             });
 
-        // History feature - load the chat history when clicking on a user or group
-        function loadChatHistory(userId, receiverId) {
-            fetch(`/chat/history/${userId}/${receiverId}`)
-                .then(response => response.json())
-                .then(messages => {
-                    messages.forEach(displayMessage);
-                });
-        }
     </script>
 </body>
 </html>

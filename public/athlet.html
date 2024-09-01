@@ -274,6 +274,35 @@
                               
                               </div>
                             </div>
+                            <div class="input-field2">
+                                <label for="batchDays">Select Batch Days</label>
+                                <select id="batchDays" name="batchDays[]" multiple required>
+                                    <option value="Monday">Monday</option>
+                                    <option value="Tuesday">Tuesday</option>
+                                    <option value="Wednesday">Wednesday</option>
+                                    <option value="Thursday">Thursday</option>
+                                    <option value="Friday">Friday</option>
+                                    <option value="Saturday">Saturday</option>
+                                    <option value="Sunday">Sunday</option>
+                                </select>
+                            </div>
+            
+                            <!-- Batch Timing Input -->
+                            <div class="input-field2">
+                                <label for="batchTiming">Select Batch Timing</label>
+                                <input type="time" id="batchTiming" name="batchTiming" required>
+                            </div>
+            
+                            <!-- Subscription Plan Dropdown -->
+                            <div class="input-field2">
+                                <label for="subscriptionPlan">Select Subscription Plan</label>
+                                <select id="subscriptionPlan" name="subscriptionPlan" required>
+                                    <option value="monthly">Monthly</option>
+                                    <option value="quarterly">Quarterly</option>
+                                    <option value="annual">Annual</option>
+                                </select>
+                            </div>
+            
                           </li>
                         </ul>
                         <h6 class="mt-4">
@@ -282,6 +311,8 @@
                         </h6>
                         <button class="btn button-elite2 text-white w-100 mt-4" style="padding: 15px; border-radius:6px;">Register</button>
                       </form>
+                       <!-- Batch Days Dropdown -->
+                
                              
                     <h6 class="mt-4">
                         Already have an account?
@@ -432,6 +463,10 @@
               const data = {};
               formData.forEach((value, key) => data[key] = value);
               data.organizationId = organizationSelect.value; // Pass the selected organization ID
+              data.batchDays = Array.from(document.getElementById('batchDays').selectedOptions).map(opt => opt.value);
+              data.batchTiming = document.getElementById('batchTiming').value;
+              data.subscriptionPlan = document.getElementById('subscriptionPlan').value;
+
               console.log(data.organizationId );
       
               const response = await fetch('/auth/register/child', {
@@ -444,7 +479,37 @@
               console.log(response);
               if (response.ok) {
                   alert('Registration successful');
-                  window.location.href = '/login.html';
+                   // Add to cart logic here
+                   const price = 300;
+                  const discount = data.subscriptionPlan === 'annual' ? 0.1 : 0;
+                  const totalAmount = data.subscriptionPlan === 'annual' 
+                    ? price * 12 * (1 - discount) 
+                    : data.subscriptionPlan === 'quarterly' 
+                      ? price * 3 
+                      : price;
+
+                  const cartResponse = await fetch('/api/cart/add', {
+                      method: 'POST',
+                      headers: {
+                          'Content-Type': 'application/json'
+                      },
+                      body: JSON.stringify({
+                          userId: userData.user._id,
+                          organizationId: data.organizationId,
+                          itemType: 'course',
+                          itemId: 'defaultCourseId', // Replace with actual default course ID
+                          price: totalAmount,
+                          quantity: 1
+                      })
+                  });
+
+                  if (cartResponse.ok) {
+                      alert('Added to cart successfully.');
+                      window.location.href = '/checkout.html';
+                  } else {
+                      alert('Failed to add to cart.');
+                  }
+                 // window.location.href = '/login.html';
               } else {
                   const error = await response.json();
                   alert('Registration failed: ' + error.error);

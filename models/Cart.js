@@ -40,6 +40,21 @@ const cartItemSchema = new Schema({
     enum: ['pending', 'completed', 'failed'],
     default: 'pending',
   },
+  subscriptionPlan: {
+    type: String,
+    enum: ['monthly', 'quarterly', 'annual'],
+    required: false, // This will only be required if the item is a subscription
+  },
+  recurringIntervalType: {
+    type: String,
+    enum: ['day', 'week', 'month', 'year'],
+    required: false,
+  },
+  recurringIntervalCount: {
+    type: Number,
+    default: 1,
+    required: false,
+  },
   createdAt: {
     type: Date,
     default: Date.now,
