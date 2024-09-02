@@ -35,6 +35,7 @@ const userSchema = new mongoose.Schema({
   tokens: [{
     token: { type: String, required: true }
   }],
+  refreshToken: { type: String }, // Added refreshToken field
   
   parent: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   age: Number,

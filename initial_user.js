@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-const User = require('./models/users');
-const Organization = require('./models/organizations');
+const User = require('./models/Users');
+const Organization = require('./models/Organizations');
 const Course = require('./models/Course');
 const Batch = require('./models/Batch');
 const Payment = require('./models/Payment');
@@ -131,7 +131,7 @@ db.once('open', async function() {
       organizations: [
         {
           org_id: eliteAcademy._id,
-          courses: [defaultCourseElite._id]
+          courses: [defaultCourseElite._id] // Ensure the course ID is correctly referenced
         }
       ]
     });
@@ -148,7 +148,7 @@ db.once('open', async function() {
       organizations: [
         {
           org_id: tjsSports._id,
-          courses: [defaultCourseTJS._id]
+          courses: [defaultCourseTJS._id] // Ensure the course ID is correctly referenced
         }
       ]
     });
@@ -165,7 +165,7 @@ db.once('open', async function() {
       organizations: [
         {
           org_id: mississaugaRamblers._id,
-          courses: [defaultCourseRamblers._id]
+          courses: [defaultCourseRamblers._id] // Ensure the course ID is correctly referenced
         }
       ]
     });
@@ -227,46 +227,6 @@ db.once('open', async function() {
     await headCoach.save();
     await freelanceCoach.save();
 
-    // Create and Assign Batches for the Default Courses
-    const createBatch = async (course, students, coaches) => {
-      const batch = new Batch({
-        name: `${course.title} - Batch 1`,
-        startDate: course.startDate,
-        endDate: course.endDate,
-        timeSlot: '15:00 - 16:00',
-        days: ['Monday', 'Wednesday', 'Friday'],
-        repeatInterval: 'Weekly',
-        course: course._id,
-        students: students.map(student => student._id),
-        coaches: coaches.map(coach => coach._id)
-      });
-
-      await batch.save();
-
-      // Assign the batch to students and coaches
-      await Promise.all(
-        students.map(student =>
-          User.updateOne(
-            { _id: student._id },
-            { $push: { 'organizations.$[org].courses.$[course].batches': { batch_id: batch._id, role: 'student' } } },
-            { arrayFilters: [{ 'org.org_id': course.organization }, { 'course.course_id': course._id }] }
-          )
-        )
-      );
-
-      await Promise.all(
-        coaches.map(coach =>
-          User.updateOne(
-            { _id: coach._id },
-            { $push: { 'organizations.$[org].courses.$[course].batches': { batch_id: batch._id, role: 'coach' } } },
-            { arrayFilters: [{ 'org.org_id': course.organization }, { 'course.course_id': course._id }] }
-          )
-        )
-      );
-
-      return batch;
-    };
-
     // Create additional users (coaches and students)
     const eliteCoachPasswords = await Promise.all(
       Array.from({ length: 3 }).map(() => bcrypt.hash('elite_coach_password', 10))
@@ -283,7 +243,7 @@ db.once('open', async function() {
       contactNumber: `12345678${index + 4}`,
       password,
       role: 'coach',
-      organizations: [{ org_id: eliteAcademy._id, courses: [defaultCourseElite._id] }]
+      organizations: [{ org_id: eliteAcademy._id, courses: [defaultCourseElite._id] }] // Correctly reference course ID
     })));
 
     const tjsCoach = await new User({
@@ -295,7 +255,7 @@ db.once('open', async function() {
       contactNumber: '1234567897',
       password: tjsCoachPassword,
       role: 'coach',
-      organizations: [{ org_id: tjsSports._id, courses: [defaultCourseTJS._id] }]
+      organizations: [{ org_id: tjsSports._id, courses: [defaultCourseTJS._id] }] // Correctly reference course ID
     }).save();
 
     const ramblersCoach = await new User({
@@ -307,7 +267,7 @@ db.once('open', async function() {
       contactNumber: '1234567898',
       password: ramblersCoachPassword,
       role: 'coach',
-      organizations: [{ org_id: mississaugaRamblers._id, courses: [defaultCourseRamblers._id] }]
+      organizations: [{ org_id: mississaugaRamblers._id, courses: [defaultCourseRamblers._id] }] // Correctly reference course ID
     }).save();
 
     const eliteStudentPasswords = await Promise.all(
@@ -329,7 +289,7 @@ db.once('open', async function() {
       contactNumber: `12345678${index + 8}`,
       password,
       role: 'student',
-      organizations: [{ org_id: eliteAcademy._id, courses: [defaultCourseElite._id] }]
+      organizations: [{ org_id: eliteAcademy._id, courses: [defaultCourseElite._id] }] // Correctly reference course ID
     })));
 
     const tjsStudents = await User.insertMany(tjsStudentPasswords.map((password, index) => ({
@@ -341,7 +301,7 @@ db.once('open', async function() {
       contactNumber: `12345679${index + 8}`,
       password,
       role: 'student',
-      organizations: [{ org_id: tjsSports._id, courses: [defaultCourseTJS._id] }]
+      organizations: [{ org_id: tjsSports._id, courses: [defaultCourseTJS._id] }] // Correctly reference course ID
     })));
 
     const ramblersStudents = await User.insertMany(ramblersStudentPasswords.map((password, index) => ({
@@ -353,13 +313,53 @@ db.once('open', async function() {
       contactNumber: `12345680${index + 8}`,
       password,
       role: 'student',
-      organizations: [{ org_id: mississaugaRamblers._id, courses: [defaultCourseRamblers._id] }]
+      organizations: [{ org_id: mississaugaRamblers._id, courses: [defaultCourseRamblers._id] }] // Correctly reference course ID
     })));
 
     // Create Batches and Assign Users
-    const eliteBatch = await createBatch(defaultCourseElite, eliteStudents, [...eliteCoaches, headCoach]);
-    const tjsBatch = await createBatch(defaultCourseTJS, tjsStudents, [tjsCoach, headCoach]);
-    const ramblersBatch = await createBatch(defaultCourseRamblers, ramblersStudents, [ramblersCoach, headCoach]);
+    const createBatch = async (course, students, coaches) => {
+      const batch = new Batch({
+        name: `${course.title} - Batch 1`,
+        startDate: course.startDate,
+        endDate: course.endDate,
+        timeSlot: '15:00 - 16:00',
+        days: ['Monday', 'Wednesday', 'Friday'],
+        repeatInterval: 'Weekly',
+        course: course._id, // Correctly link the batch to the course
+        students: students.map(student => student._id),
+        coaches: coaches.map(coach => coach._id)
+      });
+
+      await batch.save();
+
+      // Assign the batch to students and coaches
+      await Promise.all(
+        students.map(student =>
+          User.updateOne(
+            { _id: student._id },
+            { $push: { 'organizations.$[org].courses.$[course].batches': { batch_id: batch._id, role: 'student' } } },
+            { arrayFilters: [{ 'org.org_id': course.organization }, { 'course._id': course._id }] } // Ensure correct course ID is used in filters
+          )
+        )
+      );
+
+      await Promise.all(
+        coaches.map(coach =>
+          User.updateOne(
+            { _id: coach._id },
+            { $push: { 'organizations.$[org].courses.$[course].batches': { batch_id: batch._id, role: 'coach' } } },
+            { arrayFilters: [{ 'org.org_id': course.organization }, { 'course._id': course._id }] } // Ensure correct course ID is used in filters
+          )
+        )
+      );
+
+      return batch;
+    };
+
+    // Create Batches and Assign to the Correct Courses and Users
+    const eliteBatch = await createBatch(defaultCourseElite, eliteStudents, eliteCoaches);
+    const tjsBatch = await createBatch(defaultCourseTJS, tjsStudents, [tjsCoach]);
+    const ramblersBatch = await createBatch(defaultCourseRamblers, ramblersStudents, [ramblersCoach]);
 
     console.log('Database initialized successfully with users, courses, and batches for all organizations.');
   } catch (error) {
