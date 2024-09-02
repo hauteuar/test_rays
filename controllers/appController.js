@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/Users');
-const Organization = require('../models/Organizations'); 
+const { Organization } = require('../models/Organizations'); 
 const Course = require('../models/Course');  // Correctly import the Course model
 const Batch = require('../models/Batch');    
 const Payment = require('../models/Payment'); 

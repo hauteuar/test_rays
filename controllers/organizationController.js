@@ -1,4 +1,5 @@
-const Organization = require('../models/Organizations');
+const { Organization } = require('../models/Organizations');
+
 const User = require('../models/Users');
 const bcrypt = require('bcryptjs');
 const multer = require('multer');
@@ -24,7 +25,29 @@ exports.createOrganization = async (req, res) => {
       return res.status(500).json({ error: 'Error uploading file.' });
     }
 
-    const { name, theme_color, domain, email, password, firstName, lastName, dob, gender, contactNumber } = req.body;
+    const {
+      name, 
+      org_code,
+      org_email,
+      org_license_number,
+      contact_person_name,
+      contact_person_number,
+      street,
+      city,
+      state,
+      zip_code,
+      country,
+      theme_color,
+      domain,
+      org_type_id,
+      email, 
+      password, 
+      firstName, 
+      lastName, 
+      dob, 
+      gender, 
+      contactNumber 
+    } = req.body;
 
     try {
       if (!req.file) {
@@ -32,7 +55,25 @@ exports.createOrganization = async (req, res) => {
       }
 
       const logo_url = `/images/${req.file.filename}`;
-      const organization = new Organization({ name, logo_url, theme_color, domain });
+      const organization = new Organization({
+        name,
+        org_code,
+        org_email,
+        org_license_number,
+        contact_person_name,
+        contact_person_number,
+        address: {
+          street,
+          city,
+          state,
+          zip_code,
+          country
+        },
+        theme_color,
+        domain,
+        org_type_id,
+        logo_url
+      });
       await organization.save();
 
       const hashedPassword = await bcrypt.hash(password, 10);
@@ -63,9 +104,11 @@ exports.getOrganizations = async (req, res) => {
     const organizations = await Organization.find().exec();
     res.json(organizations);
   } catch (error) {
+    console.error('Error fetching organizations:', error);
     res.status(500).json({ error: 'Internal server error.' });
   }
 };
+
 
 exports.getOrganizationThemeColor = async (req, res) => {
   try {
@@ -188,5 +231,80 @@ exports.getOrganizationLogo = async (req, res) => {
   } catch (error) {
     console.error('Error fetching organization logo:', error);
     res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+
+
+exports.appGetUserOrganizations = async (req, res) => {
+  try {
+    const userId = req.user._id; // Assuming the user ID is retrieved from the authenticated user session/token
+
+    // Fetch the user and populate the organizations they are associated with
+    const user = await User.findById(userId)
+      .populate({
+        path: 'organizations.org_id', 
+        populate: { path: 'organization_type' } // Ensure organization type is populated
+      })
+      .exec();
+
+    if (!user) {
+      return res.status(404).json({ errorcode: 1, errormessage: 'User not found' });
+    }
+
+    const organizationData = user.organizations.map(org => {
+      return {
+        id: org._id,
+        user_id: user._id,
+        organization_id: org.org_id._id,
+        branch_id: null, // Assuming no branch logic; otherwise, populate accordingly
+        role_id: user.role, // Assuming this maps directly; you may need to map it differently
+        status: org.status || 'Active', // Assuming this field exists in your schema
+        created_at: org.createdAt, // Adjust based on your schema
+        updated_at: org.updatedAt, // Adjust based on your schema
+        organization: {
+          id: org.org_id._id,
+          connected_pg_unique_code: org.org_id.connected_pg_unique_code || null, // Adjust according to your schema
+          connected_pg_payouts_enabled: org.org_id.connected_pg_payouts_enabled || 0, // Adjust according to your schema
+          name: org.org_id.name,
+          org_code: org.org_id.org_code || null, // Adjust according to your schema
+          org_email: org.org_id.org_email || null, // Adjust according to your schema
+          org_type_id: org.org_id.organization_type._id,
+          org_license_number: org.org_id.org_license_number || null, // Adjust according to your schema
+          contact_person_name: org.org_id.contact_person_name || null, // Adjust according to your schema
+          contact_person_number: org.org_id.contact_person_number || null, // Adjust according to your schema
+          street: org.org_id.address ? org.org_id.address.street : null,
+          city: org.org_id.address ? org.org_id.address.city : null,
+          state: org.org_id.address ? org.org_id.address.state : null,
+          zip_code: org.org_id.address ? org.org_id.address.postalCode : null,
+          country: org.org_id.address ? org.org_id.address.country : null,
+          is_default_template: org.org_id.is_default_template || 0, // Adjust according to your schema
+          template_path: org.org_id.template_path || null, // Adjust according to your schema
+          organization_logo: org.org_id.logo_url,
+          deleted_at: org.org_id.deleted_at || null, // Adjust according to your schema
+          created_at: org.org_id.createdAt,
+          updated_at: org.org_id.updatedAt,
+          org_color_code: org.org_id.org_color_code || '{}', // Adjust according to your schema
+          organization_type: {
+            id: org.org_id.organization_type._id,
+            org_type_name: org.org_id.organization_type.org_type_name,
+            description: org.org_id.organization_type.description,
+            deleted_at: org.org_id.organization_type.deleted_at || null,
+            created_at: org.org_id.organization_type.createdAt,
+            updated_at: org.org_id.organization_type.updatedAt
+          }
+        }
+      };
+    });
+
+    res.json({
+      errorcode: 0,
+      errormessage: 'success',
+      data: organizationData
+    });
+
+  } catch (error) {
+    console.error('Error fetching user organizations:', error);
+    res.status(500).json({ errorcode: 1, errormessage: 'Internal server error' });
   }
 };

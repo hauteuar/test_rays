@@ -1,17 +1,37 @@
 <div id="edit-organization" class="form-section" style="display: none;">  
     <h3>Edit Organization</h3>
-    <form action="/api/org/<%= selectedOrgId ? selectedOrgId : '' %>" method="POST">
+    <form action="/api/org/<%= selectedOrgId ? selectedOrgId : '' %>" method="POST" enctype="multipart/form-data">
         <div>
             <label for="orgName">Organization Name:</label>
-            <input type="text" id="orgName" name="name" value="<%= selectedOrg ? selectedOrg.name : '' %>">
+            <input type="text" id="orgName" name="name" value="<%= selectedOrg ? selectedOrg.name : '' %>" required>
         </div>
         <div>
-            <label for="orgDomain">Organization Domain:</label>
-            <input type="text" id="orgDomain" name="domain" value="<%= selectedOrg ? selectedOrg.domain : '' %>">
+            <label for="org_code">Organization Code:</label>
+            <input type="text" id="org_code" name="org_code" value="<%= selectedOrg ? selectedOrg.org_code : '' %>" required>
+        </div>
+        <div>
+            <label for="org_email">Organization Email:</label>
+            <input type="email" id="org_email" name="org_email" value="<%= selectedOrg ? selectedOrg.org_email : '' %>" required>
+        </div>
+        <div>
+            <label for="org_license_number">License Number:</label>
+            <input type="text" id="org_license_number" name="org_license_number" value="<%= selectedOrg ? selectedOrg.org_license_number : '' %>">
+        </div>
+        <div>
+            <label for="contact_person_name">Contact Person Name:</label>
+            <input type="text" id="contact_person_name" name="contact_person_name" value="<%= selectedOrg ? selectedOrg.contact_person_name : '' %>" required>
+        </div>
+        <div>
+            <label for="contact_person_number">Contact Person Number:</label>
+            <input type="text" id="contact_person_number" name="contact_person_number" value="<%= selectedOrg ? selectedOrg.contact_person_number : '' %>" required>
         </div>
         <div>
             <label for="orgThemeColor">Theme Color:</label>
-            <input type="color" id="orgThemeColor" name="theme_color" value="<%= selectedOrg ? selectedOrg.theme_color : '' %>">
+            <input type="color" id="orgThemeColor" name="theme_color" value="<%= selectedOrg ? selectedOrg.theme_color : '' %>" required>
+        </div>
+        <div>
+            <label for="orgDomain">Organization Domain:</label>
+            <input type="text" id="orgDomain" name="domain" value="<%= selectedOrg ? selectedOrg.domain : '' %>" required>
         </div>
         <div>
             <label for="orgLogo">Organization Logo (optional):</label>

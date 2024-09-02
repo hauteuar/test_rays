@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Course = require('../models/Course');
-const Organization = require('../models/Organizations'); 
+const {cOrganization } = require('../models/Organizations'); 
 const User = require('../models/Users');
 
 

@@ -1,4 +1,4 @@
-const Organization = require('../models/Organizations');
+const { Organization } = require('../models/Organizations');
 
 // Create a new item
 exports.createItem = async (req, res) => {

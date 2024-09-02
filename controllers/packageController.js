@@ -1,5 +1,5 @@
 const Package = require('../models/Package');
-const Organization = require('../models/Organizations');
+const { Organization } = require('../models/Organizations');
 
 // Controller to add a package
 exports.addPackage = async (req, res) => {

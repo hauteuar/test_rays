@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const User = require('./models/Users');
-const Organization = require('./models/Organizations');
+const { Organization } = require('./models/Organizations');
 const Course = require('./models/Course');
 const Batch = require('./models/Batch');
 const Payment = require('./models/Payment');
@@ -11,7 +11,7 @@ mongoose.connect(`mongodb://admin:admin_password@34.136.91.130:27017/rays_sport_
 const db = mongoose.connection;
 
 db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', async function() {
+db.once('open', async function () {
   console.log('Connected to MongoDB');
 
   try {
@@ -28,7 +28,9 @@ db.once('open', async function() {
       logo_url: 'path/to/elite_logo.png',
       theme_color: '#FF5733',
       domain: 'elite_academy.rayssport.com',
-      courses: []
+      org_code: 'ELITE',
+      org_email: 'contact@elite_academy.com',
+      courses: [],
     });
 
     const tjsSports = new Organization({
@@ -36,7 +38,9 @@ db.once('open', async function() {
       logo_url: 'path/to/tjs_logo.png',
       theme_color: '#33FF57',
       domain: 'tjs_sports.rayssport.com',
-      courses: []
+      org_code: 'TJS',
+      org_email: 'contact@tjs_sports.com',
+      courses: [],
     });
 
     const mississaugaRamblers = new Organization({
@@ -44,7 +48,9 @@ db.once('open', async function() {
       logo_url: 'path/to/ramblers_logo.png',
       theme_color: '#3399FF',
       domain: 'mississauga_ramblers.rayssport.com',
-      courses: []
+      org_code: 'RAMBLERS',
+      org_email: 'contact@ramblers.com',
+      courses: [],
     });
 
     await eliteAcademy.save();
@@ -63,7 +69,7 @@ db.once('open', async function() {
       endDate: new Date(new Date().setMonth(new Date().getMonth() + 6)),
       bannerImage: 'path/to/elite_course_banner.png',
       isDefaultPractice: true,
-      organization: eliteAcademy._id
+      organization: eliteAcademy._id,
     });
 
     const defaultCourseTJS = new Course({
@@ -77,7 +83,7 @@ db.once('open', async function() {
       endDate: new Date(new Date().setMonth(new Date().getMonth() + 6)),
       bannerImage: 'path/to/tjs_course_banner.png',
       isDefaultPractice: true,
-      organization: tjsSports._id
+      organization: tjsSports._id,
     });
 
     const defaultCourseRamblers = new Course({
@@ -91,7 +97,7 @@ db.once('open', async function() {
       endDate: new Date(new Date().setMonth(new Date().getMonth() + 6)),
       bannerImage: 'path/to/ramblers_course_banner.png',
       isDefaultPractice: true,
-      organization: mississaugaRamblers._id
+      organization: mississaugaRamblers._id,
     });
 
     await defaultCourseElite.save();
@@ -116,7 +122,7 @@ db.once('open', async function() {
       contactNumber: '1234567890',
       password: corpAdminPassword,
       role: 'corp_admin',
-      organizations: []
+      organizations: [],
     });
 
     const eliteAdmin = new User({
@@ -131,9 +137,9 @@ db.once('open', async function() {
       organizations: [
         {
           org_id: eliteAcademy._id,
-          courses: [defaultCourseElite._id] // Ensure the course ID is correctly referenced
-        }
-      ]
+          courses: [defaultCourseElite._id],
+        },
+      ],
     });
 
     const tjsAdmin = new User({
@@ -148,9 +154,9 @@ db.once('open', async function() {
       organizations: [
         {
           org_id: tjsSports._id,
-          courses: [defaultCourseTJS._id] // Ensure the course ID is correctly referenced
-        }
-      ]
+          courses: [defaultCourseTJS._id],
+        },
+      ],
     });
 
     const ramblersAdmin = new User({
@@ -165,9 +171,9 @@ db.once('open', async function() {
       organizations: [
         {
           org_id: mississaugaRamblers._id,
-          courses: [defaultCourseRamblers._id] // Ensure the course ID is correctly referenced
-        }
-      ]
+          courses: [defaultCourseRamblers._id],
+        },
+      ],
     });
 
     const headCoach = new User({
@@ -182,17 +188,17 @@ db.once('open', async function() {
       organizations: [
         {
           org_id: eliteAcademy._id,
-          courses: [defaultCourseElite._id]
+          courses: [defaultCourseElite._id],
         },
         {
           org_id: tjsSports._id,
-          courses: [defaultCourseTJS._id]
+          courses: [defaultCourseTJS._id],
         },
         {
           org_id: mississaugaRamblers._id,
-          courses: [defaultCourseRamblers._id]
-        }
-      ]
+          courses: [defaultCourseRamblers._id],
+        },
+      ],
     });
 
     const freelanceCoach = new User({
@@ -207,17 +213,17 @@ db.once('open', async function() {
       organizations: [
         {
           org_id: eliteAcademy._id,
-          courses: [defaultCourseElite._id]
+          courses: [defaultCourseElite._id],
         },
         {
           org_id: tjsSports._id,
-          courses: [defaultCourseTJS._id]
+          courses: [defaultCourseTJS._id],
         },
         {
           org_id: mississaugaRamblers._id,
-          courses: [defaultCourseRamblers._id]
-        }
-      ]
+          courses: [defaultCourseRamblers._id],
+        },
+      ],
     });
 
     await corpAdmin.save();
@@ -234,17 +240,19 @@ db.once('open', async function() {
     const tjsCoachPassword = await bcrypt.hash('tjs_coach_password', 10);
     const ramblersCoachPassword = await bcrypt.hash('ramblers_coach_password', 10);
 
-    const eliteCoaches = await User.insertMany(eliteCoachPasswords.map((password, index) => ({
-      firstName: `EliteCoach${index + 1}`,
-      lastName: `Last${index + 1}`,
-      dob: new Date('1985-01-01'),
-      gender: 'M',
-      email: `elite_coach${index + 1}@rayssport.com`,
-      contactNumber: `12345678${index + 4}`,
-      password,
-      role: 'coach',
-      organizations: [{ org_id: eliteAcademy._id, courses: [defaultCourseElite._id] }] // Correctly reference course ID
-    })));
+    const eliteCoaches = await User.insertMany(
+      eliteCoachPasswords.map((password, index) => ({
+        firstName: `EliteCoach${index + 1}`,
+        lastName: `Last${index + 1}`,
+        dob: new Date('1985-01-01'),
+        gender: 'M',
+        email: `elite_coach${index + 1}@rayssport.com`,
+        contactNumber: `12345678${index + 4}`,
+        password,
+        role: 'coach',
+        organizations: [{ org_id: eliteAcademy._id, courses: [defaultCourseElite._id] }],
+      }))
+    );
 
     const tjsCoach = await new User({
       firstName: 'TJSCoach',
@@ -255,7 +263,7 @@ db.once('open', async function() {
       contactNumber: '1234567897',
       password: tjsCoachPassword,
       role: 'coach',
-      organizations: [{ org_id: tjsSports._id, courses: [defaultCourseTJS._id] }] // Correctly reference course ID
+      organizations: [{ org_id: tjsSports._id, courses: [defaultCourseTJS._id] }],
     }).save();
 
     const ramblersCoach = await new User({
@@ -267,7 +275,7 @@ db.once('open', async function() {
       contactNumber: '1234567898',
       password: ramblersCoachPassword,
       role: 'coach',
-      organizations: [{ org_id: mississaugaRamblers._id, courses: [defaultCourseRamblers._id] }] // Correctly reference course ID
+      organizations: [{ org_id: mississaugaRamblers._id, courses: [defaultCourseRamblers._id] }],
     }).save();
 
     const eliteStudentPasswords = await Promise.all(
@@ -280,41 +288,47 @@ db.once('open', async function() {
       Array.from({ length: 8 }).map(() => bcrypt.hash('ramblers_student_password', 10))
     );
 
-    const eliteStudents = await User.insertMany(eliteStudentPasswords.map((password, index) => ({
-      firstName: `EliteStudent${index + 1}`,
-      lastName: `Last${index + 1}`,
-      dob: new Date('2000-01-01'),
-      gender: 'F',
-      email: `elite_student${index + 1}@rayssport.com`,
-      contactNumber: `12345678${index + 8}`,
-      password,
-      role: 'student',
-      organizations: [{ org_id: eliteAcademy._id, courses: [defaultCourseElite._id] }] // Correctly reference course ID
-    })));
+    const eliteStudents = await User.insertMany(
+      eliteStudentPasswords.map((password, index) => ({
+        firstName: `EliteStudent${index + 1}`,
+        lastName: `Last${index + 1}`,
+        dob: new Date('2000-01-01'),
+        gender: 'F',
+        email: `elite_student${index + 1}@rayssport.com`,
+        contactNumber: `12345678${index + 8}`,
+        password,
+        role: 'student',
+        organizations: [{ org_id: eliteAcademy._id, courses: [defaultCourseElite._id] }],
+      }))
+    );
 
-    const tjsStudents = await User.insertMany(tjsStudentPasswords.map((password, index) => ({
-      firstName: `TJSStudent${index + 1}`,
-      lastName: `Last${index + 1}`,
-      dob: new Date('2000-01-01'),
-      gender: 'F',
-      email: `tjs_student${index + 1}@rayssport.com`,
-      contactNumber: `12345679${index + 8}`,
-      password,
-      role: 'student',
-      organizations: [{ org_id: tjsSports._id, courses: [defaultCourseTJS._id] }] // Correctly reference course ID
-    })));
+    const tjsStudents = await User.insertMany(
+      tjsStudentPasswords.map((password, index) => ({
+        firstName: `TJSStudent${index + 1}`,
+        lastName: `Last${index + 1}`,
+        dob: new Date('2000-01-01'),
+        gender: 'F',
+        email: `tjs_student${index + 1}@rayssport.com`,
+        contactNumber: `12345679${index + 8}`,
+        password,
+        role: 'student',
+        organizations: [{ org_id: tjsSports._id, courses: [defaultCourseTJS._id] }],
+      }))
+    );
 
-    const ramblersStudents = await User.insertMany(ramblersStudentPasswords.map((password, index) => ({
-      firstName: `RamblersStudent${index + 1}`,
-      lastName: `Last${index + 1}`,
-      dob: new Date('2000-01-01'),
-      gender: 'F',
-      email: `ramblers_student${index + 1}@rayssport.com`,
-      contactNumber: `12345680${index + 8}`,
-      password,
-      role: 'student',
-      organizations: [{ org_id: mississaugaRamblers._id, courses: [defaultCourseRamblers._id] }] // Correctly reference course ID
-    })));
+    const ramblersStudents = await User.insertMany(
+      ramblersStudentPasswords.map((password, index) => ({
+        firstName: `RamblersStudent${index + 1}`,
+        lastName: `Last${index + 1}`,
+        dob: new Date('2000-01-01'),
+        gender: 'F',
+        email: `ramblers_student${index + 1}@rayssport.com`,
+        contactNumber: `12345680${index + 8}`,
+        password,
+        role: 'student',
+        organizations: [{ org_id: mississaugaRamblers._id, courses: [defaultCourseRamblers._id] }],
+      }))
+    );
 
     // Create Batches and Assign Users
     const createBatch = async (course, students, coaches) => {
@@ -325,9 +339,9 @@ db.once('open', async function() {
         timeSlot: '15:00 - 16:00',
         days: ['Monday', 'Wednesday', 'Friday'],
         repeatInterval: 'Weekly',
-        course: course._id, // Correctly link the batch to the course
+        course: course._id,
         students: students.map(student => student._id),
-        coaches: coaches.map(coach => coach._id)
+        coaches: coaches.map(coach => coach._id),
       });
 
       await batch.save();
@@ -337,8 +351,17 @@ db.once('open', async function() {
         students.map(student =>
           User.updateOne(
             { _id: student._id },
-            { $push: { 'organizations.$[org].courses.$[course].batches': { batch_id: batch._id, role: 'student' } } },
-            { arrayFilters: [{ 'org.org_id': course.organization }, { 'course._id': course._id }] } // Ensure correct course ID is used in filters
+            {
+              $push: {
+                'organizations.$[org].courses.$[course].batches': {
+                  batch_id: batch._id,
+                  role: 'student',
+                },
+              },
+            },
+            {
+              arrayFilters: [{ 'org.org_id': course.organization }, { 'course._id': course._id }],
+            }
           )
         )
       );
@@ -347,8 +370,17 @@ db.once('open', async function() {
         coaches.map(coach =>
           User.updateOne(
             { _id: coach._id },
-            { $push: { 'organizations.$[org].courses.$[course].batches': { batch_id: batch._id, role: 'coach' } } },
-            { arrayFilters: [{ 'org.org_id': course.organization }, { 'course._id': course._id }] } // Ensure correct course ID is used in filters
+            {
+              $push: {
+                'organizations.$[org].courses.$[course].batches': {
+                  batch_id: batch._id,
+                  role: 'coach',
+                },
+              },
+            },
+            {
+              arrayFilters: [{ 'org.org_id': course.organization }, { 'course._id': course._id }],
+            }
           )
         )
       );

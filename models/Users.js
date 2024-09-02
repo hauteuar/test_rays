@@ -65,7 +65,10 @@ const userSchema = new mongoose.Schema({
             }
           ]
         }
-      ]
+      ],
+      status: { type: String, default: 'Active' }, // Added status field
+      created_at: { type: Date, default: Date.now }, // Track creation time
+      updated_at: { type: Date, default: Date.now }, // Track update time
     }
   ],
   subscription: {

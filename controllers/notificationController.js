@@ -1,6 +1,7 @@
 const User = require('../models/Users');
 const NotificationHistory = require('../models/NotificationHistory');
 
+
 // Controller function to send notifications to selected users
 exports.sendNotification = async (req, res) => {
     try {
