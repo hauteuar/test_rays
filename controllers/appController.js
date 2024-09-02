@@ -1,3 +1,14 @@
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const User = require('../models/Users');
+const Organization = require('../models/Organizations'); 
+const Course = require('../models/Course');  // Correctly import the Course model
+const Batch = require('../models/Batch');    
+const Payment = require('../models/Payment'); 
+const Cart = require('../models/Cart');
+const axios = require('axios');
+
+
 exports.appLogin = async (req, res) => {
     const emailOrUsername = req.body.email || req.body.username;
     const password = req.body.password;
