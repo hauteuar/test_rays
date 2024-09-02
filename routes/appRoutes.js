@@ -9,8 +9,6 @@ router.post('/auth/login', appController.appLogin);
 router.post('/auth/refresh-token', authMiddleware, appController.refreshToken);
 router.post('/auth/logout', authMiddleware, appController.applogout);
 
-
-
 router.post('/create', authMiddleware, organizationController.createOrganization);
 router.get('/get-user-organizations', authMiddleware, organizationController.appGetUserOrganizations);
 router.get('/:id', authMiddleware, organizationController.getOrganization);

@@ -73,7 +73,7 @@ app.use('/images', express.static(path.join(__dirname, 'public/images')));
 
 // Routes
 const authRoutes = require('./routes/authRoutes');
-const mobileRoutes = require('./routes/appRoutes');
+const appRoutes = require('./routes/appRoutes');
 const organizationRoutes = require('./routes/organizationRoutes');
 const userRoutes = require('./routes/userRoutes');
 const courseRoutes = require('./routes/courseRoutes');
@@ -100,7 +100,7 @@ const packageRoutes = require('./routes/packageRoutes');
 app.use('/api/meeting-sessions', meetingSessionRoutes);
 app.use('/api/scheduled-meetings', scheduledMeetingRoutes);
 app.use('/auth', authRoutes);
-app.use('/app', mobileRoutes);
+app.use('/app', appRoutes);
 app.use('/api/organizations', organizationRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/courses', courseRoutes);
