@@ -238,13 +238,12 @@ exports.getOrganizationLogo = async (req, res) => {
 
 exports.appGetUserOrganizations = async (req, res) => {
   try {
-    const userId = req.user._id; // Assuming the user ID is retrieved from the authenticated user session/token
+    const userId = req.user._id;
 
-    // Fetch the user and populate the organizations they are associated with
     const user = await User.findById(userId)
       .populate({
-        path: 'organizations.org_id', 
-        populate: { path: 'organization_type' } // Ensure organization type is populated
+        path: 'organizations.org_id',
+        populate: { path: 'organization_type' }
       })
       .exec();
 
@@ -253,38 +252,42 @@ exports.appGetUserOrganizations = async (req, res) => {
     }
 
     const organizationData = user.organizations.map(org => {
+      if (!org || !org.org_id) {
+        throw new Error('Organization or organization_id is undefined');
+      }
+
       return {
         id: org._id,
         user_id: user._id,
         organization_id: org.org_id._id,
-        branch_id: null, // Assuming no branch logic; otherwise, populate accordingly
-        role_id: user.role, // Assuming this maps directly; you may need to map it differently
-        status: org.status || 'Active', // Assuming this field exists in your schema
-        created_at: org.createdAt, // Adjust based on your schema
-        updated_at: org.updatedAt, // Adjust based on your schema
+        branch_id: null,
+        role_id: user.role,
+        status: org.status || 'Active',
+        created_at: org.createdAt,
+        updated_at: org.updatedAt,
         organization: {
           id: org.org_id._id,
-          connected_pg_unique_code: org.org_id.connected_pg_unique_code || null, // Adjust according to your schema
-          connected_pg_payouts_enabled: org.org_id.connected_pg_payouts_enabled || 0, // Adjust according to your schema
+          connected_pg_unique_code: org.org_id.connected_pg_unique_code || null,
+          connected_pg_payouts_enabled: org.org_id.connected_pg_payouts_enabled || 0,
           name: org.org_id.name,
-          org_code: org.org_id.org_code || null, // Adjust according to your schema
-          org_email: org.org_id.org_email || null, // Adjust according to your schema
+          org_code: org.org_id.org_code || null,
+          org_email: org.org_id.org_email || null,
           org_type_id: org.org_id.organization_type._id,
-          org_license_number: org.org_id.org_license_number || null, // Adjust according to your schema
-          contact_person_name: org.org_id.contact_person_name || null, // Adjust according to your schema
-          contact_person_number: org.org_id.contact_person_number || null, // Adjust according to your schema
+          org_license_number: org.org_id.org_license_number || null,
+          contact_person_name: org.org_id.contact_person_name || null,
+          contact_person_number: org.org_id.contact_person_number || null,
           street: org.org_id.address ? org.org_id.address.street : null,
           city: org.org_id.address ? org.org_id.address.city : null,
           state: org.org_id.address ? org.org_id.address.state : null,
           zip_code: org.org_id.address ? org.org_id.address.postalCode : null,
           country: org.org_id.address ? org.org_id.address.country : null,
-          is_default_template: org.org_id.is_default_template || 0, // Adjust according to your schema
-          template_path: org.org_id.template_path || null, // Adjust according to your schema
+          is_default_template: org.org_id.is_default_template || 0,
+          template_path: org.org_id.template_path || null,
           organization_logo: org.org_id.logo_url,
-          deleted_at: org.org_id.deleted_at || null, // Adjust according to your schema
+          deleted_at: org.org_id.deleted_at || null,
           created_at: org.org_id.createdAt,
           updated_at: org.org_id.updatedAt,
-          org_color_code: org.org_id.org_color_code || '{}', // Adjust according to your schema
+          org_color_code: org.org_id.org_color_code || '{}',
           organization_type: {
             id: org.org_id.organization_type._id,
             org_type_name: org.org_id.organization_type.org_type_name,

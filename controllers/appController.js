@@ -10,62 +10,57 @@ const axios = require('axios');
 
 
 exports.appLogin = async (req, res) => {
-    const emailOrUsername = req.body.email || req.body.username;
-    const password = req.body.password;
-  
-    try {
-      // Find the user by email or username
-      const user = await User.findOne({ email: emailOrUsername }).populate('organizations.org_id').exec();
-      if (!user) {
-        console.log('User not found');
-        return res.status(401).json({ status: false, error: 'Invalid email/username or password.' });
-      }
-  
-      const passwordMatch = await bcrypt.compare(password, user.password);
-      if (!passwordMatch) {
-        console.log('Password mismatch');
-        return res.status(401).json({ status: false, error: 'Invalid email/username or password.' });
-      }
-  
-      // Generate tokens
-      const accessToken = generateAccessToken(user);
-      const refreshToken = generateRefreshToken();
-  
-      // Save refresh token to the user
-      user.refreshToken = refreshToken;
-      await user.save();
-  
-      // Calculate token expiration
-      const decodedAccess = jwt.decode(accessToken);
-      const expiresAt = new Date(decodedAccess.exp * 1000).toISOString();
-  
-      // Prepare userData
-      const userData = {
-        first_name: user.firstName,
-        last_name: user.lastName,
-        official_email_id: user.email,
-        phone_number: user.contactNumber,
-        employee_id: user.employee_id || '', // Ensure this field exists
-        gender: user.gender,
-        slug: user.slug || '', // Ensure this field exists
-      };
-  
-      // Respond with the expected format
-      res.json({
-        status: true,
-        userData,
-        access_token: accessToken,
-        refresh_token: refreshToken,
-        token_type: "Bearer",
-        roll_code: user.role.toUpperCase(),
-        expires_at: expiresAt
-      });
-  
-    } catch (error) {
-      console.error('Error during app login:', error);
-      res.status(500).json({ status: false, error: 'Internal server error.' });
+  const emailOrUsername = req.body.email || req.body.username;
+  const password = req.body.password;
+
+  try {
+    const user = await User.findOne({ email: emailOrUsername }).populate('organizations.org_id').exec();
+
+    if (!user) {
+      console.log('User not found');
+      return res.status(401).json({ status: false, error: 'Invalid email/username or password.' });
     }
-  };
+
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    if (!passwordMatch) {
+      console.log('Password mismatch');
+      return res.status(401).json({ status: false, error: 'Invalid email/username or password.' });
+    }
+
+    const accessToken = generateAccessToken(user);
+    const refreshToken = generateRefreshToken();
+
+    user.refreshToken = refreshToken;
+    await user.save();
+
+    const decodedAccess = jwt.decode(accessToken);
+    const expiresAt = new Date(decodedAccess.exp * 1000).toISOString();
+
+    const userData = {
+      first_name: user.firstName,
+      last_name: user.lastName,
+      official_email_id: user.email,
+      phone_number: user.contactNumber,
+      employee_id: user.employee_id || '',
+      gender: user.gender,
+      slug: user.slug || '',
+    };
+
+    res.json({
+      status: true,
+      userData,
+      access_token: accessToken,
+      refresh_token: refreshToken,
+      token_type: "Bearer",
+      roll_code: user.role.toUpperCase(),
+      expires_at: expiresAt
+    });
+
+  } catch (error) {
+    console.error('Error during app login:', error);
+    res.status(500).json({ status: false, error: 'Internal server error.' });
+  }
+};
   
   exports.refreshToken = async (req, res) => {
     const { refresh_token } = req.body;
