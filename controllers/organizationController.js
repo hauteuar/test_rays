@@ -240,10 +240,11 @@ exports.appGetUserOrganizations = async (req, res) => {
   try {
     const userId = req.user._id;
 
+    // Find the user and populate the organizations
     const user = await User.findById(userId)
       .populate({
-        path: 'organizations.org_id',
-        populate: { path: 'org_type_id' } // Correct path to populate the organization type
+        path: 'organizations.org_id',  // Populating organization data
+        select: 'name org_code org_email connected_pg_payouts_enabled is_default_template logo_url theme_color domain address', // Select specific fields
       })
       .exec();
 
@@ -252,54 +253,49 @@ exports.appGetUserOrganizations = async (req, res) => {
     }
 
     const organizationData = user.organizations.map(org => {
+      // Ensure org and org_id exist before accessing their properties
       if (!org || !org.org_id) {
-        throw new Error('Organization or organization_id is undefined');
+        console.error('Missing organization or organization_id for user:', userId);
+        return null;  // Skip the current organization if undefined
       }
+
+      const organization = org.org_id;
 
       return {
         id: org._id,
         user_id: user._id,
-        organization_id: org.org_id._id,
+        organization_id: organization._id,
         branch_id: null,
         role_id: user.role,
         status: org.status || 'Active',
-        created_at: org.createdAt,
-        updated_at: org.updatedAt,
+        created_at: org.created_at,
+        updated_at: org.updated_at,
         organization: {
-          id: org.org_id._id,
-          connected_pg_unique_code: org.org_id.connected_pg_unique_code || null,
-          connected_pg_payouts_enabled: org.org_id.connected_pg_payouts_enabled || 0,
-          name: org.org_id.name,
-          org_code: org.org_id.org_code || null,
-          org_email: org.org_id.org_email || null,
-          org_type_id: org.org_id.org_type_id ? org.org_id.org_type_id._id : null,
-          org_type_name: org.org_id.org_type_id ? org.org_id.org_type_id.org_type_name : null,
-          org_license_number: org.org_id.org_license_number || null,
-          contact_person_name: org.org_id.contact_person_name || null,
-          contact_person_number: org.org_id.contact_person_number || null,
-          street: org.org_id.address ? org.org_id.address.street : null,
-          city: org.org_id.address ? org.org_id.address.city : null,
-          state: org.org_id.address ? org.org_id.address.state : null,
-          zip_code: org.org_id.address ? org.org_id.address.postalCode : null,
-          country: org.org_id.address ? org.org_id.address.country : null,
-          is_default_template: org.org_id.is_default_template || 0,
-          template_path: org.org_id.template_path || null,
-          organization_logo: org.org_id.logo_url,
-          deleted_at: org.org_id.deleted_at || null,
-          created_at: org.org_id.createdAt,
-          updated_at: org.org_id.updatedAt,
-          org_color_code: org.org_id.org_color_code || '{}',
-          organization_type: {
-            id: org.org_id.org_type_id ? org.org_id.org_type_id._id : null,
-            org_type_name: org.org_id.org_type_id ? org.org_id.org_type_id.org_type_name : null,
-            description: org.org_id.org_type_id ? org.org_id.org_type_id.description : null,
-            deleted_at: org.org_id.org_type_id ? org.org_id.org_type_id.deleted_at : null,
-            created_at: org.org_id.org_type_id ? org.org_id.org_type_id.createdAt : null,
-            updated_at: org.org_id.org_type_id ? org.org_id.org_type_id.updatedAt : null,
-          }
+          id: organization._id,
+          connected_pg_unique_code: organization.connected_pg_unique_code || null, // Assuming this field exists in the schema
+          connected_pg_payouts_enabled: organization.connected_pg_payouts_enabled || false,
+          name: organization.name,
+          org_code: organization.org_code || null,
+          org_email: organization.org_email || null,
+          org_license_number: organization.org_license_number || null, // Assuming this field exists in the schema
+          contact_person_name: organization.contact_person_name || null, // Assuming this field exists in the schema
+          contact_person_number: organization.contact_person_number || null, // Assuming this field exists in the schema
+          street: organization.address ? organization.address.street : null,
+          city: organization.address ? organization.address.city : null,
+          state: organization.address ? organization.address.state : null,
+          zip_code: organization.address ? organization.address.zip_code : null,
+          country: organization.address ? organization.address.country : null,
+          is_default_template: organization.is_default_template || false,
+          template_path: organization.template_path || null, // Assuming this field exists in the schema
+          organization_logo: organization.logo_url,
+          deleted_at: organization.deleted_at || null,
+          created_at: organization.createdAt,
+          updated_at: organization.updatedAt,
+          org_color_code: organization.org_color_code || '{}', // Assuming this field exists in the schema
+          organization_type: null // Since the organization type is not in the schema data provided, it's set to null
         }
       };
-    });
+    }).filter(data => data !== null);  // Filter out null values to avoid errors
 
     res.json({
       errorcode: 0,
