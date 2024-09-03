@@ -243,7 +243,7 @@ exports.appGetUserOrganizations = async (req, res) => {
     const user = await User.findById(userId)
       .populate({
         path: 'organizations.org_id',
-        populate: { path: 'organization_type' }
+        populate: { path: 'org_type_id' } // Correct path to populate the organization type
       })
       .exec();
 
@@ -272,7 +272,8 @@ exports.appGetUserOrganizations = async (req, res) => {
           name: org.org_id.name,
           org_code: org.org_id.org_code || null,
           org_email: org.org_id.org_email || null,
-          org_type_id: org.org_id.organization_type._id,
+          org_type_id: org.org_id.org_type_id ? org.org_id.org_type_id._id : null,
+          org_type_name: org.org_id.org_type_id ? org.org_id.org_type_id.org_type_name : null,
           org_license_number: org.org_id.org_license_number || null,
           contact_person_name: org.org_id.contact_person_name || null,
           contact_person_number: org.org_id.contact_person_number || null,
@@ -289,12 +290,12 @@ exports.appGetUserOrganizations = async (req, res) => {
           updated_at: org.org_id.updatedAt,
           org_color_code: org.org_id.org_color_code || '{}',
           organization_type: {
-            id: org.org_id.organization_type._id,
-            org_type_name: org.org_id.organization_type.org_type_name,
-            description: org.org_id.organization_type.description,
-            deleted_at: org.org_id.organization_type.deleted_at || null,
-            created_at: org.org_id.organization_type.createdAt,
-            updated_at: org.org_id.organization_type.updatedAt
+            id: org.org_id.org_type_id ? org.org_id.org_type_id._id : null,
+            org_type_name: org.org_id.org_type_id ? org.org_id.org_type_id.org_type_name : null,
+            description: org.org_id.org_type_id ? org.org_id.org_type_id.description : null,
+            deleted_at: org.org_id.org_type_id ? org.org_id.org_type_id.deleted_at : null,
+            created_at: org.org_id.org_type_id ? org.org_id.org_type_id.createdAt : null,
+            updated_at: org.org_id.org_type_id ? org.org_id.org_type_id.updatedAt : null,
           }
         }
       };
