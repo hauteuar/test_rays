@@ -4,6 +4,7 @@ const Sidebar = require('../models/Sidebar');
 exports.getAppSettings = async (req, res) => {
     try {
         // Fetch sidebar settings for both roles
+        console.log('app request came here');
         const sidebarSettings = await Sidebar.find({ role: { $in: ['student', 'coach'] } });
         
         if (sidebarSettings && sidebarSettings.length > 0) {

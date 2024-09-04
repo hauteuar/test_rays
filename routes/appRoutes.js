@@ -6,7 +6,7 @@ const organizationController = require('../controllers/organizationController');
 const sidebarController = require('../controllers/sidebarController');
 
 // Route to get app settings for a specific role
-router.get('/get-app-settings', sidebarController.getAppSettings);
+router.get('/get-app-settings', authMiddleware, sidebarController.getAppSettings);
 
 // Route to initialize sidebar settings
 router.post('/initialize-sidebar', sidebarController.initializeSidebar);
