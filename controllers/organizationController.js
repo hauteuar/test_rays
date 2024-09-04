@@ -5,7 +5,7 @@ const multer = require('multer');
 const path = require('path');
 
 // Define your server's base URL for public access
-const BASE_URL = 'http://34.44.163.124:4000'; // Replace with your actual domain
+const BASE_URL = 'http://34.44.163.124:5000'; // Replace with your actual domain
 
 // Configure storage for uploaded files
 const storage = multer.diskStorage({
