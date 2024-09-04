@@ -8,7 +8,7 @@ const CourtSchema = require('../models/Court').schema;
 
 const connectToDatabase = (dbName) => {
   console.log(`Connecting to database: ${dbName}`);
-  const connection = mongoose.createConnection(`mongodb://admin:admin_password@34.136.91.130:27017/${dbName}?authSource=admin`, {
+  const connection = mongoose.createConnection(`mongodb://admin:admin_password@34.44.163.124/${dbName}?authSource=admin`, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     serverSelectionTimeoutMS: 30000,
