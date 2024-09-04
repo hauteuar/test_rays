@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const User = require('./models/Users');
-const { Organization } = require('./models/Organizations');
+const { Organization, OrganizationType } = require('./models/Organizations');
 const Course = require('./models/Course');
 const Batch = require('./models/Batch');
 const Payment = require('./models/Payment');
@@ -22,35 +22,91 @@ db.once('open', async function () {
     await Batch.deleteMany({});
     await Payment.deleteMany({});
 
+    // Create Organization Types
+    const academyType = new OrganizationType({
+      org_type_name: "Academy",
+      description: "Academy",
+    });
+
+    await academyType.save();
+
     // Create Organizations
     const eliteAcademy = new Organization({
       name: 'Elite Academy',
+      org_code: 'ELITE',
+      org_email: 'contact@elite_academy.com',
+      org_type_id: academyType._id,
+      org_license_number: 'ELITE-123',
+      contact_person_name: 'Elite Admin',
+      contact_person_number: '1234567890',
+      address: {
+        street: '123 Elite St',
+        city: 'Elite City',
+        state: 'Elite State',
+        zip_code: '12345',
+        country: 'USA',
+      },
+      connected_pg_unique_code: 'unique-code-elite',
+      connected_pg_payouts_enabled: false,
+      is_default_template: false,
+      template_path: null,
       logo_url: 'path/to/elite_logo.png',
       theme_color: '#FF5733',
       domain: 'elite_academy.rayssport.com',
-      org_code: 'ELITE',
-      org_email: 'contact@elite_academy.com',
-      courses: [],
+      org_color_code: '{"sidebar_background_color":"392487","sidebar_title_color":"fff","sidebar_button_color":"FFC700","sidebar_hover_color":"2F1A7D","inner_page_button_color":"392487","username_color": "FFFFFF","sidebar_logo_height": "94px","sidebar_logo_width":""}',
+      organization_type: academyType._id,
     });
 
     const tjsSports = new Organization({
       name: "TJ's Sports",
+      org_code: 'TJS',
+      org_email: 'contact@tjs_sports.com',
+      org_type_id: academyType._id,
+      org_license_number: 'TJS-123',
+      contact_person_name: 'TJS Admin',
+      contact_person_number: '1234567891',
+      address: {
+        street: '456 TJS St',
+        city: 'TJS City',
+        state: 'TJS State',
+        zip_code: '54321',
+        country: 'USA',
+      },
+      connected_pg_unique_code: 'unique-code-tjs',
+      connected_pg_payouts_enabled: false,
+      is_default_template: false,
+      template_path: null,
       logo_url: 'path/to/tjs_logo.png',
       theme_color: '#33FF57',
       domain: 'tjs_sports.rayssport.com',
-      org_code: 'TJS',
-      org_email: 'contact@tjs_sports.com',
-      courses: [],
+      org_color_code: '{"sidebar_background_color":"392487","sidebar_title_color":"fff","sidebar_button_color":"FFC700","sidebar_hover_color":"2F1A7D","inner_page_button_color":"392487","username_color": "FFFFFF","sidebar_logo_height": "94px","sidebar_logo_width":""}',
+      organization_type: academyType._id,
     });
 
     const mississaugaRamblers = new Organization({
       name: "Mississauga Ramblers",
+      org_code: 'RAMBLERS',
+      org_email: 'contact@ramblers.com',
+      org_type_id: academyType._id,
+      org_license_number: 'RAMBLERS-123',
+      contact_person_name: 'Ramblers Admin',
+      contact_person_number: '1234567892',
+      address: {
+        street: '789 Ramblers St',
+        city: 'Ramblers City',
+        state: 'Ramblers State',
+        zip_code: '67890',
+        country: 'Canada',
+      },
+      connected_pg_unique_code: 'unique-code-ramblers',
+      connected_pg_payouts_enabled: false,
+      is_default_template: false,
+      template_path: null,
       logo_url: 'path/to/ramblers_logo.png',
       theme_color: '#3399FF',
       domain: 'mississauga_ramblers.rayssport.com',
-      org_code: 'RAMBLERS',
-      org_email: 'contact@ramblers.com',
-      courses: [],
+      org_color_code: '{"sidebar_background_color":"392487","sidebar_title_color":"fff","sidebar_button_color":"FFC700","sidebar_hover_color":"2F1A7D","inner_page_button_color":"392487","username_color": "FFFFFF","sidebar_logo_height": "94px","sidebar_logo_width":""}',
+      organization_type: academyType._id,
     });
 
     await eliteAcademy.save();
@@ -137,7 +193,10 @@ db.once('open', async function () {
       organizations: [
         {
           org_id: eliteAcademy._id,
-          courses: [defaultCourseElite._id],
+          role_id: 1, // Role ID for org_admin
+          status: 'Active',
+          created_at: new Date(),
+          updated_at: new Date(),
         },
       ],
     });
@@ -154,7 +213,10 @@ db.once('open', async function () {
       organizations: [
         {
           org_id: tjsSports._id,
-          courses: [defaultCourseTJS._id],
+          role_id: 1, // Role ID for org_admin
+          status: 'Active',
+          created_at: new Date(),
+          updated_at: new Date(),
         },
       ],
     });
@@ -171,7 +233,10 @@ db.once('open', async function () {
       organizations: [
         {
           org_id: mississaugaRamblers._id,
-          courses: [defaultCourseRamblers._id],
+          role_id: 1, // Role ID for org_admin
+          status: 'Active',
+          created_at: new Date(),
+          updated_at: new Date(),
         },
       ],
     });
@@ -188,15 +253,24 @@ db.once('open', async function () {
       organizations: [
         {
           org_id: eliteAcademy._id,
-          courses: [defaultCourseElite._id],
+          role_id: 2, // Role ID for coach
+          status: 'Active',
+          created_at: new Date(),
+          updated_at: new Date(),
         },
         {
           org_id: tjsSports._id,
-          courses: [defaultCourseTJS._id],
+          role_id: 2, // Role ID for coach
+          status: 'Active',
+          created_at: new Date(),
+          updated_at: new Date(),
         },
         {
           org_id: mississaugaRamblers._id,
-          courses: [defaultCourseRamblers._id],
+          role_id: 2, // Role ID for coach
+          status: 'Active',
+          created_at: new Date(),
+          updated_at: new Date(),
         },
       ],
     });
@@ -213,15 +287,24 @@ db.once('open', async function () {
       organizations: [
         {
           org_id: eliteAcademy._id,
-          courses: [defaultCourseElite._id],
+          role_id: 3, // Role ID for freelance coach
+          status: 'Active',
+          created_at: new Date(),
+          updated_at: new Date(),
         },
         {
           org_id: tjsSports._id,
-          courses: [defaultCourseTJS._id],
+          role_id: 3, // Role ID for freelance coach
+          status: 'Active',
+          created_at: new Date(),
+          updated_at: new Date(),
         },
         {
           org_id: mississaugaRamblers._id,
-          courses: [defaultCourseRamblers._id],
+          role_id: 3, // Role ID for freelance coach
+          status: 'Active',
+          created_at: new Date(),
+          updated_at: new Date(),
         },
       ],
     });
@@ -250,7 +333,7 @@ db.once('open', async function () {
         contactNumber: `12345678${index + 4}`,
         password,
         role: 'coach',
-        organizations: [{ org_id: eliteAcademy._id, courses: [defaultCourseElite._id] }],
+        organizations: [{ org_id: eliteAcademy._id, role_id: 2, status: 'Active', created_at: new Date(), updated_at: new Date() }],
       }))
     );
 
@@ -263,7 +346,7 @@ db.once('open', async function () {
       contactNumber: '1234567897',
       password: tjsCoachPassword,
       role: 'coach',
-      organizations: [{ org_id: tjsSports._id, courses: [defaultCourseTJS._id] }],
+      organizations: [{ org_id: tjsSports._id, role_id: 2, status: 'Active', created_at: new Date(), updated_at: new Date() }],
     }).save();
 
     const ramblersCoach = await new User({
@@ -275,7 +358,7 @@ db.once('open', async function () {
       contactNumber: '1234567898',
       password: ramblersCoachPassword,
       role: 'coach',
-      organizations: [{ org_id: mississaugaRamblers._id, courses: [defaultCourseRamblers._id] }],
+      organizations: [{ org_id: mississaugaRamblers._id, role_id: 2, status: 'Active', created_at: new Date(), updated_at: new Date() }],
     }).save();
 
     const eliteStudentPasswords = await Promise.all(
@@ -298,7 +381,7 @@ db.once('open', async function () {
         contactNumber: `12345678${index + 8}`,
         password,
         role: 'student',
-        organizations: [{ org_id: eliteAcademy._id, courses: [defaultCourseElite._id] }],
+        organizations: [{ org_id: eliteAcademy._id, role_id: 4, status: 'Active', created_at: new Date(), updated_at: new Date() }],
       }))
     );
 
@@ -312,7 +395,7 @@ db.once('open', async function () {
         contactNumber: `12345679${index + 8}`,
         password,
         role: 'student',
-        organizations: [{ org_id: tjsSports._id, courses: [defaultCourseTJS._id] }],
+        organizations: [{ org_id: tjsSports._id, role_id: 4, status: 'Active', created_at: new Date(), updated_at: new Date() }],
       }))
     );
 
@@ -326,7 +409,7 @@ db.once('open', async function () {
         contactNumber: `12345680${index + 8}`,
         password,
         role: 'student',
-        organizations: [{ org_id: mississaugaRamblers._id, courses: [defaultCourseRamblers._id] }],
+        organizations: [{ org_id: mississaugaRamblers._id, role_id: 4, status: 'Active', created_at: new Date(), updated_at: new Date() }],
       }))
     );
 

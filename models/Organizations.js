@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-// Define the Item schema
+// Define the Item schema (retained for future e-commerce integration)
 const itemSchema = new mongoose.Schema({
   name: { type: String, required: true },
   description: { type: String },
@@ -21,11 +21,12 @@ const organizationTypeSchema = new mongoose.Schema({
   description: { type: String },
 }, { timestamps: true });
 
+// Define the Organization schema
 const organizationSchema = new mongoose.Schema({
   name: { type: String, required: true },
   org_code: { type: String, unique: true }, // Organization code
   org_email: { type: String, required: true }, // Organization email
-  org_type_id: { type: mongoose.Schema.Types.ObjectId, ref: 'OrganizationType' },
+  org_type_id: { type: mongoose.Schema.Types.ObjectId, ref: 'OrganizationType' }, // Organization Type reference
   org_license_number: { type: String }, // License number
   contact_person_name: { type: String },
   contact_person_number: { type: String },
@@ -48,6 +49,7 @@ const organizationSchema = new mongoose.Schema({
   items: [itemSchema], // Array of items under the organization
 }, { timestamps: true });
 
+// Export the models
 module.exports = {
   Organization: mongoose.models.Organization || mongoose.model('Organization', organizationSchema),
   Item: mongoose.models.Item || mongoose.model('Item', itemSchema),

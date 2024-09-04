@@ -29,7 +29,8 @@ const auth = async (req, res, next) => {
       throw new Error('Invalid token');
     }
 
-    const user = await User.findOne({ _id: decoded._id, 'tokens.token': token });
+    // Find the user by _id from the decoded token
+    const user = await User.findById(decoded._id);
 
     if (!user) {
       console.log('User not found with given token');
@@ -45,6 +46,5 @@ const auth = async (req, res, next) => {
     res.status(401).json({ error: 'Please authenticate.' });
   }
 };
-
 
 module.exports = auth;

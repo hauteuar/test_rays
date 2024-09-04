@@ -3,7 +3,13 @@ const router = express.Router();
 const appController = require('../controllers/appController');
 const authMiddleware = require('../middleware/authMiddleware');
 const organizationController = require('../controllers/organizationController');
+const sidebarController = require('../controllers/sidebarController');
 
+// Route to get app settings for a specific role
+router.get('/get-app-settings', sidebarController.getAppSettings);
+
+// Route to initialize sidebar settings
+router.post('/initialize-sidebar', sidebarController.initializeSidebar);
 
 router.post('/auth/login', appController.appLogin);
 router.post('/auth/refresh-token', authMiddleware, appController.refreshToken);

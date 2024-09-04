@@ -71,6 +71,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/images', express.static(path.join(__dirname, 'public/images')));
 
 
+
 // Routes
 const authRoutes = require('./routes/authRoutes');
 const appRoutes = require('./routes/appRoutes');
